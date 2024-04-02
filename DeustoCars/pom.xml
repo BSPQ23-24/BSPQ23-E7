@@ -6,24 +6,40 @@
 
   <groupId>es.deusto.spq</groupId>
   <artifactId>DeustoCars</artifactId>
+  <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
 
   <name>DeustoCars</name>
   <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <!-- <url>http://www.example.com</url>-->
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <config.files.dir>${basedir}/src/main/resources</config.files.dir>
+    <config.files.dir>${basedir}\src\main\sources</config.files.dir>
+    <jersey.version>2.35</jersey.version>
+		<server.hostname>127.0.0.1</server.hostname>
+		<server.port>8080</server.port>
   </properties>
+
+  <dependencyManagement>
+      <dependencies>
+          <dependency>
+              <groupId>org.glassfish.jersey</groupId>
+              <artifactId>jersey-bom</artifactId>
+              <version>${jersey.version}</version>
+              <type>pom</type>
+              <scope>import</scope>
+          </dependency>
+      </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
     		<dependency>
@@ -61,6 +77,18 @@
 			<artifactId>log4j-core</artifactId>
 			<version>[2.17.1, 2.39.1]</version>
 		</dependency>
+		<dependency>
+        <groupId>org.glassfish.jersey.containers</groupId>
+        <artifactId>jersey-container-servlet-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.glassfish.jersey.inject</groupId>
+        <artifactId>jersey-hk2</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.glassfish.jersey.media</groupId>
+        <artifactId>jersey-media-json-jackson</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -173,7 +201,69 @@
             <nohelp>true</nohelp>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.3.2</version>
+        </plugin>
+        <plugin>
+				  <groupId>org.eclipse.jetty</groupId>
+				  <artifactId>jetty-maven-plugin</artifactId>
+				  <version>9.4.46.v20220331</version>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
+
+	<profiles>
+  	
+		<profile>
+      <!-- run as 'mvn exec:java -Pserver' -->
+			<id>server</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<configuration>
+							<mainClass>es.deusto.spq.server.MainServer</mainClass>
+							<arguments>
+								<argument>${server.hostname}</argument>
+								<argument>${server.port}</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+      <!-- run as 'mvn exec:java -Pclient' -->
+			<id>client</id>
+			<build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <mainClass>es.deusto.spq.client.MainClient</mainClass>
+                            <arguments>
+                              <argument>${server.hostname}</argument>
+                              <argument>${server.port}</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+		</profile>
+	</profiles>
 </project>
