@@ -1,0 +1,47 @@
+@options
+@packages
+-encoding
+'UTF-8'
+-protected
+-source
+'1.8'
+-sourcepath
+'C:/SoftLabs/SPQ/DeustoCars/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2024. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/SoftLabs/SPQ/DeustoCars/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'DeustoCars 1.0-SNAPSHOT API'
+-linkoffline
+'https://docs.oracle.com/javase/8/docs/api' 'C:/SoftLabs/SPQ/DeustoCars/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'DeustoCars 1.0-SNAPSHOT API'
+es.deusto.spq
+C:\SoftLabs\SPQ\DeustoCars\src\main\java = 1712079735313
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\allclasses-index.html = 1712079840981
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\allpackages-index.html = 1712079840984
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\copy.svg = 1712079841019
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\element-list = 1712079840937
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\help-doc.html = 1712079841013
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\index-all.html = 1712079840997
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\index.html = 1712079841003
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\link.svg = 1712079841021
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\member-search-index.js = 1712079840988
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\module-search-index.js = 1712079840985
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\overview-tree.html = 1712079840970
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\package-search-index.js = 1712079840986
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\script.js = 1712079841018
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\search-page.js = 1712079841025
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\search.html = 1712079841000
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\search.js = 1712079841023
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\stylesheet.css = 1712079841017
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\tag-search-index.js = 1712079840989
+C:\SoftLabs\SPQ\DeustoCars\target\site\apidocs\type-search-index.js = 1712079840987
