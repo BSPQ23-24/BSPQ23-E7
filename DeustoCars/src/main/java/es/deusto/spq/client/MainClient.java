@@ -1,4 +1,4 @@
-package com.deusto.app.client;
+package es.deusto.spq.client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
