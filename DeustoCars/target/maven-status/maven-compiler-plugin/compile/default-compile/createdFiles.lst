@@ -1,3 +1,3 @@
-com\deusto\app\client\MainClient.class
+es\deusto\spq\client\MainClient.class
 es\deusto\spq\App.class
-com\deusto\app\server\MainServer.class
+es\deusto\spq\server\MainServer.class
