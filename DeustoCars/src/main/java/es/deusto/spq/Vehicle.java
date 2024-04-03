@@ -1,5 +1,3 @@
-package software;
-
 /**
  * Clase que representa un vehículo.
  */
