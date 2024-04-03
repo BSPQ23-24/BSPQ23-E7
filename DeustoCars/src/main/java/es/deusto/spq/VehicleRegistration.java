@@ -87,9 +87,9 @@ public class VehicleRegistration extends JFrame {
     
     private void updateDatabase(Vehicle vehicle) {
         // Datos de conexión a la base de datos
-        String url = "jdbc:mysql://localhost:3306/PONER_DATABASE_NAME";
-        String username = "PONER_USERNAME";
-        String password = "PONER_PASSWORD";
+        String url = "jdbc:mysql://localhost:3306/spq";
+        String username = "spq";
+        String password = "spq";
 
         try {
             // Establecer la conexión con la base de datos
