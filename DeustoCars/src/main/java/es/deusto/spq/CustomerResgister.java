@@ -18,7 +18,7 @@ public class CustomerResgister extends JFrame {
      * */
 
     public CustomerResgister() {
-        setTitle("Registro de Usuario");
+        setTitle("User Registration");
         setSize(600, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(4, 2));
@@ -27,9 +27,9 @@ public class CustomerResgister extends JFrame {
         nameField = new JTextField();
         JLabel surnameLabel = new JLabel("Surname:");
         surnameField = new JTextField();
-        JLabel BirthLabel = new JLabel("Fecha de nacimiento (AAAA-MM-DD):");
+        JLabel BirthLabel = new JLabel("Date of Birth (AAAA-MM-DD):");
         BithDate = new JTextField();
-        submitButton = new JButton("Registrar Usuario");
+        submitButton = new JButton("Register user");
 
         add(nameLabel);
         add(nameField);
@@ -59,7 +59,7 @@ public class CustomerResgister extends JFrame {
         try {
         	birth = LocalDate.parse(birthDate);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Fecha de nacimiento inv�lida. Formato esperado: AAAA-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid date of birth. Expected format: YYYY-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 

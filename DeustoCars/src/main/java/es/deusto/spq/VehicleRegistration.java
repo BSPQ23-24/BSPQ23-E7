@@ -4,7 +4,7 @@ import java.sql.*;
 
 
 /**
- * Clase para el registro de vehículos utilizando una interfaz gráfica de usuario.
+ * Class for vehicle registration using a graphical user interface.
  */
 
 public class VehicleRegistration extends JFrame {
@@ -16,24 +16,24 @@ public class VehicleRegistration extends JFrame {
     private JButton submitButton;
 
     /**
-     * Constructor para la ventana de registro de vehículos.
+     * Constructor for vehicle registration window.
      */
     
     public VehicleRegistration() {
-        setTitle("Registro de Vehículo");
+        setTitle("Vehicle Registration");
         setSize(600, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(6, 2));
 
-        JLabel brandLabel = new JLabel("Marca:");
+        JLabel brandLabel = new JLabel("Brand:");
         brandField = new JTextField();
-        JLabel numberPlateLabel = new JLabel("Matrícula:");
+        JLabel numberPlateLabel = new JLabel("Number Plate:");
         numberPlateField = new JTextField();
-        JLabel modelLabel = new JLabel("Modelo:");
+        JLabel modelLabel = new JLabel("Model:");
         modelField = new JTextField();
-        readyToBorrowCheckbox = new JCheckBox("Listo para prestar", true);
-        onRepairCheckbox = new JCheckBox("En reparación", false);
-        submitButton = new JButton("Registrar Vehículo");
+        readyToBorrowCheckbox = new JCheckBox("Ready to lend", true);
+        onRepairCheckbox = new JCheckBox("In repair", false);
+        submitButton = new JButton("Register Vehicle");
 
         add(brandLabel);
         add(brandField);
@@ -54,7 +54,7 @@ public class VehicleRegistration extends JFrame {
     }
 
     /**
-     * Registra un nuevo vehículo en la base de datos y lo agrega a la lista de vehículos.
+     * Registers a new vehicle in the database and adds it to the vehicle list.
      */
     
     private void registerVehicle() {
@@ -64,42 +64,42 @@ public class VehicleRegistration extends JFrame {
         boolean readyToBorrow = readyToBorrowCheckbox.isSelected();
         boolean onRepair = onRepairCheckbox.isSelected();
 
-        // Crear el nuevo vehículo
+        // Create the new vehicle
         Vehicle newVehicle = new Vehicle(brand, numberPlate, model);
         newVehicle.setReadyToBorrow(readyToBorrow);
         newVehicle.setOnRepair(onRepair);
 
-        // Limpiar los campos de entrada
+        // Clear input fields
         brandField.setText("");
         numberPlateField.setText("");
         modelField.setText("");
         readyToBorrowCheckbox.setSelected(true);
         onRepairCheckbox.setSelected(false);
 
-        // Conectar y actualizar la base de datos
+        // Connect and update the database
         updateDatabase(newVehicle);
     }
 
     /**
-     * Conecta a la base de datos MySQL y actualiza la información del nuevo vehículo.
+     * Connect to the MySQL database and update the information of the new vehicle.
      *
      */
     
     private void updateDatabase(Vehicle vehicle) {
-        // Datos de conexión a la base de datos
-        String url = "jdbc:mysql://localhost:3306/spq";
+        // Database connection details
+        String url = "jdbc:mysql://localhost:3306/deustoCarsDB";
         String username = "spq";
         String password = "spq";
 
         try {
-            // Establecer la conexión con la base de datos
+            // Establish the connection to the database
             Connection connection = DriverManager.getConnection(url, username, password);
 
-            // Consulta SQL para insertar el vehículo en la base de datos
+            // SQL query to insert the vehicle into the database
             String query = "INSERT INTO vehicles (brand, number_plate, model, ready_to_borrow, on_repair) " +
                            "VALUES (?, ?, ?, ?, ?)";
 
-            // Preparar la declaración SQL
+            // Prepare the SQL statement
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, vehicle.getBrand());
             preparedStatement.setString(2, vehicle.getNumberPlate());
@@ -107,10 +107,10 @@ public class VehicleRegistration extends JFrame {
             preparedStatement.setBoolean(4, vehicle.isReadyToBorrow());
             preparedStatement.setBoolean(5, vehicle.isOnRepair());
 
-            // Ejecutar la consulta SQL
+            // Run the SQL query
             preparedStatement.executeUpdate();
 
-            // Cerrar la conexión y liberar recursos
+            // Close the connection and release resources
             preparedStatement.close();
             connection.close();
         } catch (SQLException e) {
@@ -119,7 +119,7 @@ public class VehicleRegistration extends JFrame {
     }
 
     /**
-     * Método principal para iniciar la aplicación.
+     * Main method to start the application.
      *
      */
     
