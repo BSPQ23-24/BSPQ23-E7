@@ -1,3 +1,5 @@
+package es.deusto.spq;
+
 /**
  * Clase que representa un vehículo.
  */

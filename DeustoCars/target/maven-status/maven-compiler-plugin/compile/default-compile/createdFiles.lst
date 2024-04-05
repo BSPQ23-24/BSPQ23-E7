@@ -1,7 +1,7 @@
-Customer.class
-VehicleRegistration.class
-Vehicle.class
-CustomerResgister.class
+es\deusto\spq\CustomerRegister.class
+es\deusto\spq\VehicleRegistration.class
+es\deusto\spq\Vehicle.class
 es\deusto\spq\client\MainClient.class
 es\deusto\spq\App.class
 es\deusto\spq\server\MainServer.class
+es\deusto\spq\Customer.class

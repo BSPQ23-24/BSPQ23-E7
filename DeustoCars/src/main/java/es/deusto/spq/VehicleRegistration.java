@@ -1,3 +1,5 @@
+package es.deusto.spq;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
@@ -123,7 +125,11 @@ public class VehicleRegistration extends JFrame {
      *
      */
     
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(VehicleRegistration::new);
+     public static void main(String[] args) {
+        // Instantiate the customer registration window
+        VehicleRegistration CustomerRegistrationWindow = new VehicleRegistration();
+
+        // Display the customer registration window
+        CustomerRegistrationWindow.setVisible(true);
     }
 }
