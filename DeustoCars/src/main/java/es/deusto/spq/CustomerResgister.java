@@ -37,7 +37,7 @@ public class CustomerResgister extends JFrame {
         add(surnameField);
         add(BirthLabel);
         add(BithDate);
-        add(new JLabel()); // Espacio en blanco
+        add(new JLabel()); // Blank space
         add(submitButton);
 
         submitButton.addActionListener(e -> registerUser());
@@ -54,22 +54,22 @@ public class CustomerResgister extends JFrame {
         String surname = surnameField.getText();
         String birthDate = BithDate.getText();
 
-        // Validar que la fecha de nacimiento sea válida
+        // Check that the birth date is valid
         LocalDate birth;
         try {
         	birth = LocalDate.parse(birthDate);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Fecha de nacimiento inválida. Formato esperado: AAAA-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Fecha de nacimiento invï¿½lida. Formato esperado: AAAA-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Crear el usuario
+        // Create the user
         Customer newUser = new Customer(0, name, surname, birth);
         
        
         System.out.println("Customer registered: " + newUser);
 
-        // Limpiar los campos del formulario
+        // Clean the form fields
         nameField.setText("");
         surnameField.setText("");
         BithDate.setText("");
@@ -78,33 +78,33 @@ public class CustomerResgister extends JFrame {
     }
     
     private void updateDatabase(Customer customer) {
-        // Datos de conexión a la base de datos
-        String url = "jdbc:mysql://localhost:3306/spq";
+        // Connection to the database data
+        String url = "jdbc:mysql://localhost:3306/deustoCarsDB";
         String username = "spq";
         String password = "spq";
 
         try {
-            // Establecer la conexión con la base de datos
+            // Connection establishment with the database
             Connection connection = DriverManager.getConnection(url, username, password);
 
-            // Consulta SQL para insertar el vehículo en la base de datos
+            // SQL query to insert the vehicle into the database
             String query = "INSERT INTO customers (name, surname, birth_date) " +
                            "VALUES (?, ?, ?)";
 
-            // Preparar la declaración SQL
+            // Prepare the SQL statement
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, customer.getName());
             preparedStatement.setString(2, customer.getSurname());
-            //No acepta LocalDate SQL por lo que lo pasamos a java.sql.Date
+            // It does not accept LocalDate SQL so we pass it to java.sql.Date
             java.sql.Date sqlDate = java.sql.Date.valueOf(customer.getDateOfBirth());
             preparedStatement.setDate(3, sqlDate);
             
             
 
-            // Ejecutar la consulta SQL
+            // Run the SQL query
             preparedStatement.executeUpdate();
 
-            // Cerrar la conexión y liberar recursos
+            // Close the connection and release resources
             preparedStatement.close();
             connection.close();
         } catch (SQLException e) {
