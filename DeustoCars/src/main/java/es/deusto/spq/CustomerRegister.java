@@ -1,6 +1,10 @@
 package es.deusto.spq;
 
 import javax.swing.*;
+
+import es.deusto.spq.db.Database;
+import es.deusto.spq.db.resources.*;
+
 import java.awt.*;
 import java.time.LocalDate;
 import java.sql.*;
@@ -10,7 +14,8 @@ import java.sql.*;
  * */
 
 public class CustomerRegister extends JFrame {
-    private JTextField nameField;
+	private static final long serialVersionUID = 1L;
+	private JTextField nameField;
     private JTextField surnameField;
     private JTextField BithDate;
     private JButton submitButton;
@@ -79,39 +84,12 @@ public class CustomerRegister extends JFrame {
         updateDatabase(newUser);
     }
     
-    private void updateDatabase(Customer customer) {
-        // Connection to the database data
-        String url = "jdbc:mysql://localhost:3306/deustoCarsDB";
-        String username = "spq";
-        String password = "spq";
-
-        try {
-            // Connection establishment with the database
-            Connection connection = DriverManager.getConnection(url, username, password);
-
-            // SQL query to insert the vehicle into the database
-            String query = "INSERT INTO customers (name, surname, birth_date) " +
-                           "VALUES (?, ?, ?)";
-
-            // Prepare the SQL statement
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, customer.getName());
-            preparedStatement.setString(2, customer.getSurname());
-            // It does not accept LocalDate SQL so we pass it to java.sql.Date
-            java.sql.Date sqlDate = java.sql.Date.valueOf(customer.getDateOfBirth());
-            preparedStatement.setDate(3, sqlDate);
-            
-            
-
-            // Run the SQL query
-            preparedStatement.executeUpdate();
-
-            // Close the connection and release resources
-            preparedStatement.close();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    boolean updateDatabase(Customer customer) {
+        return Database.getInstance().ejecutarActualizacion("INSERT INTO customers (name, surname, birth_date)",
+        	    new Parameter(customer.getName(), DataType.STRING),
+        	    new Parameter(customer.getSurname(), DataType.STRING),
+        	    new Parameter(java.sql.Date.valueOf(customer.getDateOfBirth()), DataType.DATE)
+        	);
     }
     
     /*

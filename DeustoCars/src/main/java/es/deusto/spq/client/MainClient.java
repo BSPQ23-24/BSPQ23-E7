@@ -2,12 +2,13 @@ package es.deusto.spq.client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import es.deusto.spq.client.gui.ClientGUI;
 
 public class MainClient implements ActionListener, Runnable {
 	
 
 	public MainClient(String hostname, String port) {
-		// TODO Auto-generated constructor stub
+		new ClientGUI();
 	}
 
 	public static void main(String[] args) {

@@ -1,6 +1,11 @@
 package es.deusto.spq;
 
 import javax.swing.*;
+
+import es.deusto.spq.db.Database;
+import es.deusto.spq.db.resources.DataType;
+import es.deusto.spq.db.resources.Parameter;
+
 import java.awt.*;
 import java.sql.*;
 
@@ -87,37 +92,14 @@ public class VehicleRegistration extends JFrame {
      *
      */
     
-    private void updateDatabase(Vehicle vehicle) {
-        // Database connection details
-        String url = "jdbc:mysql://localhost:3306/deustoCarsDB";
-        String username = "spq";
-        String password = "spq";
-
-        try {
-            // Establish the connection to the database
-            Connection connection = DriverManager.getConnection(url, username, password);
-
-            // SQL query to insert the vehicle into the database
-            String query = "INSERT INTO vehicles (brand, number_plate, model, ready_to_borrow, on_repair) " +
-                           "VALUES (?, ?, ?, ?, ?)";
-
-            // Prepare the SQL statement
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, vehicle.getBrand());
-            preparedStatement.setString(2, vehicle.getNumberPlate());
-            preparedStatement.setString(3, vehicle.getModel());
-            preparedStatement.setBoolean(4, vehicle.isReadyToBorrow());
-            preparedStatement.setBoolean(5, vehicle.isOnRepair());
-
-            // Run the SQL query
-            preparedStatement.executeUpdate();
-
-            // Close the connection and release resources
-            preparedStatement.close();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    boolean updateDatabase(Vehicle vehicle) {
+        return Database.getInstance().ejecutarActualizacion("INSERT INTO customers (name, surname, birth_date)",
+        	    new Parameter(vehicle.getBrand(), DataType.STRING),
+        	    new Parameter(vehicle.getNumberPlate(), DataType.STRING),
+        	    new Parameter(vehicle.getModel(), DataType.STRING),
+        	    new Parameter(vehicle.isReadyToBorrow(), DataType.BOOLEAN),
+        	    new Parameter(vehicle.isOnRepair(), DataType.BOOLEAN)
+        	);
     }
 
     /**
