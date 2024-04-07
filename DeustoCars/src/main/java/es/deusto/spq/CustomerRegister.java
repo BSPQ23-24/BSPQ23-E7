@@ -1,65 +1,86 @@
 package es.deusto.spq;
 
 import javax.swing.*;
-
 import es.deusto.spq.db.Database;
-import es.deusto.spq.db.resources.*;
+import es.deusto.spq.db.resources.DataType;
+import es.deusto.spq.db.resources.Parameter;
 
 import java.awt.*;
-import java.time.LocalDate;
 import java.sql.*;
+import java.time.LocalDate;
 
-/*
- * Class for customer registration using a graphical user interface.
- * */
-
+/**
+ * Class for customer registration and modification using a graphical user interface.
+ */
 public class CustomerRegister extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTextField nameField;
     private JTextField surnameField;
-    private JTextField BithDate;
+    private JTextField birthDateField;
     private JButton submitButton;
-    
-    /*
-     * Constructor for the registration of customers
-     * */
 
     public CustomerRegister() {
-        setTitle("User Registration");
+        submitButton = new JButton("Register user");
+        setupUI("User Registration");
+
+        nameField = new JTextField();
+        surnameField = new JTextField();
+        birthDateField = new JTextField();
+
+        addComponentsToForm();
+
+        setVisible(true);
+    }
+
+    public CustomerRegister(int customerId) {
+        submitButton = new JButton("Modify user");
+        setupUI("User Modification");
+
+        ResultSet rs = Database.getInstance().ejecutarConsulta(
+            "SELECT name, surname, birth_date FROM customers WHERE id = ?",
+            new Parameter(Integer.toString(customerId), DataType.STRING)
+        );
+        try {
+            if (rs != null && rs.next()) {
+                nameField = new JTextField(rs.getString("name"));
+                surnameField = new JTextField(rs.getString("surname"));
+                birthDateField = new JTextField(rs.getDate("birth_date").toString());
+            } else {
+                JOptionPane.showMessageDialog(this, "Customer not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error loading customer data: " + e.getMessage());
+        }
+
+        addComponentsToForm();
+
+        setVisible(true);
+    }
+
+    private void setupUI(String title) {
+        setTitle(title);
         setSize(600, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(4, 2));
 
-        JLabel nameLabel = new JLabel("Name:");
-        nameField = new JTextField();
-        JLabel surnameLabel = new JLabel("Surname:");
-        surnameField = new JTextField();
-        JLabel BirthLabel = new JLabel("Date of Birth (AAAA-MM-DD):");
-        BithDate = new JTextField();
-        submitButton = new JButton("Register user");
-
-        add(nameLabel);
-        add(nameField);
-        add(surnameLabel);
-        add(surnameField);
-        add(BirthLabel);
-        add(BithDate);
-        add(new JLabel()); // Blank space
-        add(submitButton);
-
         submitButton.addActionListener(e -> registerUser());
-
-        setVisible(true);
     }
-    
-    /*
-     * Registers a new customer in the database and adds it to the customer list.
-     * */
+
+    private void addComponentsToForm() {
+        add(new JLabel("Name:"));
+        add(nameField);
+        add(new JLabel("Surname:"));
+        add(surnameField);
+        add(new JLabel("Date of Birth (AAAA-MM-DD):"));
+        add(birthDateField);
+        add(new JLabel("")); // Espacio en blanco
+        add(submitButton);
+    }
 
     private void registerUser() {
-        String name = nameField.getText();
+    	String name = nameField.getText();
         String surname = surnameField.getText();
-        String birthDate = BithDate.getText();
+        String birthDate = birthDateField.getText();
 
         // Check that the birth date is valid
         LocalDate birth;
@@ -71,17 +92,18 @@ public class CustomerRegister extends JFrame {
         }
 
         // Create the user
-        Customer newUser = new Customer(0, name, surname, birth);
-        
-       
-        System.out.println("Customer registered: " + newUser);
+        Customer newUser = new Customer(name, surname, birth);
 
         // Clean the form fields
         nameField.setText("");
         surnameField.setText("");
-        BithDate.setText("");
+        birthDateField.setText("");
         
-        updateDatabase(newUser);
+        if (updateDatabase(newUser)) {
+        	System.out.println("Customer registered: " + newUser);
+        } else {
+        	System.out.println("Error registering user");
+        }
     }
     
     boolean updateDatabase(Customer customer) {
@@ -91,18 +113,10 @@ public class CustomerRegister extends JFrame {
         	    new Parameter(java.sql.Date.valueOf(customer.getDateOfBirth()), DataType.DATE)
         	);
     }
-    
-    /*
-     * Main method to start the application. 
-     * */
 
     public static void main(String[] args) {
-        // Instantiate the customer registration window
-        CustomerRegister CustomerRegistrationWindow = new CustomerRegister();
-
-        // Display the customer registration window
-        CustomerRegistrationWindow.setVisible(true);
+        // Para pruebas
+        CustomerRegister customerRegistrationWindow = new CustomerRegister();
+        customerRegistrationWindow.setVisible(true);
     }
-    
-
 }

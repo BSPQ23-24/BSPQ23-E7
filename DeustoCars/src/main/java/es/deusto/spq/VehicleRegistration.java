@@ -1,21 +1,19 @@
 package es.deusto.spq;
 
 import javax.swing.*;
-
 import es.deusto.spq.db.Database;
 import es.deusto.spq.db.resources.DataType;
 import es.deusto.spq.db.resources.Parameter;
-
 import java.awt.*;
-import java.sql.*;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Class for vehicle registration using a graphical user interface.
  */
-
 public class VehicleRegistration extends JFrame {
-    private JTextField brandField;
+	private static final long serialVersionUID = 1L;
+	private JTextField brandField;
     private JTextField numberPlateField;
     private JTextField modelField;
     private JCheckBox readyToBorrowCheckbox;
@@ -25,56 +23,79 @@ public class VehicleRegistration extends JFrame {
     /**
      * Constructor for vehicle registration window.
      */
-    
     public VehicleRegistration() {
-        setTitle("Vehicle Registration");
+        submitButton = new JButton("Register Vehicle");
+        setupUI("Vehicle Registration");
+
+        brandField = new JTextField();
+        numberPlateField = new JTextField();
+        modelField = new JTextField();
+        readyToBorrowCheckbox = new JCheckBox("Ready to lend", true);
+        onRepairCheckbox = new JCheckBox("In repair", false);
+
+        addComponentsToForm(false);
+
+        setVisible(true);
+    }
+
+    public VehicleRegistration(int vehicleId) {
+        submitButton = new JButton("Modify Vehicle");
+        setupUI("Vehicle Modification");
+
+        ResultSet rs = Database.getInstance().ejecutarConsulta(
+            "SELECT brand, number_plate, model, ready_to_borrow, on_repair FROM vehicles WHERE id = ?",
+            new Parameter(Integer.toString(vehicleId), DataType.STRING)
+        );
+        try {
+            if (rs != null && rs.next()) {
+                brandField = new JTextField(rs.getString("brand"));
+                numberPlateField = new JTextField(rs.getString("number_plate"));
+                modelField = new JTextField(rs.getString("model"));
+                readyToBorrowCheckbox = new JCheckBox("Ready to lend", rs.getBoolean("ready_to_borrow"));
+                onRepairCheckbox = new JCheckBox("In repair", rs.getBoolean("on_repair"));
+            } else {
+                JOptionPane.showMessageDialog(this, "Vehicle not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error loading vehicle data: " + e.getMessage());
+        }
+
+        addComponentsToForm(true);
+
+        setVisible(true);
+    }
+    
+    private void setupUI(String title) {
+        setTitle(title);
         setSize(600, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(6, 2));
 
-        JLabel brandLabel = new JLabel("Brand:");
-        brandField = new JTextField();
-        JLabel numberPlateLabel = new JLabel("Number Plate:");
-        numberPlateField = new JTextField();
-        JLabel modelLabel = new JLabel("Model:");
-        modelField = new JTextField();
-        readyToBorrowCheckbox = new JCheckBox("Ready to lend", true);
-        onRepairCheckbox = new JCheckBox("In repair", false);
-        submitButton = new JButton("Register Vehicle");
-
-        add(brandLabel);
-        add(brandField);
-        add(numberPlateLabel);
-        add(numberPlateField);
-        add(modelLabel);
-        add(modelField);
-        add(readyToBorrowCheckbox);
-        add(onRepairCheckbox);
-        add(new JLabel());
-        add(submitButton);
-
         submitButton.addActionListener(e -> registerVehicle());
-
-        setVisible(true);
-
-      
     }
 
-    /**
-     * Registers a new vehicle in the database and adds it to the vehicle list.
-     */
-    
+    private void addComponentsToForm(boolean isModification) {
+        add(new JLabel("Brand:"));
+        add(brandField);
+        add(new JLabel("Number Plate:"));
+        add(numberPlateField);
+        add(new JLabel("Model:"));
+        add(modelField);
+        if (isModification) {
+            add(readyToBorrowCheckbox);
+            add(onRepairCheckbox);
+        } else {
+            add(new JLabel(""));
+            add(new JLabel(""));
+        }
+        add(new JLabel("")); // Espacio en blanco para alinear el botón
+        add(submitButton);
+    }
+
     private void registerVehicle() {
-        String brand = brandField.getText();
-        String numberPlate = numberPlateField.getText();
-        String model = modelField.getText();
-        boolean readyToBorrow = readyToBorrowCheckbox.isSelected();
-        boolean onRepair = onRepairCheckbox.isSelected();
 
         // Create the new vehicle
-        Vehicle newVehicle = new Vehicle(brand, numberPlate, model);
-        newVehicle.setReadyToBorrow(readyToBorrow);
-        newVehicle.setOnRepair(onRepair);
+        Vehicle newVehicle = new Vehicle(brandField.getText(), numberPlateField.getText(), modelField.getText());
 
         // Clear input fields
         brandField.setText("");
@@ -84,34 +105,26 @@ public class VehicleRegistration extends JFrame {
         onRepairCheckbox.setSelected(false);
 
         // Connect and update the database
-        updateDatabase(newVehicle);
+        if (updateDatabase(newVehicle)) {
+            JOptionPane.showMessageDialog(this, "Vehicle registered successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Error registering vehicle.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    /**
-     * Connect to the MySQL database and update the information of the new vehicle.
-     *
-     */
-    
     boolean updateDatabase(Vehicle vehicle) {
-        return Database.getInstance().ejecutarActualizacion("INSERT INTO customers (name, surname, birth_date)",
-        	    new Parameter(vehicle.getBrand(), DataType.STRING),
-        	    new Parameter(vehicle.getNumberPlate(), DataType.STRING),
-        	    new Parameter(vehicle.getModel(), DataType.STRING),
-        	    new Parameter(vehicle.isReadyToBorrow(), DataType.BOOLEAN),
-        	    new Parameter(vehicle.isOnRepair(), DataType.BOOLEAN)
-        	);
+        return Database.getInstance().ejecutarActualizacion("INSERT INTO vehicles (brand, number_plate, model, ready_to_borrow, on_repair)",
+                new Parameter(vehicle.getBrand(), DataType.STRING),
+                new Parameter(vehicle.getNumberPlate(), DataType.STRING),
+                new Parameter(vehicle.getModel(), DataType.STRING),
+                new Parameter(vehicle.isReadyToBorrow(), DataType.BOOLEAN),
+                new Parameter(vehicle.isOnRepair(), DataType.BOOLEAN)
+        );
     }
 
-    /**
-     * Main method to start the application.
-     *
-     */
-    
-     public static void main(String[] args) {
-        // Instantiate the customer registration window
-        VehicleRegistration CustomerRegistrationWindow = new VehicleRegistration();
-
-        // Display the customer registration window
-        CustomerRegistrationWindow.setVisible(true);
+    public static void main(String[] args) {
+        VehicleRegistration a = new VehicleRegistration();
+    	//VehicleRegistration a = new VehicleRegistration(new Vehicle("a", "a", "a"));
+        a.setVisible(true);
     }
 }

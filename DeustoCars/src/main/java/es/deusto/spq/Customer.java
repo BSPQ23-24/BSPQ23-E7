@@ -16,7 +16,7 @@ public class Customer {
     /*
      * Constructor of the customer class
      * */
-    public Customer(int ID, String name, String surname, LocalDate dateOfBirth) {
+    public Customer(String name, String surname, LocalDate dateOfBirth) {
         this.ID = ++lastID;
         this.name = name;
         this.surname = surname;
