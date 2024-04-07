@@ -23,6 +23,13 @@ public class Customer {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public Customer(int ID, String name, String surname, LocalDate dateOfBirth) {
+        this.ID = ID;
+        this.name = name;
+        this.surname = surname;
+        this.dateOfBirth = dateOfBirth;
+    }
+    
     /*
      * Getters and setters for the customer class
      * */

@@ -9,3 +9,20 @@ CREATE SCHEMA deustoCarsDB;
 CREATE USER IF NOT EXISTS 'spq'@'localhost' IDENTIFIED BY 'spq';
 /* GIVE 'spq' all permissions*/
 GRANT ALL ON deustoCarsDB.* TO 'spq'@'localhost';
+USE deustoCarsDB;
+/* Create 'customers' */
+CREATE TABLE customers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    surname VARCHAR(255) NOT NULL,
+    birth_date DATE NOT NULL
+);
+/* Create 'vehicles' */
+CREATE TABLE vehicles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    brand VARCHAR(255) NOT NULL,
+    number_plate VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    ready_to_borrow BOOLEAN NOT NULL,
+    on_repair BOOLEAN NOT NULL
+);

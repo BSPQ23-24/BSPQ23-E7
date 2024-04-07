@@ -27,7 +27,14 @@ public class Vehicle {
         this.onRepair = false;
     }
     
-    
+    public Vehicle(int ID, String brand, String numberPlate, String model) {
+        this.ID = ID;
+        this.brand = brand;
+        this.numberPlate = numberPlate;
+        this.model = model;
+        this.readyToBorrow = true;
+        this.onRepair = false;
+    }
     /**
      * Métodos getters y setters de la clase Vehicle.
      * 
