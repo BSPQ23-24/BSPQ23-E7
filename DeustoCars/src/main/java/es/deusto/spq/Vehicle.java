@@ -5,10 +5,8 @@ package es.deusto.spq;
  */
 
 public class Vehicle {
-    private static int lastID = 0;
-    private int ID;
-    private String brand;
     private String numberPlate;
+    private String brand;
     private String model;
     private boolean readyToBorrow;
     private boolean onRepair;
@@ -18,19 +16,10 @@ public class Vehicle {
      * 
      */
     
-    public Vehicle(String brand, String numberPlate, String model) {
-        this.ID = lastID++;
-        this.brand = brand;
-        this.numberPlate = numberPlate;
-        this.model = model;
-        this.readyToBorrow = true;
-        this.onRepair = false;
-    }
     
-    public Vehicle(int ID, String brand, String numberPlate, String model) {
-        this.ID = ID;
-        this.brand = brand;
+    public Vehicle(String numberPlate, String brand,  String model) {
         this.numberPlate = numberPlate;
+        this.brand = brand;
         this.model = model;
         this.readyToBorrow = true;
         this.onRepair = false;
@@ -40,12 +29,12 @@ public class Vehicle {
      * 
      */
 
-    public int getID() {
-        return ID;
+    public String getNumberPlate() {
+        return numberPlate;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setNumberPlate(String numberPlate) {
+        this.numberPlate = numberPlate;
     }
 
     public String getBrand() {
@@ -56,13 +45,7 @@ public class Vehicle {
         this.brand = brand;
     }
 
-    public String getNumberPlate() {
-        return numberPlate;
-    }
 
-    public void setNumberPlate(String numberPlate) {
-        this.numberPlate = numberPlate;
-    }
 
     public String getModel() {
         return model;
@@ -94,11 +77,12 @@ public class Vehicle {
      */
     
     public String toString() {
-        return "Vehicle ID: " + ID + 
-               "\nBrand: " + brand + 
+        return "Vehicle" + 
                "\nNumber Plate: " + numberPlate + 
+               "\nBrand: " + brand + 
                "\nModel: " + model + 
                "\nReady to Borrow: " + readyToBorrow + 
                "\nOn Repair: " + onRepair;
     }
 }
+
