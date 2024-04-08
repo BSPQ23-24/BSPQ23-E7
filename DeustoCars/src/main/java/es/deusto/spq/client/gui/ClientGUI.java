@@ -102,8 +102,8 @@ public class ClientGUI extends JFrame{
 	        editButton.addActionListener(e -> {
 	            int selectedRow = table.getSelectedRow();
 	            if (selectedRow >= 0) {
-	                int Id = (int) table.getValueAt(selectedRow, 0);
-	                new CustomerRegister(Id); 
+	                String email = table.getValueAt(selectedRow, 0).toString();
+	                new CustomerRegister(email); 
 	            }
 	        });
 	        editPane.add(editButton);

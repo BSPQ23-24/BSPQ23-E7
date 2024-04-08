@@ -34,13 +34,13 @@ public class CustomerRegister extends JFrame {
         setVisible(true);
     }
 
-    public CustomerRegister(int customerId) {
+    public CustomerRegister(String email) {
         submitButton = new JButton("Modify user");
         setupUI("User Modification");
 
         ResultSet rs = Database.getInstance().ejecutarConsulta(
             "SELECT email, name, surname, birth_date FROM customers WHERE email = ?",
-            new Parameter(Integer.toString(customerId), DataType.STRING)
+            new Parameter(email, DataType.STRING)
         );
         try {
             if (rs != null && rs.next()) {
