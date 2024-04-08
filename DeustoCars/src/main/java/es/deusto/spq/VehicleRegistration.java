@@ -12,8 +12,8 @@ import java.sql.SQLException;
  * Class for vehicle registration using a graphical user interface.
  */
 public class VehicleRegistration extends JFrame {
-	private static final long serialVersionUID = 1L;
-	private JTextField brandField;
+    private static final long serialVersionUID = 1L;
+    private JTextField brandField;
     private JTextField numberPlateField;
     private JTextField modelField;
     private JCheckBox readyToBorrowCheckbox;
@@ -38,13 +38,13 @@ public class VehicleRegistration extends JFrame {
         setVisible(true);
     }
 
-    public VehicleRegistration(int vehicleId) {
+    public VehicleRegistration(String numberPlate) {
         submitButton = new JButton("Modify Vehicle");
         setupUI("Vehicle Modification");
 
         ResultSet rs = Database.getInstance().ejecutarConsulta(
-            "SELECT brand, number_plate, model, ready_to_borrow, on_repair FROM vehicles WHERE id = ?",
-            new Parameter(Integer.toString(vehicleId), DataType.STRING)
+            "SELECT brand, number_plate, model, ready_to_borrow, on_repair FROM vehicles WHERE number_plate = ?",
+            new Parameter(numberPlate, DataType.STRING)
         );
         try {
             if (rs != null && rs.next()) {
@@ -113,7 +113,7 @@ public class VehicleRegistration extends JFrame {
     }
 
     boolean updateDatabase(Vehicle vehicle) {
-        return Database.getInstance().ejecutarActualizacion("INSERT INTO vehicles (brand, number_plate, model, ready_to_borrow, on_repair)",
+        return Database.getInstance().ejecutarActualizacion("INSERT INTO vehicles (brand, number_plate, model, ready_to_borrow, on_repair) VALUES (?, ?, ?, ?, ?)",
                 new Parameter(vehicle.getBrand(), DataType.STRING),
                 new Parameter(vehicle.getNumberPlate(), DataType.STRING),
                 new Parameter(vehicle.getModel(), DataType.STRING),
@@ -124,7 +124,9 @@ public class VehicleRegistration extends JFrame {
 
     public static void main(String[] args) {
         VehicleRegistration a = new VehicleRegistration();
-    	//VehicleRegistration a = new VehicleRegistration(new Vehicle("a", "a", "a"));
+        //VehicleRegistration a = new VehicleRegistration(new Vehicle("a", "a", "a"));
         a.setVisible(true);
     }
 }
+
+
