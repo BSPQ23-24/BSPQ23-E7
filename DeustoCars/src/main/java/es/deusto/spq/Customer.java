@@ -7,8 +7,7 @@ import java.time.LocalDate;
  * */
 
 public class Customer {
-    private static int lastID = 0;
-    private int ID;
+    private String eMail;
     private String name;
     private String surname;
     private LocalDate dateOfBirth;
@@ -16,15 +15,10 @@ public class Customer {
     /*
      * Constructor of the customer class
      * */
-    public Customer(String name, String surname, LocalDate dateOfBirth) {
-        this.ID = ++lastID;
-        this.name = name;
-        this.surname = surname;
-        this.dateOfBirth = dateOfBirth;
-    }
 
-    public Customer(int ID, String name, String surname, LocalDate dateOfBirth) {
-        this.ID = ID;
+
+    public Customer(String eMail, String name, String surname, LocalDate dateOfBirth) {
+        this.eMail = eMail;
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
@@ -33,12 +27,12 @@ public class Customer {
     /*
      * Getters and setters for the customer class
      * */
-    public int getId() {
-        return ID;
+    public String geteMail() {
+        return eMail;
     }
 
-    public void setId(int id) {
-        this.ID = id;
+    public void seteMail(String eMail) {
+        this.eMail = eMail;
     }
 
     public String getName() {
@@ -64,13 +58,16 @@ public class Customer {
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+	@Override
+	public String toString() {
+		return "Customer [eMail=" + eMail + ", name=" + name + ", surname=" + surname + ", dateOfBirth=" + dateOfBirth
+				+ "]";
+	}
     
     /*
      * Returns a string representation of the Customer object.
      * */
     
-    @Override
-	public String toString() {
-		return "Customer [name=" + name + ", surname=" + surname + ", dateOfBirth=" + dateOfBirth + "]";
-	}
+    
 }
