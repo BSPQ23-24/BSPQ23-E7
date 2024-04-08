@@ -88,7 +88,7 @@ public class ClientGUI extends JFrame{
 	        Object[][] dataArray = new Object[data.size()][];
 	        data.toArray(dataArray);
 
-	        String[] column = {"ID", "Name", "Surname", "Date of Birth"};
+	        String[] column = {"eMail", "Name", "Surname", "Date of Birth"};
 	        JTable table = new JTable(dataArray, column);
 
 	        JScrollPane pane = new JScrollPane(table);
@@ -147,7 +147,7 @@ public class ClientGUI extends JFrame{
 	        Object[][] dataArray2 = new Object[data2.size()][];
 	        data2.toArray(dataArray2);
 
-	        String[] column2 = {"ID", "Brand", "Plate", "Model", "Ready To Borrow", "On Repair"};
+	        String[] column2 = {"Plate", "Brand", "Model", "Ready To Borrow", "On Repair"};
 	        JTable table = new JTable(dataArray2, column2);
 
 	        JScrollPane pane = new JScrollPane(table);
@@ -161,8 +161,8 @@ public class ClientGUI extends JFrame{
 	        editButton.addActionListener(e -> {
 	            int selectedRow2 = table.getSelectedRow();
 	            if (selectedRow2 >= 0) {
-	                int Id2 = (int) table.getValueAt(selectedRow2, 0);
-	                new VehicleRegistration(Id2); 
+	            	String Plate2 = (String) table.getValueAt(selectedRow2, 0);
+	                new VehicleRegistration(Plate2); 
 	            }
 	        });
 	        editPane.add(editButton);
