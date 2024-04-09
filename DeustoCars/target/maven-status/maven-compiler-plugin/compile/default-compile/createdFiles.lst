@@ -1,7 +1,12 @@
 es\deusto\spq\CustomerRegister.class
-es\deusto\spq\VehicleRegistration.class
 es\deusto\spq\Vehicle.class
+es\deusto\spq\db\Database.class
+es\deusto\spq\client\gui\ClientGUI.class
 es\deusto\spq\client\MainClient.class
 es\deusto\spq\App.class
+es\deusto\spq\db\resources\DataType.class
+es\deusto\spq\VehicleRegistration.class
+es\deusto\spq\db\Database$1.class
+es\deusto\spq\db\resources\Parameter.class
 es\deusto\spq\server\MainServer.class
 es\deusto\spq\Customer.class
