@@ -174,4 +174,9 @@ public class ClientGUI extends JFrame{
 
 		tableFrame.setVisible(true);
 	}
+
+	public static void main(String[] args) {
+        ClientGUI cg = new ClientGUI();
+        cg.setVisible(true);
+    }
 }
