@@ -1,10 +1,16 @@
 # BSPQ23-E7: DeustoCars
+## Index
+1. [Introduction](#introduction)
+2. [Steps to run it](#run)
 
+ <a id="introduction"></a>
 ## Introduction
+
 The DeustoCars App is a vehicle renting platform that allows dealership workers to manage vehicle lending, tracking and retrieval, along with a basic dashboard to view statistical measurements for company analysts.
 
 This project is deployed in Java using Maven. The App implements the REST pattern, separating the server and client functionality.
 
+<a id="run"></a>
 ## Steps to run it
 1 - First, compile the project to create the .class files:
 ```
