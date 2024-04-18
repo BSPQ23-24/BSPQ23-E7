@@ -7,6 +7,7 @@ import es.deusto.spq.db.resources.Parameter;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import es.deusto.spq.serialization.Vehicle;
 
 /**
  * Class for vehicle registration using a graphical user interface.

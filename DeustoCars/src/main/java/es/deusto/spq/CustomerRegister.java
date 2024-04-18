@@ -8,6 +8,7 @@ import es.deusto.spq.db.resources.Parameter;
 import java.awt.*;
 import java.sql.*;
 import java.time.LocalDate;
+import es.deusto.spq.serialization.Customer;
 
 /**
  * Class for customer registration and modification using a graphical user interface.

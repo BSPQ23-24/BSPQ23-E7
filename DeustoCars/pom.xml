@@ -234,7 +234,7 @@
 						<artifactId>exec-maven-plugin</artifactId>
 						<version>1.2.1</version>
 						<configuration>
-							<mainClass>es.deusto.spq.server.MainServer</mainClass>
+							<mainClass>es.deusto.spq.server.DCServerManager</mainClass>
 							<arguments>
 								<argument>${server.hostname}</argument>
 								<argument>${server.port}</argument>
