@@ -58,7 +58,7 @@ public class DCServerManager implements ActionListener, Runnable {
 
 		this.buttonEnd = new JButton("End DCServer Process");
 		this.buttonEnd.addActionListener(this);
-		this.message = new JLabel("REST Donation Manager running...");
+		this.message = new JLabel("REST DeustoCars Manager running...");
 		this.message.setOpaque(true);
 		this.message.setForeground(Color.yellow);
 		this.message.setBackground(Color.gray);
@@ -100,8 +100,8 @@ public class DCServerManager implements ActionListener, Runnable {
 	}
 
 	public String getCustomersString(){
-		WebTarget donationsWebTarget = webTarget.path("server/getcustomers");
-		Invocation.Builder invocationBuilder = donationsWebTarget.request(MediaType.APPLICATION_JSON);
+		WebTarget DeustoCarsWebTarget = webTarget.path("server/getcustomers");
+		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.get();
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error connecting with the server. Code: {}",response.getStatus());
@@ -113,8 +113,8 @@ public class DCServerManager implements ActionListener, Runnable {
 		}
 	}
 	public String getVehiclesString(){
-		WebTarget donationsWebTarget = webTarget.path("server/getvehicles");
-		Invocation.Builder invocationBuilder = donationsWebTarget.request(MediaType.APPLICATION_JSON);
+		WebTarget DeustoCarsWebTarget = webTarget.path("server/getvehicles");
+		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.get();
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error connecting with the server. Code: {}",response.getStatus());
@@ -133,7 +133,7 @@ public class DCServerManager implements ActionListener, Runnable {
 			try {
 				Thread.sleep(2000);
 				System.out.println("Obtaining data from server...");
-				//DonationInfo donationInfo = getDonationInfo();
+				//DeustoCarsInfo DeustoCarsInfo = getDeustoCarsInfo();
 				this.customerText.setText(getCustomersString());
 				this.vehicleText.setText(getVehiclesString());
 			} catch (InterruptedException e){ 
