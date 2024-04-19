@@ -23,11 +23,17 @@ import javax.ws.rs.core.Response.Status;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import es.deusto.spq.serialization.Customer;
 import es.deusto.spq.serialization.Vehicle;
 
+// Server manager will serve as a test class for the server functions, when running the app with the
+// true client it is not necessary to run: mvn exec:java -Pserver
 public class DCServerManager implements ActionListener, Runnable {
+
+	protected static final Logger logger = LogManager.getLogger();
 
 	private JFrame frame;
 	private JButton buttonEnd;
@@ -45,6 +51,8 @@ public class DCServerManager implements ActionListener, Runnable {
 	
 	public DCServerManager(String hostname, String port) {
 		client = ClientBuilder.newClient();
+		// this is the default server path, then the extensions for each method should be added
+		// the 'deustocars' extension part should match the web.xml file
 		// probably if pom not changed http://localhost:8080/deustocars/...
 		webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
 
@@ -94,24 +102,28 @@ public class DCServerManager implements ActionListener, Runnable {
 	public String getCustomersString(){
 		WebTarget donationsWebTarget = webTarget.path("server/getcustomers");
 		Invocation.Builder invocationBuilder = donationsWebTarget.request(MediaType.APPLICATION_JSON);
-		GenericType<List<Customer>> genericType = new GenericType<List<Customer>>() {};
-		List<Customer> response = invocationBuilder.get(genericType);
-		String final_string = "";
-		for (Customer c : response) {
-			final_string = final_string + c.toString();
+		Response response = invocationBuilder.get();
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}",response.getStatus());
+			return "Error";
+		} else {
+			String responseMessage = response.readEntity(String.class);
+			logger.info("* Customers coming from the server: '{}'", responseMessage);
+			return responseMessage;
 		}
-		return final_string;
 	}
 	public String getVehiclesString(){
 		WebTarget donationsWebTarget = webTarget.path("server/getvehicles");
 		Invocation.Builder invocationBuilder = donationsWebTarget.request(MediaType.APPLICATION_JSON);
-		GenericType<List<Vehicle>> genericType = new GenericType<List<Vehicle>>() {};
-		List<Vehicle> response = invocationBuilder.get(genericType);
-		String final_string = "";
-		for (Vehicle v : response) {
-			final_string = final_string + v.toString();
+		Response response = invocationBuilder.get();
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}",response.getStatus());
+			return "Error";
+		} else {
+			String responseMessage = response.readEntity(String.class);
+			logger.info("* Vehicles coming from the server: '{}'", responseMessage);
+			return responseMessage;
 		}
-		return final_string;
 	}
 
 	@Override

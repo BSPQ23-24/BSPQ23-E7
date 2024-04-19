@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import es.deusto.spq.serialization.Customer;
 import es.deusto.spq.serialization.Vehicle;
 
-@Path("/server")
+@Path("/server") // general extension of the path for the server
 @Produces(MediaType.APPLICATION_JSON)
 public class DCServer {
 
@@ -25,7 +25,7 @@ public class DCServer {
 	}
 
 	@POST
-	@Path("/customers")
+	@Path("/customers") // extension for the method bellow
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addCustomer() {
 		// Receive the info from Client and add the parameters to the function
@@ -45,22 +45,22 @@ public class DCServer {
 
 	@GET
 	@Path("/getcustomers")
-	public List<Customer> getCustomers() {
+	public Response getCustomers() {
 		// This data will be retrieved from the database
 		List<Customer> customers = new ArrayList<Customer>();
 		customers.add(new Customer("test@gmail.com", "Billy", "Bob"));
 		customers.add(new Customer("test2@gmail.com", "Johnny", "Jones"));
 		customers.add(new Customer("test3@gmail.com", "Evelyn", "Easton"));
-		return customers;
+		return Response.ok(customers).build();
 	}
 	@GET
 	@Path("/getvehicles")
-	public List<Vehicle> getVehicles() {
+	public Response getVehicles() {
 		// This data will be retrieved from the database
 		List<Vehicle> vehicles = new ArrayList<Vehicle>();
 		vehicles.add(new Vehicle("9872SLY", "Toyota", "Corolla"));
 		vehicles.add(new Vehicle("1234QWR", "Opel", "Corsa"));
 		vehicles.add(new Vehicle("5678BNM", "Volkswagen", "Golf"));
-		return vehicles;
+		return Response.ok(vehicles).build();
 	}
 }

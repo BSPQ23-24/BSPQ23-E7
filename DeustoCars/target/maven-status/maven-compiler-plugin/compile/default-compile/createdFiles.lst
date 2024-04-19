@@ -7,9 +7,7 @@ es\deusto\spq\db\resources\DataType.class
 es\deusto\spq\serialization\Vehicle.class
 es\deusto\spq\server\DCServer.class
 es\deusto\spq\server\DCServerManager.class
-es\deusto\spq\server\DCServerManager$1.class
 es\deusto\spq\VehicleRegistration.class
 es\deusto\spq\db\Database$1.class
 es\deusto\spq\db\resources\Parameter.class
 es\deusto\spq\serialization\Customer.class
-es\deusto\spq\server\DCServerManager$2.class
