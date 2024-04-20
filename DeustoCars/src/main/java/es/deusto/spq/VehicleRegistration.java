@@ -8,11 +8,28 @@ import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import es.deusto.spq.serialization.Vehicle;
+import es.deusto.spq.pojo.VehicleData;
+
+import es.deusto.spq.client.ClientManager;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Class for vehicle registration using a graphical user interface.
  */
 public class VehicleRegistration extends JFrame {
+    protected static final Logger logger = LogManager.getLogger();
+
     private static final long serialVersionUID = 1L;
     private JTextField brandField;
     private JTextField numberPlateField;
@@ -96,7 +113,16 @@ public class VehicleRegistration extends JFrame {
     private void registerVehicle() {
 
         // Create the new vehicle
-        Vehicle newVehicle = new Vehicle(brandField.getText(), numberPlateField.getText(), modelField.getText());
+        VehicleData newVehicle = new VehicleData(brandField.getText(), numberPlateField.getText(), modelField.getText());
+
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/vehicles");
+		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}",response.getStatus());
+		} else {
+			logger.info("Vehicle Correctly Registered :)");
+		}
 
         // Clear input fields
         brandField.setText("");
@@ -113,7 +139,7 @@ public class VehicleRegistration extends JFrame {
         }
     }
 
-    boolean updateDatabase(Vehicle vehicle) {
+    boolean updateDatabase(VehicleData vehicle) {
         return Database.getInstance().ejecutarActualizacion("INSERT INTO vehicles (brand, number_plate, model, ready_to_borrow, on_repair) VALUES (?, ?, ?, ?, ?)",
                 new Parameter(vehicle.getBrand(), DataType.STRING),
                 new Parameter(vehicle.getNumberPlate(), DataType.STRING),

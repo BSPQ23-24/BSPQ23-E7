@@ -10,15 +10,23 @@ import javax.ws.rs.core.Response;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import es.deusto.spq.serialization.Customer;
 import es.deusto.spq.serialization.Vehicle;
 
+
+import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.VehicleData;
+import es.deusto.spq.pojo.Renting;
+import java.util.Date;
+
+
 @Path("/server") // general extension of the path for the server
 @Produces(MediaType.APPLICATION_JSON)
 public class DCServer {
+	protected static final Logger logger = LogManager.getLogger();
 
 	public DCServer() {
 		// When adding any pattern or class to connect to the database, instatiate and create the connection here 
@@ -26,20 +34,23 @@ public class DCServer {
 
 	@POST
 	@Path("/customers") // extension for the method bellow
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addCustomer() {
+	public Response addCustomer(CustomerData customerData) {
 		// Receive the info from Client and add the parameters to the function
-		Customer c1 = new Customer("test@gmail.com", "Billy", "Bob", LocalDate.parse("2002-10-14"));
-		System.out.println("Adding client: " + c1.toString());
+
+		Date birthDate = customerData.getDateOfBirth();
+    	CustomerData c1 = new CustomerData("test@gmail.com", "Billy", "Bob", birthDate);
+   
+		logger.info("Adding customer: " + c1.toString());
+		System.out.println("Customer registered.");
 		return Response.ok().build();
 	}
 	@POST
 	@Path("/vehicles")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addVehicle() {
+	public Response addVehicle(VehicleData vehicleData) {
 		// Receive the info from Client and add the parameters to the function
-		Vehicle v1 = new Vehicle("9872SLY", "Toyota", "Corolla");
-		System.out.println("Adding vehicle: " + v1.toString());
+		VehicleData v1 = new VehicleData("9872SLY", "Toyota", "Corolla");
+		logger.info("Adding vehicle: " + v1.toString());
+		System.out.println("Vehicle registered.");
 		return Response.ok().build();
 	}
 
@@ -47,20 +58,36 @@ public class DCServer {
 	@Path("/getcustomers")
 	public Response getCustomers() {
 		// This data will be retrieved from the database
-		List<Customer> customers = new ArrayList<Customer>();
-		customers.add(new Customer("test@gmail.com", "Billy", "Bob"));
-		customers.add(new Customer("test2@gmail.com", "Johnny", "Jones"));
-		customers.add(new Customer("test3@gmail.com", "Evelyn", "Easton"));
+		List<CustomerData> customers = new ArrayList<CustomerData>();
+		customers.add(new CustomerData("test@gmail.com", "Billy", "Bob"));
+		customers.add(new CustomerData("test2@gmail.com", "Johnny", "Jones"));
+		customers.add(new CustomerData("test3@gmail.com", "Evelyn", "Easton"));
 		return Response.ok(customers).build();
 	}
 	@GET
 	@Path("/getvehicles")
 	public Response getVehicles() {
 		// This data will be retrieved from the database
-		List<Vehicle> vehicles = new ArrayList<Vehicle>();
-		vehicles.add(new Vehicle("9872SLY", "Toyota", "Corolla"));
-		vehicles.add(new Vehicle("1234QWR", "Opel", "Corsa"));
-		vehicles.add(new Vehicle("5678BNM", "Volkswagen", "Golf"));
+		List<VehicleData> vehicles = new ArrayList<VehicleData>();
+		vehicles.add(new VehicleData("9872SLY", "Toyota", "Corolla"));
+		vehicles.add(new VehicleData("1234QWR", "Opel", "Corsa"));
+		vehicles.add(new VehicleData("5678BNM", "Volkswagen", "Golf"));
 		return Response.ok(vehicles).build();
+	}
+
+	@GET
+	@Path("/getcustomer")
+	public Response getCustomer(String eMail) {
+		// This data will be retrieved from the database
+		CustomerData customer = new CustomerData(eMail, "Billy", "Bob");
+		return Response.ok(customer).build();
+	}
+	
+	@GET
+	@Path("/getvehicle")
+	public Response getVehicle(String numberPlate) {
+		// This data will be retrieved from the database
+		VehicleData vehicle = new VehicleData(numberPlate, "Toyota", "Corolla");
+		return Response.ok(vehicle).build();
 	}
 }

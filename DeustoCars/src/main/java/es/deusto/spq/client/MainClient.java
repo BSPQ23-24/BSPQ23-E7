@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import es.deusto.spq.CustomerRegister;
@@ -35,6 +36,21 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Collections;
+
+import es.deusto.spq.serialization.Customer;
+import es.deusto.spq.serialization.Vehicle;
+
+import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.VehicleData;
 
 public class MainClient extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -42,14 +58,24 @@ public class MainClient extends JFrame {
 	private JButton addClient;
 	private JButton editVehicle;
 	private JButton addVehicle;
+	private JButton getVehicle;
+	private JTextField numberPlate;
+	private JButton getCustomer;
+	private JTextField eMail;
+	
 
-	private Client client;
-	private WebTarget webTarget;
+
+	
+	protected static final Logger logger = LogManager.getLogger();
+
+
+	//private Client client;
+	//private WebTarget webTarget;
 
 	public MainClient(String hostname, String port) {
 		
-		client = ClientBuilder.newClient();
-		webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
+		//client = ClientBuilder.newClient();
+		//webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
 
         setTitle("Client");
         setSize(600, 250);
@@ -62,6 +88,16 @@ public class MainClient extends JFrame {
         JLabel vehicle = new JLabel("Vehicle:");
         addVehicle = new JButton("Add Vehicle");
         editVehicle = new JButton("Edit Vehicle");
+		
+
+		JLabel getvehicle = new JLabel("Get Vehicle with number plate:");
+		JTextField numberPlate = new JTextField();
+        JButton getVehicle = new JButton("Get Vehicle");
+		
+
+		JLabel getcustomer = new JLabel("Get Customer with eMail:");
+		JTextField eMail = new JTextField();
+        JButton getCustomer = new JButton("Get Customer");
 
         add(client);
         add(vehicle);
@@ -70,10 +106,22 @@ public class MainClient extends JFrame {
         add(editClient);
         add(editVehicle);
 
+		add(getvehicle);
+		add(numberPlate);
+		add(getVehicle);
+
+		add(getcustomer);
+		add(eMail);
+		add(getCustomer);
+
         addClient.addActionListener(e -> new CustomerRegister());
         addVehicle.addActionListener(e -> new VehicleRegistration());
         editClient.addActionListener(e -> TableCustomersWindow());
         editVehicle.addActionListener(e -> TableVehicleWindow());
+
+		getVehicle.addActionListener(e -> getVehicle(numberPlate.getText()));
+		getCustomer.addActionListener(e -> getCustomer(eMail.getText()));
+
 
         setVisible(true);
 
@@ -83,7 +131,7 @@ public class MainClient extends JFrame {
 	public static void main(String[] args) {
 		String hostname = args[0];
 		String port = args[1];
-
+		ClientManager.getInstance().setWebTarget(hostname, port);
 		new MainClient(hostname, port);
 	}
 
@@ -164,9 +212,10 @@ public class MainClient extends JFrame {
 		tableFrame.setContentPane(searchPanel);
 		
 		try {
+			
 	        ResultSet allVehicles = Database.getInstance().ejecutarConsulta("SELECT * FROM vehicles");
 	        java.sql.ResultSetMetaData metaData = allVehicles.getMetaData();
-
+			
 	        List<Object[]> data2 = new ArrayList<>();
 	        while (allVehicles.next()) {
 	            Object[] row2 = new Object[metaData.getColumnCount()];
@@ -204,5 +253,92 @@ public class MainClient extends JFrame {
 
 		tableFrame.setVisible(true);
 	}
+
+	/**
+	 * Retrieves a Customer object from the server based on the provided email.
+	 *
+	 * @param eMail The email of the customer to retrieve.
+	 * @return The Customer object retrieved from the server, or null if not found or an error occurred.
+	 */
+    public CustomerData getCustomer(String eMail) {
+        Response response = ClientManager.getInstance().getWebTarget()
+                .path("server/getcustomer")
+                .queryParam("eMail", eMail)
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+			logger.info("Getting customer: " + response.toString());
+            return response.readEntity(CustomerData.class);
+        } else {
+			logger.info("ERROR getting customer");
+            return null;
+        }
+    }
+
+
+	/**
+	 * Retrieves a Vehicle object from the server based on the provided number plate.
+	 *
+	 * @param numberPlate The number plate of the vehicle to retrieve.
+	 * @return The Vehicle object retrieved from the server, or null if not found or an error occurred.
+	 */
+    public VehicleData getVehicle(String numberPlate) {
+        Response response = ClientManager.getInstance().getWebTarget()
+                .path("server/getvehicle")
+                .queryParam("numberPlate", numberPlate)
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+			logger.info("Getting vehicle: " + response.toString());
+            return response.readEntity(VehicleData.class);
+        } else {
+			logger.info("ERROR getting vehicle");
+            return null;
+        }
+    }
+
+
+	/**
+	 * Retrieves a list of Customer objects from the server.
+	 *
+	 * @return A list of Customer objects retrieved from the server, or an empty list if no customers found or an error occurred.
+	 */
+	public List<CustomerData> getCustomers() {
+		Response response = ClientManager.getInstance().getWebTarget()
+				.path("server/getcustomers")
+				.request(MediaType.APPLICATION_JSON)
+				.get();
+
+		if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+			return response.readEntity(new GenericType<List<CustomerData>>(){});
+		} else {
+			logger.info("ERROR getting customers");
+			return Collections.emptyList();
+		}
+	}
+
+
+
+	/**
+	 * Retrieves a list of Vehicle objects from the server.
+	 *
+	 * @return A list of Vehicle objects retrieved from the server, or an empty list if no vehicles found or an error occurred.
+	 */
+	public List<VehicleData> getVehicles() {
+        Response response = ClientManager.getInstance().getWebTarget()
+                .path("server/getvehicles")
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            return response.readEntity(new GenericType<List<VehicleData>>(){});
+        } else {
+			logger.info("ERROR getting vehicles");
+            return Collections.emptyList();
+        }
+    }
+
 
 }

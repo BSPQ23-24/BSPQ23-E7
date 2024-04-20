@@ -1,6 +1,7 @@
 package es.deusto.spq.serialization;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 /*
  * Class of the customer
@@ -10,14 +11,14 @@ public class Customer {
     private String eMail;
     private String name;
     private String surname;
-    private LocalDate dateOfBirth;
+    private Date dateOfBirth;
 
     /*
      * Constructor of the customer class
      * */
 
 
-    public Customer(String eMail, String name, String surname, LocalDate dateOfBirth) {
+    public Customer(String eMail, String name, String surname, Date dateOfBirth) {
         this.eMail = eMail;
         this.name = name;
         this.surname = surname;
@@ -56,11 +57,11 @@ public class Customer {
         this.surname = surname;
     }
 
-    public LocalDate getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

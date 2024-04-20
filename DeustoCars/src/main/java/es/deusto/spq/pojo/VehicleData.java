@@ -24,6 +24,12 @@ public class VehicleData {
         this.readyToBorrow = true;
         this.onRepair = false;
     }
+
+    public VehicleData(){
+        // Required for serialization
+    }
+
+
     /**
      * Getter and setter methods of the Vehicle class.
      * 

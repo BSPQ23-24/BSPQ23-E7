@@ -1,6 +1,6 @@
 package es.deusto.spq.pojo;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 /*
  * Class of the customer
@@ -10,14 +10,14 @@ public class CustomerData {
     private String eMail;
     private String name;
     private String surname;
-    private LocalDate dateOfBirth;
+    private Date dateOfBirth;
 
     /*
      * Constructor of the customer class
      * */
 
 
-    public CustomerData(String eMail, String name, String surname, LocalDate dateOfBirth) {
+    public CustomerData(String eMail, String name, String surname, Date dateOfBirth) {
         this.eMail = eMail;
         this.name = name;
         this.surname = surname;
@@ -27,6 +27,10 @@ public class CustomerData {
         this.eMail = eMail;
         this.name = name;
         this.surname = surname;
+    }
+
+    public CustomerData(){
+        // Required for serialization
     }
     
     /*
@@ -56,11 +60,11 @@ public class CustomerData {
         this.surname = surname;
     }
 
-    public LocalDate getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

@@ -1,19 +1,37 @@
 package es.deusto.spq;
 
 import javax.swing.*;
+
+import es.deusto.spq.client.ClientManager;
 import es.deusto.spq.db.Database;
 import es.deusto.spq.db.resources.DataType;
 import es.deusto.spq.db.resources.Parameter;
 
 import java.awt.*;
 import java.sql.*;
-import java.time.LocalDate;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import es.deusto.spq.serialization.Customer;
+import es.deusto.spq.pojo.CustomerData;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Class for customer registration and modification using a graphical user interface.
  */
 public class CustomerRegister extends JFrame {
+    protected static final Logger logger = LogManager.getLogger();
+
     private static final long serialVersionUID = 1L;
     private JTextField nameField;
     private JTextField surnameField;
@@ -107,15 +125,24 @@ public class CustomerRegister extends JFrame {
         String birthDate = birthDateField.getText();
         String email = emailField.getText();
 
-        LocalDate birth;
+        Date birth;
         try {
-            birth = LocalDate.parse(birthDate);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            birth = dateFormat.parse(birthDate);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Invalid date of birth. Expected format: YYYY-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        Customer newUser = new Customer(email, name, surname, birth);
+        CustomerData newUser = new CustomerData(email, name, surname, birth);
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/customers");
+		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.post(Entity.entity(newUser, MediaType.APPLICATION_JSON));
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}",response.getStatus());
+		} else {
+			logger.info("Customer Correctly Registered :)");
+		}
 
         nameField.setText("");
         surnameField.setText("");
@@ -129,12 +156,13 @@ public class CustomerRegister extends JFrame {
         }
     }
 
-    boolean updateDatabase(Customer customer) {
+    boolean updateDatabase(CustomerData customer) {
         return Database.getInstance().ejecutarActualizacion("INSERT INTO customers (email, name, surname, birth_date)",
                 new Parameter(customer.geteMail(), DataType.STRING),
                 new Parameter(customer.getName(), DataType.STRING),
                 new Parameter(customer.getSurname(), DataType.STRING),
-                new Parameter(java.sql.Date.valueOf(customer.getDateOfBirth()), DataType.DATE)
+                new Parameter(new java.sql.Date(customer.getDateOfBirth().getTime()), DataType.DATE)
+
         );
     }
 
