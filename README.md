@@ -17,6 +17,9 @@ This project is deployed in Java using Maven. The App implements the REST patter
 mvn clean compile
 ```
 2 - Next, start the database (TBD)
+```
+mvn datanucleus:schema-create
+```
 
 3 -  Then, start the server:
 ```
@@ -24,7 +27,7 @@ mvn jetty:run
 ```
 You can check this works by entering the URL (Example: `localhost:8080`)
 
-4 - Now, launch the client and server profiles:
+4 - Now, in a different command line window, launch the client and server profiles:
 ```
 mvn compile exec:java -Pclient
 ```
@@ -33,4 +36,5 @@ mvn compile exec:java -Pserver
 
 ```
 
+5 - Finally, you can run some tests to check the app is working properly
 

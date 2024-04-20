@@ -52,82 +52,91 @@ import es.deusto.spq.serialization.Vehicle;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleData;
 
+import javax.swing.BorderFactory;
+
 public class MainClient extends JFrame {
-	private static final long serialVersionUID = 1L;
-	private JButton editClient;
-	private JButton addClient;
-	private JButton editVehicle;
-	private JButton addVehicle;
-	private JButton getVehicle;
-	private JTextField numberPlate;
+    private JButton editClient;
+    private JButton addClient;
+    private JButton editVehicle;
+    private JButton addVehicle;
 	private JButton getCustomer;
-	private JTextField eMail;
+    private JButton getVehicle;
+	private JButton deleteCustomer;
+	private JButton deleteVehicle;
 	
-
-
-	
+    private JTextField numberPlate;
+    private JTextField eMail;
 	protected static final Logger logger = LogManager.getLogger();
 
-
-	//private Client client;
-	//private WebTarget webTarget;
-
-	public MainClient(String hostname, String port) {
-		
-		//client = ClientBuilder.newClient();
-		//webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
-
+    public MainClient(String hostname, String port) {
         setTitle("Client");
-        setSize(600, 250);
+        setSize(900, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(3, 2));
+        setLayout(new GridLayout(2, 1));
 
-        JLabel client = new JLabel("Client:");
+        JPanel topPanel = new JPanel(new GridLayout(1, 2));
+        add(topPanel);
+
+        JPanel clientPanel = new JPanel(new GridLayout(3, 1));
+        clientPanel.setBorder(BorderFactory.createTitledBorder("Client"));
+        topPanel.add(clientPanel);
+
         addClient = new JButton("Add Client");
         editClient = new JButton("Edit Client");
-        JLabel vehicle = new JLabel("Vehicle:");
+        clientPanel.add(new JLabel("Actions:"));
+        clientPanel.add(addClient);
+        clientPanel.add(editClient);
+
+        JPanel vehiclePanel = new JPanel(new GridLayout(3, 1));
+        vehiclePanel.setBorder(BorderFactory.createTitledBorder("Vehicle"));
+        topPanel.add(vehiclePanel);
+
         addVehicle = new JButton("Add Vehicle");
         editVehicle = new JButton("Edit Vehicle");
-		
+        vehiclePanel.add(new JLabel("Actions:"));
+        vehiclePanel.add(addVehicle);
+        vehiclePanel.add(editVehicle);
 
-		JLabel getvehicle = new JLabel("Get Vehicle with number plate:");
-		JTextField numberPlate = new JTextField();
-        JButton getVehicle = new JButton("Get Vehicle");
-		
+        JPanel searchDeletePanel = new JPanel(new GridLayout(4, 3));
+        searchDeletePanel.setBorder(BorderFactory.createTitledBorder("Search/Delete"));
+        add(searchDeletePanel);
 
-		JLabel getcustomer = new JLabel("Get Customer with eMail:");
-		JTextField eMail = new JTextField();
-        JButton getCustomer = new JButton("Get Customer");
+        JLabel getVehicleLabel = new JLabel("Get Vehicle with number plate:");
+        numberPlate = new JTextField();
+        getVehicle = new JButton("Get Vehicle");
+        deleteVehicle = new JButton("Delete Vehicle");
 
-        add(client);
-        add(vehicle);
-        add(addClient);
-        add(addVehicle);
-        add(editClient);
-        add(editVehicle);
+        JLabel getCustomerLabel = new JLabel("Get Customer with eMail:");
+        eMail = new JTextField();
+        getCustomer = new JButton("Get Customer");
+        deleteCustomer = new JButton("Delete Customer");
 
-		add(getvehicle);
-		add(numberPlate);
-		add(getVehicle);
+        searchDeletePanel.add(getVehicleLabel);
+        searchDeletePanel.add(numberPlate);
+        searchDeletePanel.add(getVehicle);
+        searchDeletePanel.add(new JLabel()); // Empty label for spacing
+        searchDeletePanel.add(deleteVehicle);
+        searchDeletePanel.add(new JLabel()); // Empty label for spacing
 
-		add(getcustomer);
-		add(eMail);
-		add(getCustomer);
+        searchDeletePanel.add(getCustomerLabel);
+        searchDeletePanel.add(eMail);
+        searchDeletePanel.add(getCustomer);
+        searchDeletePanel.add(new JLabel()); // Empty label for spacing
+        searchDeletePanel.add(deleteCustomer);
+        searchDeletePanel.add(new JLabel()); // Empty label for spacing
 
         addClient.addActionListener(e -> new CustomerRegister());
         addVehicle.addActionListener(e -> new VehicleRegistration());
         editClient.addActionListener(e -> TableCustomersWindow());
         editVehicle.addActionListener(e -> TableVehicleWindow());
-
-		getVehicle.addActionListener(e -> getVehicle(numberPlate.getText()));
-		getCustomer.addActionListener(e -> getCustomer(eMail.getText()));
-
+        getVehicle.addActionListener(e -> getVehicle(numberPlate.getText()));
+        getCustomer.addActionListener(e -> getCustomer(eMail.getText()));
+        deleteVehicle.addActionListener(e -> deleteVehicle(numberPlate.getText()));
+        deleteCustomer.addActionListener(e -> deleteCustomer(eMail.getText()));
 
         setVisible(true);
-
-		new ClientGUI();
-	}
-
+    }
+	
 	public static void main(String[] args) {
 		String hostname = args[0];
 		String port = args[1];
@@ -339,6 +348,35 @@ public class MainClient extends JFrame {
             return Collections.emptyList();
         }
     }
+
+
+	public void deleteVehicle(String numberPlate){
+        Response response = ClientManager.getInstance().getWebTarget()
+                .path("server/deletevehicle")
+                .queryParam("numberPlate", numberPlate)
+                .request(MediaType.APPLICATION_JSON)
+                .delete();
+
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+			logger.info("Deleting vehicle: " + response.toString());
+        } else {
+			logger.info("ERROR deleting vehicle");
+        }
+	}
+
+	public void deleteCustomer(String eMail){
+		Response response = ClientManager.getInstance().getWebTarget()
+				.path("server/deletecustomer")
+				.queryParam("eMail", eMail)
+				.request(MediaType.APPLICATION_JSON)
+				.delete();
+
+		if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+			logger.info("Deleting customer: " + response.toString());
+		} else {
+			logger.info("ERROR deleting customer");
+		}
+	}
 
 
 }

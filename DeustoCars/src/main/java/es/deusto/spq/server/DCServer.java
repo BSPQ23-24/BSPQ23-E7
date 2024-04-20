@@ -2,6 +2,7 @@ package es.deusto.spq.server;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
@@ -36,9 +37,11 @@ public class DCServer {
 	@Path("/customers") // extension for the method bellow
 	public Response addCustomer(CustomerData customerData) {
 		// Receive the info from Client and add the parameters to the function
-
+		String eMail = customerData.geteMail();
+		String name = customerData.getName();
+		String surname = customerData.getSurname();
 		Date birthDate = customerData.getDateOfBirth();
-    	CustomerData c1 = new CustomerData("test@gmail.com", "Billy", "Bob", birthDate);
+    	CustomerData c1 = new CustomerData(eMail, name, surname, birthDate);
    
 		logger.info("Adding customer: " + c1.toString());
 		System.out.println("Customer registered.");
@@ -47,8 +50,12 @@ public class DCServer {
 	@POST
 	@Path("/vehicles")
 	public Response addVehicle(VehicleData vehicleData) {
+		String numberPlate = vehicleData.getNumberPlate();
+		String brand = vehicleData.getBrand();
+		String model = vehicleData.getModel();
+
 		// Receive the info from Client and add the parameters to the function
-		VehicleData v1 = new VehicleData("9872SLY", "Toyota", "Corolla");
+		VehicleData v1 = new VehicleData(numberPlate, brand, model);
 		logger.info("Adding vehicle: " + v1.toString());
 		System.out.println("Vehicle registered.");
 		return Response.ok().build();
@@ -90,4 +97,20 @@ public class DCServer {
 		VehicleData vehicle = new VehicleData(numberPlate, "Toyota", "Corolla");
 		return Response.ok(vehicle).build();
 	}
+
+
+	@DELETE
+	@Path("/deletevehicle")
+	public Response deleteVehicle(String numberPlate) {
+		logger.info("Deleting vehicle with number plate: " + numberPlate);
+		return Response.ok().build();
+	}
+
+	@DELETE
+	@Path("/deletecustomer")
+	public Response deleteCustomer(String eMail) {
+		logger.info("Deleting customer with eMail: " + eMail);
+		return Response.ok().build();
+	}
+	
 }

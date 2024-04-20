@@ -1,6 +1,7 @@
 es\deusto\spq\client\MainClient$1.class
 es\deusto\spq\CustomerRegister.class
 es\deusto\spq\pojo\VehicleData.class
+es\deusto\spq\client\ClientManager.class
 es\deusto\spq\db\Database.class
 es\deusto\spq\client\gui\ClientGUI.class
 es\deusto\spq\client\MainClient$2.class
@@ -14,6 +15,5 @@ es\deusto\spq\server\DCServerManager.class
 es\deusto\spq\VehicleRegistration.class
 es\deusto\spq\db\Database$1.class
 es\deusto\spq\db\resources\Parameter.class
-es\deusto\spq\client\ServiceLocator.class
 es\deusto\spq\serialization\Customer.class
 es\deusto\spq\pojo\CustomerData.class
