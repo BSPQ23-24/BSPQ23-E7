@@ -31,6 +31,7 @@ You can check this works by entering the URL (Example: `localhost:8080`)
 ```
 mvn compile exec:java -Pclient
 ```
+Launching the server profile is not necessary for the application to work. You may launch the server manager for some real time testing of the communications.
 ```
 mvn compile exec:java -Pserver
 
