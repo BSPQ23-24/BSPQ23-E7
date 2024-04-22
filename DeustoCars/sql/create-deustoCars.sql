@@ -25,3 +25,14 @@ CREATE TABLE vehicles (
     ready_to_borrow BOOLEAN NOT NULL,
     on_repair BOOLEAN NOT NULL
 );
+
+CREATE TABLE renting (
+    id INT PRIMARY KEY,
+    customer_email VARCHAR(255) NOT NULL,
+    number_plate VARCHAR(255) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    FOREIGN KEY (customer_email) REFERENCES customers(email),
+    FOREIGN KEY (number_plate) REFERENCES vehicles(number_plate)
+);

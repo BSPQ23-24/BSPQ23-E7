@@ -4,7 +4,8 @@ import java.util.Date;
 
 
 public class Renting {
-	private int id;
+	private static int nextId = 1;
+    private int id;
     private Customer customer;
     private Vehicle vehicle;
     private Date startDate;
@@ -14,6 +15,7 @@ public class Renting {
     
 	public Renting(Customer customer, Vehicle vehicle, Date startDate, Date endDate, String status) {
 		super();
+		this.id = nextId++;
 		this.customer = customer;
 		this.vehicle = vehicle;
 		this.startDate = startDate;
