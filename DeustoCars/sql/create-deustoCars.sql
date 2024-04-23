@@ -35,3 +35,11 @@ CREATE TABLE renting (
     FOREIGN KEY (customer_email) REFERENCES customers(email),
     FOREIGN KEY (number_plate) REFERENCES vehicles(number_plate)
 );
+
+CREATE TABLE retrieval (
+    id INT PRIMARY KEY,
+    customer_email VARCHAR(255) NOT NULL,
+    number_plate VARCHAR(255) NOT NULL,
+    FOREIGN KEY (customer_email) REFERENCES customers(email),
+    FOREIGN KEY (number_plate) REFERENCES vehicles(number_plate)
+);
