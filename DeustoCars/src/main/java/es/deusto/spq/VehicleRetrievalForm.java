@@ -1,10 +1,32 @@
 package es.deusto.spq;
 
 import javax.swing.*;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import es.deusto.spq.client.ClientManager;
+import es.deusto.spq.db.Database;
+import es.deusto.spq.db.resources.DataType;
+import es.deusto.spq.db.resources.Parameter;
+import es.deusto.spq.pojo.VehicleData;
+import es.deusto.spq.serialization.Retrieval;
+
 import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class VehicleRetrievalForm extends JFrame {
-    private JTextField emailField;
+	protected static final Logger logger = LogManager.getLogger();
+	
+    private JTextField emailField;	
     private JTextField plateField;
     private JButton submitButton;
 
@@ -60,9 +82,47 @@ public class VehicleRetrievalForm extends JFrame {
     }
 
     private void retrieveVehicle() {
-        // Add functionality to retrieve the vehicle based on the entered information
-        // This method will be called when the submitButton is clicked
-        // Implement retrieval logic here
+        String email = emailField.getText();
+        String plate = plateField.getText();
+
+
+        // Create a VehicleRetrieval object
+        Retrieval newRetrieval = new Retrieval(email, plate);
+
+        	
+        // Add logic to send retrieval request to the server
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/vehicles/retrieve");
+        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.post(Entity.entity(newRetrieval, MediaType.APPLICATION_JSON));
+        
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}",response.getStatus());
+		} else {
+			logger.info("Vehicle Correctly Retrieved :)");
+		}
+
+
+        // Clear input fields
+        emailField.setText("");
+        plateField.setText("");
+        
+        // Connect and update the database
+        if (updateDatabase(newRetrieval)) {
+            JOptionPane.showMessageDialog(this, "Vehicle retrieved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Error retrieving vehicle.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+ 
+    }
+    
+    boolean updateDatabase(Retrieval retrieval) {
+        return Database.getInstance().ejecutarActualizacion("INSERT INTO retrieval (id, email, licensePlate) VALUES (?, ?, ?)",
+                new Parameter(retrieval.getId(), DataType.INTEGER),
+                new Parameter(retrieval.getEmail(), DataType.STRING),
+                new Parameter(retrieval.getLicensePlate(), DataType.STRING)
+ 
+        );
     }
 
     public static void main(String[] args) {
