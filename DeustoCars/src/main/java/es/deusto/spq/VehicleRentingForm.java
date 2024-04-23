@@ -13,6 +13,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import es.deusto.spq.client.ClientManager;
+import es.deusto.spq.db.Database;
+import es.deusto.spq.db.resources.DataType;
+import es.deusto.spq.db.resources.Parameter;
 import es.deusto.spq.pojo.VehicleData;
 import es.deusto.spq.serialization.Renting;
 
@@ -101,29 +104,40 @@ public class VehicleRentingForm extends JFrame {
             return;
         }
         
-//        Renting newRenting = new Renting(email, plate, startDate, endDate);
-//
-//        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/vehicles");
-//		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
-//		Response response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
-//		if (response.getStatus() != Status.OK.getStatusCode()) {
-//			logger.error("Error connecting with the server. Code: {}",response.getStatus());
-//		} else {
-//			logger.info("Vehicle Correctly Registered :)");
-//		}
+        Renting newRenting = new Renting(email, plate, start, end);
+
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/vehicles");
+		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.post(Entity.entity(newRenting, MediaType.APPLICATION_JSON));
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}",response.getStatus());
+		} else {
+			logger.info("Vehicle Correctly Registered :)");
+		}
 
         // Clear input fields
-//        brandField.setText("");
-//        numberPlateField.setText("");
-//        modelField.setText("");
-//        
-//
-//        // Connect and update the database
-//        if (updateDatabase(newVehicle)) {
-//            JOptionPane.showMessageDialog(this, "Vehicle registered successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-//        } else {
-//            JOptionPane.showMessageDialog(this, "Error registering vehicle.", "Error", JOptionPane.ERROR_MESSAGE);
-//        }
+		emailField.setText("");
+		plateField.setText("");
+		startDateField.setText("");
+		endDateField.setText("");
+        
+
+        // Connect and update the database
+        if (updateDatabase(newRenting)) {
+            JOptionPane.showMessageDialog(this, "Vehicle registered successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Error registering vehicle.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    boolean updateDatabase(Renting renting) {
+        return Database.getInstance().ejecutarActualizacion("INSERT INTO renting (id, email, licensePlate, startDate, endDate) VALUES (?, ?, ?, ?, ?)",
+                new Parameter(renting.getId(), DataType.INTEGER),
+                new Parameter(renting.getEmail(), DataType.STRING),
+                new Parameter(renting.getLicensePlate(), DataType.STRING),
+                new Parameter(new java.sql.Date(renting.getStartDate().getTime()), DataType.DATE),
+                new Parameter(new java.sql.Date(renting.getEndDate().getTime()), DataType.DATE)
+        );
     }
 
     public static void main(String[] args) {
