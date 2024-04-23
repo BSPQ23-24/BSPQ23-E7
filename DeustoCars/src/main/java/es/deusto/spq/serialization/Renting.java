@@ -6,22 +6,22 @@ import java.util.Date;
 public class Renting {
 	private static int nextId = 1;
     private int id;
-    private Customer customer;
-    private Vehicle vehicle;
+    private String email;
+    private String licensePlate;
     private Date startDate;
     private Date endDate;
-    private String status;
+ 
     
     
-	public Renting(Customer customer, Vehicle vehicle, Date startDate, Date endDate, String status) {
+	public Renting(String email, String licensePlate, Date startDate, Date endDate) {
 		super();
 		this.id = nextId++;
-		this.customer = customer;
-		this.vehicle = vehicle;
+		this.email = email;
+		this.licensePlate = licensePlate;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.status = status;
 	}
+
 
 
 	public int getId() {
@@ -29,29 +29,35 @@ public class Renting {
 	}
 
 
+
 	public void setId(int id) {
 		this.id = id;
 	}
 
 
-	public Customer getCustomer() {
-		return customer;
+
+	public String getEmail() {
+		return email;
 	}
 
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 
-	public Vehicle getVehicle() {
-		return vehicle;
+
+	public String getLicensePlate() {
+		return licensePlate;
 	}
 
 
-	public void setVehicle(Vehicle vehicle) {
-		this.vehicle = vehicle;
+
+	public void setLicensePlate(String licensePlate) {
+		this.licensePlate = licensePlate;
 	}
+
 
 
 	public Date getStartDate() {
@@ -59,9 +65,11 @@ public class Renting {
 	}
 
 
+
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
+
 
 
 	public Date getEndDate() {
@@ -69,26 +77,20 @@ public class Renting {
 	}
 
 
+
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
 
 
-	public String getStatus() {
-		return status;
-	}
-
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 
 	@Override
 	public String toString() {
-		return "Renting [customer=" + customer + ", vehicle=" + vehicle + ", startDate=" + startDate + ", endDate="
-				+ endDate + ", status=" + status + "]";
+		return "Renting [id=" + id + ", email=" + email + ", licensePlate=" + licensePlate + ", startDate=" + startDate
+				+ ", endDate=" + endDate + "]";
 	}
+
+	
     
 
 }

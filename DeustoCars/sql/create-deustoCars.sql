@@ -32,7 +32,6 @@ CREATE TABLE renting (
     number_plate VARCHAR(255) NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    status VARCHAR(50) NOT NULL,
     FOREIGN KEY (customer_email) REFERENCES customers(email),
     FOREIGN KEY (number_plate) REFERENCES vehicles(number_plate)
 );
