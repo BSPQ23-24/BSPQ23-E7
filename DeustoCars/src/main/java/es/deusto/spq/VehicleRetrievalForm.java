@@ -16,7 +16,7 @@ import es.deusto.spq.db.Database;
 import es.deusto.spq.db.resources.DataType;
 import es.deusto.spq.db.resources.Parameter;
 import es.deusto.spq.pojo.VehicleData;
-import es.deusto.spq.serialization.Retrieval;
+
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -82,18 +82,13 @@ public class VehicleRetrievalForm extends JFrame {
     }
 
     private void retrieveVehicle() {
-        String email = emailField.getText();
+    	
         String plate = plateField.getText();
-
-
-        // Create a VehicleRetrieval object
-        Retrieval newRetrieval = new Retrieval(email, plate);
-
-        	
+  
         // Add logic to send retrieval request to the server
         WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/vehicles/retrieve");
         Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
-        Response response = invocationBuilder.post(Entity.entity(newRetrieval, MediaType.APPLICATION_JSON));
+        Response response = invocationBuilder.post(Entity.entity(plate, MediaType.APPLICATION_JSON));
         
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error connecting with the server. Code: {}",response.getStatus());
@@ -103,11 +98,10 @@ public class VehicleRetrievalForm extends JFrame {
 
 
         // Clear input fields
-        emailField.setText("");
         plateField.setText("");
         
         // Connect and update the database
-        if (updateDatabase(newRetrieval)) {
+        if (updateDatabase(plate)) {
             JOptionPane.showMessageDialog(this, "Vehicle retrieved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "Error retrieving vehicle.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -116,12 +110,9 @@ public class VehicleRetrievalForm extends JFrame {
  
     }
     
-    boolean updateDatabase(Retrieval retrieval) {
-        return Database.getInstance().ejecutarActualizacion("INSERT INTO retrieval (id, email, licensePlate) VALUES (?, ?, ?)",
-                new Parameter(retrieval.getId(), DataType.INTEGER),
-                new Parameter(retrieval.getEmail(), DataType.STRING),
-                new Parameter(retrieval.getLicensePlate(), DataType.STRING)
- 
+    boolean updateDatabase(String plate) {
+        return Database.getInstance().ejecutarActualizacion("UPDATE retrieval SET licensePlate = ?",
+                new Parameter(plate, DataType.STRING)
         );
     }
 
