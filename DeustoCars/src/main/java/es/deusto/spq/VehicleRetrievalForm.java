@@ -81,7 +81,7 @@ public class VehicleRetrievalForm extends JFrame {
         return panel;
     }
 
-    private void retrieveVehicle() {
+    public void retrieveVehicle() {
     	
         String plate = plateField.getText();
   

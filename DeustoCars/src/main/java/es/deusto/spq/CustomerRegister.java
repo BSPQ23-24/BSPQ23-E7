@@ -119,7 +119,7 @@ public class CustomerRegister extends JFrame {
         return panel;
     }
 
-    private void registerUser() {
+    public void registerUser() {
         String name = nameField.getText();
         String surname = surnameField.getText();
         String birthDate = birthDateField.getText();

@@ -23,12 +23,13 @@ public class VehicleRetrievalFormTest {
     private Invocation.Builder invocationBuilder;
     private Response response;
 
+    
     @Before
     public void setUp() {
         form = new VehicleRetrievalForm();
         plateField = new JTextField();
-        form.setPlateField(plateField);
-
+        plateField.setText("");
+        
         // Mocking the web target and response
         webTarget = mock(WebTarget.class);
         invocationBuilder = mock(Invocation.Builder.class);
@@ -38,6 +39,7 @@ public class VehicleRetrievalFormTest {
         when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
     }
 
+    //DATABASE DOEST WORK
     @Test
     public void testRetrieveVehicle() {
         plateField.setText("ABC123");
