@@ -17,12 +17,12 @@ public class VehicleData {
      */
     
     
-    public VehicleData(String numberPlate, String brand,  String model, boolean readyToBorrow, boolean onRepair) {
+    public VehicleData(String numberPlate, String brand,  String model) {
         this.numberPlate = numberPlate;
         this.brand = brand;
         this.model = model;
-        this.readyToBorrow = readyToBorrow;
-        this.onRepair = onRepair;
+        this.readyToBorrow = true;
+        this.onRepair = false;
     }
 
     public VehicleData(){
