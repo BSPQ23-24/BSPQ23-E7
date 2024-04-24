@@ -153,7 +153,7 @@ public class CustomerRegister extends JFrame {
             System.out.println("Customer registered: " + newUser);
         } else {
             System.out.println("Error registering user");
-        }
+        }				
     }
 
     boolean updateDatabase(CustomerData customer) {

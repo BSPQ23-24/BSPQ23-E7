@@ -17,7 +17,7 @@ import es.deusto.spq.db.Database;
 import es.deusto.spq.db.resources.DataType;
 import es.deusto.spq.db.resources.Parameter;
 import es.deusto.spq.pojo.VehicleData;
-import es.deusto.spq.serialization.Renting;
+import es.deusto.spq.pojo.Renting;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
