@@ -1,6 +1,7 @@
 package es.deusto.spq;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 import javax.swing.JTextField;
@@ -12,6 +13,8 @@ import javax.ws.rs.core.Response;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import es.deusto.spq.client.ClientManager;
 
 public class VehicleRetrievalFormTest {
     private VehicleRetrievalForm form;
