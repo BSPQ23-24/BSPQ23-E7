@@ -41,6 +41,14 @@ public class VehicleRegistration extends JFrame {
     /**
      * Constructor for vehicle registration window.
      */
+    
+    private Database database; // Agregar un campo para almacenar la instancia de la base de datos
+
+    // Método para establecer la instancia de la base de datos
+    public void setDatabase(Database database) {
+        this.database = database;
+    }
+    
     public VehicleRegistration() {
         submitButton = new JButton("Register Vehicle");
         setupUI("Vehicle Registration");
