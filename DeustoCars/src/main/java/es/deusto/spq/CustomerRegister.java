@@ -39,6 +39,9 @@ public class CustomerRegister extends JFrame {
     private JTextField emailField;
     private JButton submitButton;
 
+    /**
+     * Constructs a new CustomerRegister window for user registration.
+     */
     public CustomerRegister() {
         submitButton = new JButton("Register User");
         setupUI("User Registration");
@@ -53,6 +56,11 @@ public class CustomerRegister extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Constructs a new CustomerRegister window for user modification.
+     * 
+     * @param eMail The email of the customer to modify.
+     */
     public CustomerRegister(String eMail) {
         submitButton = new JButton("Modify User");
         setupUI("User Modification");
@@ -131,6 +139,9 @@ public class CustomerRegister extends JFrame {
         return panel;
     }
 
+    /**
+     * Registers a new customer.
+     */
     public void registerUser() {
         String name = nameField.getText();
         String surname = surnameField.getText();
@@ -168,6 +179,12 @@ public class CustomerRegister extends JFrame {
         }				
     }
 
+    /**
+     * Updates the database with the new customer information.
+     * 
+     * @param customer The customer data to update in the database.
+     * @return True if the database was successfully updated, false otherwise.
+     */
     boolean updateDatabase(CustomerData customer) {
         return Database.getInstance().ejecutarActualizacion("INSERT INTO customers (email, name, surname, birth_date)",
                 new Parameter(customer.geteMail(), DataType.STRING),
@@ -178,6 +195,11 @@ public class CustomerRegister extends JFrame {
         );
     }
 
+    /**
+     * Main method to launch the CustomerRegister window for user registration.
+     * 
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         CustomerRegister customerRegistrationWindow = new CustomerRegister();
         customerRegistrationWindow.setVisible(true);

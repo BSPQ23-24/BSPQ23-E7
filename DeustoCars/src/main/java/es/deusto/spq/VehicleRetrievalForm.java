@@ -15,21 +15,24 @@ import es.deusto.spq.client.ClientManager;
 import es.deusto.spq.db.Database;
 import es.deusto.spq.db.resources.DataType;
 import es.deusto.spq.db.resources.Parameter;
-import es.deusto.spq.pojo.VehicleData;
-
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * Class for retrieving a vehicle using a graphical user interface.
+ */
 public class VehicleRetrievalForm extends JFrame {
-	protected static final Logger logger = LogManager.getLogger();
+    protected static final Logger logger = LogManager.getLogger();
 	
     private JTextField emailField;	
     private JTextField plateField;
     private JButton submitButton;
 
+    /**
+     * Constructs a new VehicleRetrievalForm window.
+     */
     public VehicleRetrievalForm() {
         submitButton = new JButton("Retrieve Vehicle");
         setupUI("Vehicle Retrieval");
@@ -81,8 +84,10 @@ public class VehicleRetrievalForm extends JFrame {
         return panel;
     }
 
+    /**
+     * Retrieves a vehicle based on the provided license plate.
+     */
     public void retrieveVehicle() {
-    	
         String plate = plateField.getText();
   
         // Add logic to send retrieval request to the server
@@ -96,7 +101,6 @@ public class VehicleRetrievalForm extends JFrame {
 			logger.info("Vehicle Correctly Retrieved :)");
 		}
 
-
         // Clear input fields
         plateField.setText("");
         
@@ -106,16 +110,25 @@ public class VehicleRetrievalForm extends JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Error retrieving vehicle.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-
- 
     }
     
+    /**
+     * Updates the database after vehicle retrieval.
+     * 
+     * @param plate The license plate of the retrieved vehicle.
+     * @return True if the database was successfully updated, false otherwise.
+     */
     boolean updateDatabase(String plate) {
         return Database.getInstance().ejecutarActualizacion("UPDATE retrieval SET licensePlate = ?",
                 new Parameter(plate, DataType.STRING)
         );
     }
 
+    /**
+     * Main method to launch the VehicleRetrievalForm window for vehicle retrieval.
+     * 
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         VehicleRetrievalForm form = new VehicleRetrievalForm();
         form.setVisible(true);

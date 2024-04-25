@@ -38,17 +38,20 @@ public class VehicleRegistration extends JFrame {
     private JCheckBox onRepairCheckbox;
     private JButton submitButton;
 
+    private Database database;
+
     /**
-     * Constructor for vehicle registration window.
+     * Sets the database instance for this vehicle registration.
+     * 
+     * @param database The database instance to set.
      */
-
-    private Database database; // Agregar un campo para almacenar la instancia de la base de datos
-
-    // Método para establecer la instancia de la base de datos
     public void setDatabase(Database database) {
         this.database = database;
     }
 
+    /**
+     * Constructs a new vehicle registration window.
+     */
     public VehicleRegistration() {
         submitButton = new JButton("Register Vehicle");
         setupUI("Vehicle Registration");
@@ -64,6 +67,11 @@ public class VehicleRegistration extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Constructs a new vehicle modification window.
+     * 
+     * @param numberPlate The number plate of the vehicle to modify.
+     */
     public VehicleRegistration(String numberPlate) {
         submitButton = new JButton("Modify Vehicle");
         setupUI("Vehicle Modification");
@@ -137,8 +145,10 @@ public class VehicleRegistration extends JFrame {
         modelField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
     }
 
+    /**
+     * Registers a new vehicle.
+     */
     private void registerVehicle() {
-
         // Create the new vehicle
         VehicleData newVehicle = new VehicleData(brandField.getText(), numberPlateField.getText(), modelField.getText());
 
@@ -166,6 +176,12 @@ public class VehicleRegistration extends JFrame {
         }
     }
 
+    /**
+     * Updates the database with the new vehicle information.
+     * 
+     * @param vehicle The vehicle data to update in the database.
+     * @return True if the database was successfully updated, false otherwise.
+     */
     boolean updateDatabase(VehicleData vehicle) {
         return Database.getInstance().ejecutarActualizacion("INSERT INTO vehicles (brand, number_plate, model, ready_to_borrow, on_repair) VALUES (?, ?, ?, ?, ?)",
                 new Parameter(vehicle.getBrand(), DataType.STRING),
@@ -176,9 +192,13 @@ public class VehicleRegistration extends JFrame {
         );
     }
 
+    /**
+     * Main method to launch the VehicleRegistration window for vehicle registration.
+     * 
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
-        VehicleRegistration a = new VehicleRegistration();
-        //VehicleRegistration a = new VehicleRegistration(new Vehicle("a", "a", "a"));
-        a.setVisible(true);
+        VehicleRegistration vehicleRegistrationWindow = new VehicleRegistration();
+        vehicleRegistrationWindow.setVisible(true);
     }
 }
