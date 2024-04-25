@@ -102,12 +102,24 @@ public class CustomerRegister extends JFrame {
 
     private void addComponentsToForm() {
         JPanel formPanel = (JPanel) getContentPane().getComponent(0);
-
-        formPanel.add(createFormField("Name", nameField));
-        formPanel.add(createFormField("Surname", surnameField));
-        formPanel.add(createFormField("Date of Birth (YYYY-MM-DD)", birthDateField));
-        formPanel.add(createFormField("Email", emailField));
+        formPanel.setLayout(new GridLayout(0, 2, 10, 10)); // Two columns layout
+    
+        formPanel.add(new JLabel("Name:"));
+        formPanel.add(nameField);
+        formPanel.add(new JLabel("Surname:"));
+        formPanel.add(surnameField);
+        formPanel.add(new JLabel("Date of Birth (YYYY-MM-DD):"));
+        formPanel.add(birthDateField);
+        formPanel.add(new JLabel("Email:"));
+        formPanel.add(emailField);
+    
+        // Set blue borders to text fields
+        nameField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
+        surnameField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
+        birthDateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
+        emailField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
     }
+    
 
     private JPanel createFormField(String label, JTextField textField) {
         JPanel panel = new JPanel(new BorderLayout());
