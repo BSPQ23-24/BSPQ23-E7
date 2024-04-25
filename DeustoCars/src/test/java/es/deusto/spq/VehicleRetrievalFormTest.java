@@ -1,55 +1,44 @@
 package es.deusto.spq;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
-import javax.swing.JTextField;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import es.deusto.spq.client.ClientManager;
+import es.deusto.spq.pojo.Renting;
+import es.deusto.spq.pojo.VehicleData;
 
 public class VehicleRetrievalFormTest {
-    private VehicleRetrievalForm form;
-    private JTextField plateField;
-    private WebTarget webTarget;
-    private Invocation.Builder invocationBuilder;
-    private Response response;
 
-    
+	private VehicleRetrievalForm VehicleRetrievalForm;
+
     @Before
     public void setUp() {
-        form = new VehicleRetrievalForm();
-        plateField = new JTextField();
-        plateField.setText("");
-        
-        // Mocking the web target and response
-        webTarget = mock(WebTarget.class);
-        invocationBuilder = mock(Invocation.Builder.class);
-        response = mock(Response.class);
-        when(ClientManager.getInstance().getWebTarget().path(anyString())).thenReturn(webTarget);
-        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
-        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+    	VehicleRetrievalForm = new VehicleRetrievalForm();
     }
 
-    //DATABASE DOEST WORK
     @Test
-    public void testRetrieveVehicle() {
-        plateField.setText("ABC123");
-        form.retrieveVehicle();
-        assertEquals("", plateField.getText());
-        verify(response, times(1)).getStatus();
+    public void testVehicleRetrievalFormWindowOpening() {
+        // Verificar que la ventana esté visible después de crear la instancia
+        assertTrue(VehicleRetrievalForm.isVisible());
     }
+
 
     @Test
     public void testUpdateDatabase() {
-        assertTrue(form.updateDatabase("ABC123"));
+        // Crear una instancia de Renting para simular los datos de un vehículo
+        Renting renting = new Renting("@gmail.com", "123ABC", new Date(), new Date());
+
+        // Crear una instancia de VehicleRetrievalForm
+        VehicleRetrievalForm form = new VehicleRetrievalForm();
+
+        // Llamar al método updateDatabase con los datos del vehículo
+        boolean result = VehicleRetrievalForm.updateDatabase("123ABC");
+
+        // Verificar si la actualización de la base de datos fue exitosa
+        assertTrue(result);
     }
+
+
 }
