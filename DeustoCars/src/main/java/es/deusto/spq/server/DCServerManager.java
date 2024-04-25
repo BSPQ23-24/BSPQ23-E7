@@ -112,6 +112,23 @@ public class DCServerManager implements ActionListener, Runnable {
 			return responseMessage;
 		}
 	}
+	
+	public boolean deleteVehicleBoolean(String numberPlate) {
+	    WebTarget deleteVehicleWebTarget = webTarget.path("deletevehicle");
+
+	    Response response = deleteVehicleWebTarget
+	            .queryParam("numberPlate", numberPlate)
+	            .request(MediaType.APPLICATION_JSON)
+	            .delete();
+
+	    if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+	        logger.info("Error connecting with the server. Code: {}", response.getStatus());
+	        return false;
+	    } else {
+	        logger.info("Vehicle correctly deleted");
+	        return true;
+	    }
+	}
 	public String getVehiclesString(){
 		WebTarget DeustoCarsWebTarget = webTarget.path("server/getvehicles");
 		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);

@@ -66,6 +66,7 @@ public class MainClient extends JFrame {
 	
     private JTextField numberPlate;
     private JTextField eMail;
+    private WebTarget webTarget;
 	protected static final Logger logger = LogManager.getLogger();
 
     public MainClient(String hostname, String port) {
@@ -363,6 +364,26 @@ public class MainClient extends JFrame {
 			logger.info("ERROR deleting vehicle");
         }
 	}
+	
+	public boolean deleteVehicleBoolean(String numberPlate) {
+	    WebTarget deleteVehicleWebTarget = webTarget.path("deletevehicle");
+
+	    Response response = deleteVehicleWebTarget
+	            .queryParam("numberPlate", numberPlate)
+	            .request(MediaType.APPLICATION_JSON)
+	            .delete();
+
+	    if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+	        logger.info("Error connecting with the server. Code: {}", response.getStatus());
+	        return false;
+	    } else {
+	        logger.info("Vehicle correctly deleted");
+	        return true;
+	    }
+	}
+
+	
+
 
 	public void deleteCustomer(String eMail){
 		Response response = ClientManager.getInstance().getWebTarget()
@@ -377,6 +398,8 @@ public class MainClient extends JFrame {
 			logger.info("ERROR deleting customer");
 		}
 	}
+	
+	
 
 
 }
