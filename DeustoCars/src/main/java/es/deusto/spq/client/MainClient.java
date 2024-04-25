@@ -70,91 +70,99 @@ public class MainClient extends JFrame {
 	protected static final Logger logger = LogManager.getLogger();
 
     public MainClient(String hostname, String port) {
-        setTitle("Client");
-        setSize(900, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(2, 1));
-
-        JPanel topPanel = new JPanel(new GridLayout(1, 2));
-        topPanel.setBackground(new Color(240, 240, 240)); 
-        add(topPanel);
-
-        JPanel clientPanel = new JPanel(new GridLayout(3, 1));
-        clientPanel.setBorder(BorderFactory.createTitledBorder("Customer"));
-        topPanel.add(clientPanel);
-
-        addClient = new JButton("Add Customer");
-        addClient.setBackground(new Color(52, 103, 220)); 
-        addClient.setForeground(Color.WHITE); 
-        editClient = new JButton("Edit Customer");
-        editClient.setBackground(new Color(52, 152, 219)); 
-        editClient.setForeground(Color.WHITE); 
-        clientPanel.add(new JLabel("Actions:"));
-        clientPanel.add(addClient);
-        clientPanel.add(editClient);
-
-        JPanel vehiclePanel = new JPanel(new GridLayout(3, 1));
-        vehiclePanel.setBorder(BorderFactory.createTitledBorder("Vehicle"));
-        topPanel.add(vehiclePanel);
-
-        addVehicle = new JButton("Add Vehicle");
-        addVehicle.setBackground(new Color(52, 103, 220)); 
-        addVehicle.setForeground(Color.WHITE); 
-        editVehicle = new JButton("Edit Vehicle");
-        editVehicle.setBackground(new Color(52, 152, 219)); 
-        editVehicle.setForeground(Color.WHITE); 
-        vehiclePanel.add(new JLabel("Actions:"));
-        vehiclePanel.add(addVehicle);
-        vehiclePanel.add(editVehicle);
-
-        JPanel searchDeletePanel = new JPanel(new GridLayout(4, 3));
-        searchDeletePanel.setBorder(BorderFactory.createTitledBorder("Search/Delete"));
-        searchDeletePanel.setBackground(new Color(240, 240, 240)); 
-        add(searchDeletePanel);
-
-        JLabel getVehicleLabel = new JLabel("Search/Delete Vehicle using number plate:");
-        numberPlate = new JTextField();
-        getVehicle = new JButton("Get Vehicle");
-        getVehicle.setBackground(new Color(46, 204, 113)); 
-        getVehicle.setForeground(Color.WHITE); 
-        deleteVehicle = new JButton("Delete Vehicle");
-        deleteVehicle.setBackground(new Color(231, 76, 60)); 
-        deleteVehicle.setForeground(Color.WHITE); 
-
-        JLabel getCustomerLabel = new JLabel("Search/Delete Customer using eMail:");
-        eMail = new JTextField();
-        getCustomer = new JButton("Get Customer");
-        getCustomer.setBackground(new Color(46, 204, 113)); 
-        getCustomer.setForeground(Color.WHITE); 
-        deleteCustomer = new JButton("Delete Customer");
-        deleteCustomer.setBackground(new Color(231, 76, 60)); 
-        deleteCustomer.setForeground(Color.WHITE); 
-
-        searchDeletePanel.add(getVehicleLabel);
-        searchDeletePanel.add(numberPlate);
-        searchDeletePanel.add(getVehicle);
-        searchDeletePanel.add(new JLabel()); // Empty label for spacing
-        searchDeletePanel.add(deleteVehicle);
-        searchDeletePanel.add(new JLabel()); // Empty label for spacing
-
-        searchDeletePanel.add(getCustomerLabel);
-        searchDeletePanel.add(eMail);
-        searchDeletePanel.add(getCustomer);
-        searchDeletePanel.add(new JLabel()); // Empty label for spacing
-        searchDeletePanel.add(deleteCustomer);
-        searchDeletePanel.add(new JLabel()); // Empty label for spacing
-
+		setTitle("Client");
+		setSize(900, 400);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLayout(new GridLayout(2, 1));
+	
+		JPanel topPanel = new JPanel(new GridLayout(1, 2));
+		topPanel.setBackground(new Color(240, 240, 240)); 
+		add(topPanel);
+	
+		JPanel clientPanel = new JPanel(new GridLayout(3, 1));
+		clientPanel.setBorder(BorderFactory.createTitledBorder("Customer"));
+		topPanel.add(clientPanel);
+	
+		addClient = new JButton("Add Customer");
+		addClient.setBackground(new Color(52, 103, 220)); 
+		addClient.setForeground(Color.WHITE); 
+		editClient = new JButton("Edit Customer");
+		editClient.setBackground(new Color(52, 152, 219)); 
+		editClient.setForeground(Color.WHITE); 
+		clientPanel.add(new JLabel("Actions:"));
+		clientPanel.add(addClient);
+		clientPanel.add(editClient);
+	
+		ImageIcon img = new ImageIcon("src/resources/bottom-bar-icon.png");
+		setIconImage(img.getImage());
+	
+		JPanel vehiclePanel = new JPanel(new GridLayout(3, 1));
+		vehiclePanel.setBorder(BorderFactory.createTitledBorder("Vehicle"));
+		topPanel.add(vehiclePanel);
+	
+		addVehicle = new JButton("Add Vehicle");
+		addVehicle.setBackground(new Color(52, 103, 220)); 
+		addVehicle.setForeground(Color.WHITE); 
+		editVehicle = new JButton("Edit Vehicle");
+		editVehicle.setBackground(new Color(52, 152, 219)); 
+		editVehicle.setForeground(Color.WHITE); 
+		vehiclePanel.add(new JLabel("Actions:"));
+		vehiclePanel.add(addVehicle);
+		vehiclePanel.add(editVehicle);
+	
+		JPanel searchDeletePanel = new JPanel(new GridLayout(4, 3));
+		searchDeletePanel.setBorder(BorderFactory.createTitledBorder("Search/Delete"));
+		searchDeletePanel.setBackground(new Color(240, 240, 240)); 
+		add(searchDeletePanel);
+	
+		JLabel getVehicleLabel = new JLabel("Search/Delete Vehicle using number plate:");
+		numberPlate = new JTextField();
+		getVehicle = new JButton("Get Vehicle");
+		getVehicle.setBackground(new Color(46, 204, 113)); 
+		getVehicle.setForeground(Color.WHITE); 
+		deleteVehicle = new JButton("Delete Vehicle");
+		deleteVehicle.setBackground(new Color(231, 76, 60)); 
+		deleteVehicle.setForeground(Color.WHITE); 
+	
+		JLabel getCustomerLabel = new JLabel("Search/Delete Customer using eMail:");
+		eMail = new JTextField();
+		getCustomer = new JButton("Get Customer");
+		getCustomer.setBackground(new Color(46, 204, 113)); 
+		getCustomer.setForeground(Color.WHITE); 
+		deleteCustomer = new JButton("Delete Customer");
+		deleteCustomer.setBackground(new Color(231, 76, 60)); 
+		deleteCustomer.setForeground(Color.WHITE); 
+	
+		searchDeletePanel.add(getVehicleLabel);
+		searchDeletePanel.add(numberPlate);
+		searchDeletePanel.add(getVehicle);
+		searchDeletePanel.add(new JLabel()); // Empty label for spacing
+		searchDeletePanel.add(deleteVehicle);
+		searchDeletePanel.add(new JLabel()); // Empty label for spacing
+	
+		searchDeletePanel.add(getCustomerLabel);
+		searchDeletePanel.add(eMail);
+		searchDeletePanel.add(getCustomer);
+		searchDeletePanel.add(new JLabel()); // Empty label for spacing
+		searchDeletePanel.add(deleteCustomer);
+		searchDeletePanel.add(new JLabel()); // Empty label for spacing
+	
+		// Add blue border to text fields
+		numberPlate.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
+		eMail.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
+	
 		addClient.addActionListener(e -> new CustomerRegister());
-        addVehicle.addActionListener(e -> new VehicleRegistration());
-        editClient.addActionListener(e -> TableCustomersWindow());
-        editVehicle.addActionListener(e -> TableVehicleWindow());
-        getVehicle.addActionListener(e -> getVehicle(numberPlate.getText()));
-        getCustomer.addActionListener(e -> getCustomer(eMail.getText()));
-        deleteVehicle.addActionListener(e -> deleteVehicle(numberPlate.getText()));
-        deleteCustomer.addActionListener(e -> deleteCustomer(eMail.getText()));
-
-        setVisible(true);
-    }
+		addVehicle.addActionListener(e -> new VehicleRegistration());
+		editClient.addActionListener(e -> TableCustomersWindow());
+		editVehicle.addActionListener(e -> TableVehicleWindow());
+		getVehicle.addActionListener(e -> getVehicle(numberPlate.getText()));
+		getCustomer.addActionListener(e -> getCustomer(eMail.getText()));
+		deleteVehicle.addActionListener(e -> deleteVehicle(numberPlate.getText()));
+		deleteCustomer.addActionListener(e -> deleteCustomer(eMail.getText()));
+	
+		setVisible(true);
+	}
+	
 	
 	public static void main(String[] args) {
 		String hostname = args[0];

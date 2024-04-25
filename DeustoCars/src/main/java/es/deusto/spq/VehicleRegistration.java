@@ -41,14 +41,14 @@ public class VehicleRegistration extends JFrame {
     /**
      * Constructor for vehicle registration window.
      */
-    
+
     private Database database; // Agregar un campo para almacenar la instancia de la base de datos
 
     // Método para establecer la instancia de la base de datos
     public void setDatabase(Database database) {
         this.database = database;
     }
-    
+
     public VehicleRegistration() {
         submitButton = new JButton("Register Vehicle");
         setupUI("Vehicle Registration");
@@ -69,8 +69,8 @@ public class VehicleRegistration extends JFrame {
         setupUI("Vehicle Modification");
 
         ResultSet rs = Database.getInstance().ejecutarConsulta(
-            "SELECT brand, number_plate, model, ready_to_borrow, on_repair FROM vehicles WHERE number_plate = ?",
-            new Parameter(numberPlate, DataType.STRING)
+                "SELECT brand, number_plate, model, ready_to_borrow, on_repair FROM vehicles WHERE number_plate = ?",
+                new Parameter(numberPlate, DataType.STRING)
         );
         try {
             if (rs != null && rs.next()) {
@@ -90,32 +90,51 @@ public class VehicleRegistration extends JFrame {
 
         setVisible(true);
     }
-    
+
     private void setupUI(String title) {
         setTitle(title);
-        setSize(600, 250);
+        setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(6, 2));
+        setLocationRelativeTo(null); // Center the window
+        setLayout(new BorderLayout());
+
+        JPanel formPanel = new JPanel(new GridLayout(6, 1, 10, 10));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        submitButton.setBackground(new Color(0, 153, 204));
+        submitButton.setForeground(Color.WHITE);
+        submitButton.setFocusPainted(false);
+        submitButton.setFont(new Font("Arial", Font.BOLD, 16));
 
         submitButton.addActionListener(e -> registerVehicle());
+
+        add(formPanel, BorderLayout.CENTER);
+        add(submitButton, BorderLayout.SOUTH);
     }
 
     private void addComponentsToForm(boolean isModification) {
-        add(new JLabel("Brand:"));
-        add(brandField);
-        add(new JLabel("Number Plate:"));
-        add(numberPlateField);
-        add(new JLabel("Model:"));
-        add(modelField);
+        JPanel formPanel = (JPanel) getContentPane().getComponent(0);
+        formPanel.setLayout(new GridLayout(0, 2, 10, 10)); // Two columns layout
+
+        formPanel.add(new JLabel("Brand:"));
+        formPanel.add(brandField);
+        formPanel.add(new JLabel("Number Plate:"));
+        formPanel.add(numberPlateField);
+        formPanel.add(new JLabel("Model:"));
+        formPanel.add(modelField);
         if (isModification) {
-            add(readyToBorrowCheckbox);
-            add(onRepairCheckbox);
+            formPanel.add(readyToBorrowCheckbox);
+            formPanel.add(onRepairCheckbox);
         } else {
-            add(new JLabel(""));
-            add(new JLabel(""));
+            formPanel.add(new JPanel()); // Empty panel for alignment
+            formPanel.add(new JPanel()); // Empty panel for alignment
         }
-        add(new JLabel("")); // Espacio en blanco para alinear el botón
-        add(submitButton);
+        formPanel.add(new JPanel()); // Empty panel for alignment
+
+        // Set blue borders to text fields
+        brandField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
+        numberPlateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
+        modelField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
     }
 
     private void registerVehicle() {
@@ -124,13 +143,13 @@ public class VehicleRegistration extends JFrame {
         VehicleData newVehicle = new VehicleData(brandField.getText(), numberPlateField.getText(), modelField.getText());
 
         WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/vehicles");
-		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
-		Response response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
-		if (response.getStatus() != Status.OK.getStatusCode()) {
-			logger.error("Error connecting with the server. Code: {}",response.getStatus());
-		} else {
-			logger.info("Vehicle Correctly Registered :)");
-		}
+        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
+        if (response.getStatus() != Status.OK.getStatusCode()) {
+            logger.error("Error connecting with the server. Code: {}", response.getStatus());
+        } else {
+            logger.info("Vehicle Correctly Registered :)");
+        }
 
         // Clear input fields
         brandField.setText("");
@@ -163,5 +182,3 @@ public class VehicleRegistration extends JFrame {
         a.setVisible(true);
     }
 }
-
-
