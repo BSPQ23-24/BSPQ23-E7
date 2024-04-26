@@ -45,7 +45,7 @@ public class DCServer {
         CustomerData c1 = new CustomerData(eMail, name, surname, birthDate);
 
         logger.info("Adding customer: " + c1.toString());
-        System.out.println("Customer registered.");
+        logger.info("Customer registered.");
         return Response.ok().build();
     }
 
@@ -59,7 +59,7 @@ public class DCServer {
         // Receive the info from Client and add the parameters to the function
         VehicleData v1 = new VehicleData(numberPlate, brand, model);
         logger.info("Adding vehicle: " + v1.toString());
-        System.out.println("Vehicle registered.");
+        logger.info("Vehicle registered.");
         return Response.ok().build();
     }
 

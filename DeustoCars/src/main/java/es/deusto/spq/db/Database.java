@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import es.deusto.spq.db.resources.*;
 import java.time.LocalDate;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Database {
 
     private static Database instance;
@@ -16,6 +19,7 @@ public class Database {
     private final String url = "jdbc:mysql://localhost:3306/deustoCarsDB";
     private final String user = "spq";
     private final String password = "spq";
+    protected static final Logger logger = LogManager.getLogger();
 
     private Database() {
     	try {
@@ -39,7 +43,7 @@ public class Database {
                     instance = new Database();
                 }
             } catch (SQLException e) {
-                System.out.println("Error al verificar el estado de la conexión: " + e.getMessage());
+                logger.info("Error al verificar el estado de la conexión: " + e.getMessage());
             }
         }
         return instance;
@@ -72,7 +76,7 @@ public class Database {
             }
             return stmt.executeQuery();
         } catch (SQLException e) {
-            System.out.println("Error executing query: " + e.getMessage());
+            logger.info("Error executing query: " + e.getMessage());
             return null;
         }
     }
@@ -105,7 +109,7 @@ public class Database {
             int affectedRows = stmt.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
-            System.out.println("Error executing update: " + e.getMessage());
+            logger.info("Error executing update: " + e.getMessage());
             return false;
         }
     }

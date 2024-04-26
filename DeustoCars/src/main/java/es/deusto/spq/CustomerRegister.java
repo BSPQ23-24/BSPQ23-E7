@@ -79,7 +79,7 @@ public class CustomerRegister extends JFrame {
                 JOptionPane.showMessageDialog(this, "Customer not found.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException e) {
-            System.out.println("Error loading customer data: " + e.getMessage());
+            logger.info("Error loading customer data: " + e.getMessage());
         }
 
         addComponentsToForm();
@@ -173,9 +173,9 @@ public class CustomerRegister extends JFrame {
         emailField.setText("");
 
         if (updateDatabase(newUser)) {
-            System.out.println("Customer registered: " + newUser);
+            logger.info("Customer registered: " + newUser);
         } else {
-            System.out.println("Error registering user");
+            logger.info("Error registering user");
         }				
     }
 

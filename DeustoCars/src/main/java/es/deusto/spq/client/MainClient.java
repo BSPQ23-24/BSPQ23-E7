@@ -220,7 +220,7 @@ public class MainClient extends JFrame {
             });
             editPane.add(editButton);
         } catch (SQLException e) {
-            System.out.println("Error accessing database: " + e.getMessage());
+            logger.info("Error accessing database: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -280,7 +280,7 @@ public class MainClient extends JFrame {
             });
             editPane.add(editButton);
         } catch (SQLException e) {
-            System.out.println("Error accessing database: " + e.getMessage());
+            logger.info("Error accessing database: " + e.getMessage());
             e.printStackTrace();
         }
 
