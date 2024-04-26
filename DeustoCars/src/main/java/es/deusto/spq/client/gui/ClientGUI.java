@@ -20,6 +20,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import es.deusto.spq.CustomerRegister;
 import es.deusto.spq.VehicleRegistration;
 import es.deusto.spq.db.Database;
@@ -33,6 +36,7 @@ public class ClientGUI extends JFrame {
     private JButton addClient;
     private JButton editVehicle;
     private JButton addVehicle;
+    protected static final Logger logger = LogManager.getLogger();
 
     /**
      * Constructs a new ClientGUI object.
@@ -118,7 +122,7 @@ public class ClientGUI extends JFrame {
             });
             editPane.add(editButton);
         } catch (SQLException e) {
-            System.out.println("Error accessing database: " + e.getMessage());
+            logger.info("Error accessing database: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -178,7 +182,7 @@ public class ClientGUI extends JFrame {
             });
             editPane.add(editButton);
         } catch (SQLException e) {
-            System.out.println("Error accessing database: " + e.getMessage());
+            logger.info("Error accessing database: " + e.getMessage());
             e.printStackTrace();
         }
 

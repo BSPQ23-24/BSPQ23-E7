@@ -172,12 +172,12 @@ public class DCServerManager implements ActionListener, Runnable {
         while (running.get()) {
             try {
                 Thread.sleep(2000);
-                System.out.println("Obtaining data from server...");
+                logger.info("Obtaining data from server...");
                 this.customerText.setText(getCustomersString());
                 this.vehicleText.setText(getVehiclesString());
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                System.out.println("Thread was interrupted, Failed to complete operation");
+                logger.info("Thread was interrupted, Failed to complete operation");
             }
         }
     }

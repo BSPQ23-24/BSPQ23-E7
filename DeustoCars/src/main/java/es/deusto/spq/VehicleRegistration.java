@@ -91,7 +91,7 @@ public class VehicleRegistration extends JFrame {
                 JOptionPane.showMessageDialog(this, "Vehicle not found.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException e) {
-            System.out.println("Error loading vehicle data: " + e.getMessage());
+            logger.info("Error loading vehicle data: " + e.getMessage());
         }
 
         addComponentsToForm(true);
