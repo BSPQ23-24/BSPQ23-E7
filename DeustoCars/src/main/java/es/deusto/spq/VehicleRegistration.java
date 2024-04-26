@@ -7,17 +7,13 @@ import es.deusto.spq.db.resources.Parameter;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import es.deusto.spq.serialization.Vehicle;
 import es.deusto.spq.pojo.VehicleData;
 
 import es.deusto.spq.client.ClientManager;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;

@@ -5,7 +5,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -14,12 +13,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import es.deusto.spq.serialization.Customer;
-import es.deusto.spq.serialization.Vehicle;
-
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleData;
-import es.deusto.spq.pojo.Renting;
 import java.util.Date;
 
 /**

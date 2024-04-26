@@ -17,8 +17,6 @@ import es.deusto.spq.db.resources.DataType;
 import es.deusto.spq.db.resources.Parameter;
 
 import java.awt.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Class for retrieving a vehicle using a graphical user interface.
