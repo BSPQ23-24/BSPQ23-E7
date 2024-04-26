@@ -1,6 +1,5 @@
 package es.deusto.spq;
 
-
 import javax.swing.*;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -16,15 +15,17 @@ import es.deusto.spq.client.ClientManager;
 import es.deusto.spq.db.Database;
 import es.deusto.spq.db.resources.DataType;
 import es.deusto.spq.db.resources.Parameter;
-import es.deusto.spq.pojo.VehicleData;
 import es.deusto.spq.pojo.Renting;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Class for renting a vehicle using a graphical user interface.
+ */
 public class VehicleRentingForm extends JFrame {
-	protected static final Logger logger = LogManager.getLogger();
+    protected static final Logger logger = LogManager.getLogger();
 	
     private JTextField emailField;
     private JTextField plateField;
@@ -32,6 +33,9 @@ public class VehicleRentingForm extends JFrame {
     private JTextField endDateField;
     private JButton submitButton;
 
+    /**
+     * Constructs a new VehicleRentingForm window.
+     */
     public VehicleRentingForm() {
         submitButton = new JButton("Rent Vehicle");
         setupUI("Vehicle Renting");
@@ -130,6 +134,12 @@ public class VehicleRentingForm extends JFrame {
         }
     }
     
+    /**
+     * Updates the database with the new renting information.
+     * 
+     * @param renting The renting data to update in the database.
+     * @return True if the database was successfully updated, false otherwise.
+     */
     boolean updateDatabase(Renting renting) {
         return Database.getInstance().ejecutarActualizacion("INSERT INTO renting (id, email, licensePlate, startDate, endDate) VALUES (?, ?, ?, ?, ?)",
                 new Parameter(renting.getId(), DataType.INTEGER),
@@ -140,6 +150,11 @@ public class VehicleRentingForm extends JFrame {
         );
     }
 
+    /**
+     * Main method to launch the VehicleRentingForm window for vehicle renting.
+     * 
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         VehicleRentingForm form = new VehicleRentingForm();
         form.setVisible(true);
