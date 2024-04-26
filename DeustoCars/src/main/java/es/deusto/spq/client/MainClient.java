@@ -5,6 +5,8 @@ package es.deusto.spq.client;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.GradientPaint;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.sql.ResultSet;
@@ -62,22 +64,33 @@ public class MainClient extends JFrame {
         setTitle("Client");
         setSize(900, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(2, 1));
+        setLayout(new BorderLayout());
+
+        JLabel banner = new JLabel("DEUSTOCARS", JLabel.CENTER);
+        banner.setOpaque(true);
+        banner.setBackground(new Color(180, 227, 240));
+        banner.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 28));
+        banner.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        add(banner, BorderLayout.NORTH);
+        
+
+        JPanel contentPanel = new JPanel(new GridLayout(2, 1));
+        add(contentPanel, BorderLayout.CENTER);
 
         JPanel topPanel = new JPanel(new GridLayout(1, 2));
-        topPanel.setBackground(new Color(240, 240, 240)); 
-        add(topPanel);
+        contentPanel.add(topPanel);
 
         JPanel clientPanel = new JPanel(new GridLayout(3, 1));
         clientPanel.setBorder(BorderFactory.createTitledBorder("Customer"));
+        clientPanel.setBackground(new Color(240, 248, 255));
         topPanel.add(clientPanel);
 
         addClient = new JButton("Add Customer");
-        addClient.setBackground(new Color(52, 103, 220)); 
-        addClient.setForeground(Color.WHITE); 
+        addClient.setBackground(new Color(52, 103, 220));
+        addClient.setForeground(Color.WHITE);
         editClient = new JButton("Edit Customer");
-        editClient.setBackground(new Color(52, 152, 219)); 
-        editClient.setForeground(Color.WHITE); 
+        editClient.setBackground(new Color(52, 152, 219));
+        editClient.setForeground(Color.WHITE);
         clientPanel.add(new JLabel("Actions:"));
         clientPanel.add(addClient);
         clientPanel.add(editClient);
@@ -87,40 +100,41 @@ public class MainClient extends JFrame {
 
         JPanel vehiclePanel = new JPanel(new GridLayout(3, 1));
         vehiclePanel.setBorder(BorderFactory.createTitledBorder("Vehicle"));
+        vehiclePanel.setBackground(new Color(240, 248, 255));
         topPanel.add(vehiclePanel);
 
         addVehicle = new JButton("Add Vehicle");
-        addVehicle.setBackground(new Color(52, 103, 220)); 
-        addVehicle.setForeground(Color.WHITE); 
+        addVehicle.setBackground(new Color(52, 103, 220));
+        addVehicle.setForeground(Color.WHITE);
         editVehicle = new JButton("Edit Vehicle");
-        editVehicle.setBackground(new Color(52, 152, 219)); 
-        editVehicle.setForeground(Color.WHITE); 
+        editVehicle.setBackground(new Color(52, 152, 219));
+        editVehicle.setForeground(Color.WHITE);
         vehiclePanel.add(new JLabel("Actions:"));
         vehiclePanel.add(addVehicle);
         vehiclePanel.add(editVehicle);
 
         JPanel searchDeletePanel = new JPanel(new GridLayout(4, 3));
         searchDeletePanel.setBorder(BorderFactory.createTitledBorder("Search/Delete"));
-        searchDeletePanel.setBackground(new Color(240, 240, 240)); 
-        add(searchDeletePanel);
+        searchDeletePanel.setBackground(new Color(240, 248, 255));
+        contentPanel.add(searchDeletePanel);
 
         JLabel getVehicleLabel = new JLabel("Search/Delete Vehicle using number plate:");
         numberPlate = new JTextField();
         getVehicle = new JButton("Get Vehicle");
-        getVehicle.setBackground(new Color(46, 204, 113)); 
-        getVehicle.setForeground(Color.WHITE); 
+        getVehicle.setBackground(new Color(46, 204, 113));
+        getVehicle.setForeground(Color.WHITE);
         deleteVehicle = new JButton("Delete Vehicle");
-        deleteVehicle.setBackground(new Color(231, 76, 60)); 
-        deleteVehicle.setForeground(Color.WHITE); 
+        deleteVehicle.setBackground(new Color(231, 76, 60));
+        deleteVehicle.setForeground(Color.WHITE);
 
         JLabel getCustomerLabel = new JLabel("Search/Delete Customer using eMail:");
         eMail = new JTextField();
         getCustomer = new JButton("Get Customer");
-        getCustomer.setBackground(new Color(46, 204, 113)); 
-        getCustomer.setForeground(Color.WHITE); 
+        getCustomer.setBackground(new Color(46, 204, 113));
+        getCustomer.setForeground(Color.WHITE);
         deleteCustomer = new JButton("Delete Customer");
-        deleteCustomer.setBackground(new Color(231, 76, 60)); 
-        deleteCustomer.setForeground(Color.WHITE); 
+        deleteCustomer.setBackground(new Color(231, 76, 60));
+        deleteCustomer.setForeground(Color.WHITE);
 
         searchDeletePanel.add(getVehicleLabel);
         searchDeletePanel.add(numberPlate);

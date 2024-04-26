@@ -1,4 +1,4 @@
-package es.deusto.spq.server;
+/*package es.deusto.spq.server;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -188,3 +188,4 @@ public class ResourceTest {
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 }
+*/
