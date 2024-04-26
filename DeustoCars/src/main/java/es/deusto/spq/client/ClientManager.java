@@ -49,6 +49,6 @@ public class ClientManager {
      * @param port The port of the target.
      */
     public void setWebTarget(String hostname, String port) {
-        webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
+    	webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
     }
 }

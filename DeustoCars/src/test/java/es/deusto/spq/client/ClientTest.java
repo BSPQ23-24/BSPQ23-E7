@@ -52,8 +52,9 @@ public class ClientTest {
     @Captor
     private ArgumentCaptor<Entity<DirectMessage>> directMessageEntityCaptor;
 
+    private MainClient mainclient;
     
-    private DCServerManager cdservermanager;
+    //private DCServerManager cdservermanager;
 
     @Before
     public void setUp() {
@@ -62,10 +63,10 @@ public class ClientTest {
         // prepare static mock of ClientBuilder
         try (MockedStatic<ClientBuilder> clientBuilder = Mockito.mockStatic(ClientBuilder.class)) {
             clientBuilder.when(ClientBuilder::newClient).thenReturn(client);
-            when(client.target("http://localhost:8080/rest/resource")).thenReturn(webTarget);
+            when(client.target("http://localhost:8080/rest/server")).thenReturn(webTarget);
         }
 
-        cdservermanager = new DCServerManager("localhost", "8080");
+        mainclient = new MainClient("localhost", "8080");
     }
 
     
@@ -76,7 +77,7 @@ public class ClientTest {
 
         Response response = Response.ok().build();
         when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
-        assertTrue(cdservermanager.deleteVehicleBoolean("123AB"));
+        assertTrue(mainclient.deleteVehicleBoolean("123AB"));
 
     }
 

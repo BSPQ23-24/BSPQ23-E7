@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.io.ObjectInputFilter.Status;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,6 +26,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.html.parser.Entity;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,6 +41,7 @@ import es.deusto.spq.CustomerRegister;
 import es.deusto.spq.VehicleRegistration;
 import es.deusto.spq.db.Database;
 import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.UserData;
 import es.deusto.spq.pojo.VehicleData;
 
 /**
@@ -54,6 +60,12 @@ public class MainClient extends JFrame {
     private JTextField numberPlate;
     private JTextField eMail;
     protected static final Logger logger = LogManager.getLogger();
+    
+	private static final String USER = "dipina";
+	private static final String PASSWORD = "dipina";
+	
+	private Client client;
+	private WebTarget webTarget;
 
     /**
      * Constructs a new MainClient object.
@@ -61,6 +73,10 @@ public class MainClient extends JFrame {
      * @param port The port of the server.
      */
     public MainClient(String hostname, String port) {
+    	
+		client = ClientBuilder.newClient();
+		webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
+    	
         setTitle("Client");
         setSize(900, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -403,6 +419,23 @@ public class MainClient extends JFrame {
      *
      * @param eMail The email of the customer to delete.
      */
+    
+    public boolean deleteVehicleBoolean(String numberPlate) {
+        WebTarget deleteVehicleWebTarget = webTarget.path("deletevehicle");
+
+        Response response = deleteVehicleWebTarget.queryParam("numberPlate", numberPlate)
+                .request(MediaType.APPLICATION_JSON).delete();
+
+        if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+            logger.info("Error connecting with the server. Code: {}", response.getStatus());
+            return false;
+        } else {
+            logger.info("Vehicle correctly deleted");
+            return true;
+        }
+    }
+    
+    
     public void deleteCustomer(String eMail) {
         Response response = ClientManager.getInstance().getWebTarget()
                 .path("server/deletecustomer")

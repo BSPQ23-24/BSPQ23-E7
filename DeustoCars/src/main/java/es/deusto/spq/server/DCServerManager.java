@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 public class DCServerManager implements ActionListener, Runnable {
 
     protected static final Logger logger = LogManager.getLogger();
-
+    
     private JFrame frame;
     private JButton buttonEnd;
     private JLabel customerLabel;
@@ -102,6 +102,7 @@ public class DCServerManager implements ActionListener, Runnable {
         new DCServerManager(hostname, port);
     }
 
+    
     /**
      * Retrieves a string representation of the customers from the server.
      * 
@@ -127,20 +128,7 @@ public class DCServerManager implements ActionListener, Runnable {
      * @param numberPlate The number plate of the vehicle to delete.
      * @return True if the vehicle was deleted successfully, false otherwise.
      */
-    public boolean deleteVehicleBoolean(String numberPlate) {
-        WebTarget deleteVehicleWebTarget = webTarget.path("deletevehicle");
 
-        Response response = deleteVehicleWebTarget.queryParam("numberPlate", numberPlate)
-                .request(MediaType.APPLICATION_JSON).delete();
-
-        if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-            logger.info("Error connecting with the server. Code: {}", response.getStatus());
-            return false;
-        } else {
-            logger.info("Vehicle correctly deleted");
-            return true;
-        }
-    }
 
     /**
      * Retrieves a string representation of the vehicles from the server.
