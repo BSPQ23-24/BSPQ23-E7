@@ -17,6 +17,10 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.VehicleData;
+import es.deusto.spq.serialization.Customer;
 import es.deusto.spq.serialization.Vehicle;
 
 
@@ -52,9 +56,49 @@ public class ResourceTest {
 
     @Test
     public void testDeleteVehicle() {
-    	Vehicle vehicle= new Vehicle("123ABC", "Toyota", "Corolla");
-    	when(persistenceManager.getObjectById(Vehicle.class, vehicle.getNumberPlate())).thenReturn(vehicle);
+    	VehicleData vehicle= new VehicleData("123ABC", "Toyota", "Corolla");
+    	when(persistenceManager.getObjectById(VehicleData.class, vehicle.getNumberPlate())).thenReturn(vehicle);
         Response response = dcserver.deleteVehicle("123ABC");
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+    
+    @Test
+    public void testDeleteCustomer() {
+    	CustomerData customer= new CustomerData("x@gmail.com", "xx", "xxxx");
+    	when(persistenceManager.getObjectById(CustomerData.class, customer.geteMail())).thenReturn(customer);
+        Response response = dcserver.deleteVehicle("x@gmail.com");
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+    
+    @Test
+    public void getVehicle() {
+    	VehicleData vehicle= new VehicleData("123ABC", "Toyota", "Corolla");
+    	when(persistenceManager.getObjectById(VehicleData.class, vehicle.getNumberPlate())).thenReturn(vehicle);
+        Response response = dcserver.getVehicle("123ABC");
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+    
+    @Test
+    public void getCustomer() {
+    	CustomerData customer= new CustomerData("x@gmail.com", "xx", "xxxx");
+    	when(persistenceManager.getObjectById(CustomerData.class, customer.geteMail())).thenReturn(customer);
+        Response response = dcserver.getCustomer("x@gmail.com");
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+    
+    @Test
+    public void addVehicle() {
+    	VehicleData vehicle= new VehicleData("123ABC", "Toyota", "Corolla");
+    	when(persistenceManager.getObjectById(VehicleData.class, vehicle.getNumberPlate())).thenReturn(vehicle);
+        Response response = dcserver.addVehicle(vehicle);
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+    
+    @Test
+    public void addCustomer() {
+    	CustomerData customer= new CustomerData("x@gmail.com", "xx", "xxxx");
+    	when(persistenceManager.getObjectById(CustomerData.class, customer.geteMail())).thenReturn(customer);
+        Response response = dcserver.addCustomer(customer);
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
     
