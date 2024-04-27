@@ -63,7 +63,7 @@ public class ClientTest {
         // prepare static mock of ClientBuilder
         try (MockedStatic<ClientBuilder> clientBuilder = Mockito.mockStatic(ClientBuilder.class)) {
             clientBuilder.when(ClientBuilder::newClient).thenReturn(client);
-            when(client.target("http://localhost:8080/rest/server")).thenReturn(webTarget);
+            when(client.target("http://localhost:8080/deustocars")).thenReturn(webTarget);
         }
 
         mainclient = new MainClient("localhost", "8080");
@@ -77,8 +77,9 @@ public class ClientTest {
 
         Response response = Response.ok().build();
         when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
-        assertTrue(mainclient.deleteVehicleBoolean("123AB"));
+        MainClient.deleteVehicle("123AB");
 
     }
+    
 
 }

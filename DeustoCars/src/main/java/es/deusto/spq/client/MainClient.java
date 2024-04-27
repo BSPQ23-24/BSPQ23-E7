@@ -400,7 +400,7 @@ public class MainClient extends JFrame {
      *
      * @param numberPlate The number plate of the vehicle to delete.
      */
-    public void deleteVehicle(String numberPlate) {
+    public static void deleteVehicle(String numberPlate) {
         Response response = ClientManager.getInstance().getWebTarget()
                 .path("server/deletevehicle")
                 .queryParam("numberPlate", numberPlate)
