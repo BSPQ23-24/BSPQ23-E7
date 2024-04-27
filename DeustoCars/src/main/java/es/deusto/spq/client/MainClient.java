@@ -401,18 +401,24 @@ public class MainClient extends JFrame {
      * @param numberPlate The number plate of the vehicle to delete.
      */
     public static void deleteVehicle(String numberPlate) {
-        Response response = ClientManager.getInstance().getWebTarget()
-                .path("server/deletevehicle")
-                .queryParam("numberPlate", numberPlate)
-                .request(MediaType.APPLICATION_JSON)
-                .delete();
+        WebTarget webTarget = ClientManager.getInstance().getWebTarget();
+        if (webTarget != null) {
+            Response response = webTarget
+                    .path("server/deletevehicle")
+                    .queryParam("numberPlate", numberPlate)
+                    .request(MediaType.APPLICATION_JSON)
+                    .delete();
 
-        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            logger.info("Deleting vehicle: " + response.toString());
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                logger.info("Deleting vehicle: " + response.toString());
+            } else {
+                logger.info("ERROR deleting vehicle: " + response.getStatus());
+            }
         } else {
-            logger.info("ERROR deleting vehicle");
+            logger.error("WebTarget is null. Unable to delete vehicle.");
         }
     }
+
 
     /**
      * Deletes a customer from the server based on the provided email.
