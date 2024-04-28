@@ -25,7 +25,7 @@ import es.deusto.spq.serialization.Vehicle;
 
 
 
-public class ResourceTest {
+public class UnitTesting {
 
     private DCServer dcserver;
 
