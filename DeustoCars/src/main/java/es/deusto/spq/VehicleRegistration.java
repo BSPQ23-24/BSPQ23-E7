@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 import es.deusto.spq.pojo.VehicleData;
 
 import es.deusto.spq.client.ClientManager;
+import es.deusto.spq.client.MainClient;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -55,7 +56,7 @@ public class VehicleRegistration extends JFrame {
      * Constructs a new vehicle registration window.
      */
     public VehicleRegistration() {
-        resourceBundle = ResourceBundle.getBundle(SYSTEM_MESSAGES, Locale.getDefault());
+        resourceBundle = MainClient.getResourceBundle();
 
         submitButton = new JButton(resourceBundle.getString("register_vehicle_label"));
         setupUI(resourceBundle.getString("register_vehicle_label"));
@@ -77,7 +78,6 @@ public class VehicleRegistration extends JFrame {
      * @param numberPlate The number plate of the vehicle to modify.
      */
     public VehicleRegistration(String numberPlate) {
-        resourceBundle = ResourceBundle.getBundle(SYSTEM_MESSAGES, Locale.getDefault());
 
         submitButton = new JButton(resourceBundle.getString("register_vehicle_label"));
         setupUI("Vehicle Modification");
