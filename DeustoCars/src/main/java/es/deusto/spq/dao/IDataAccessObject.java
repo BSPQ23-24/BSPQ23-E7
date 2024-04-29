@@ -1,4 +1,4 @@
-package es.deusto.sqp.dao;
+package es.deusto.spq.dao;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
-package es.deusto.sqp.dao;
+package es.deusto.spq.dao;
 
-import es.deusto.spq.serialization.Customer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,23 +7,25 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
-public class CustomerDAO extends DataAccessObject implements IDataAccessObject<Customer> {
+import es.deusto.spq.pojo.VehicleData;
+
+public class VehicleDAO extends DataAccessObject implements IDataAccessObject<VehicleData> {
 	//This class implements Singleton and DAO patterns
-	private static CustomerDAO instance;	
+	private static VehicleDAO instance;	
 		
-	private CustomerDAO() { }
+	private VehicleDAO() { }
 		
-	public static CustomerDAO getInstance() {
+	public static VehicleDAO getInstance() {
 		if (instance == null) {
-			instance = new CustomerDAO();
+			instance = new VehicleDAO();
 		}		
 			
 		return instance;
 	}	
 		
 	@Override
-	public void store(Customer object) {
-		Customer storedObject = instance.find(object.geteMail());
+	public void store(VehicleData object) {
+		VehicleData storedObject = instance.find(object.getNumberPlate());
 
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -40,7 +41,7 @@ public class CustomerDAO extends DataAccessObject implements IDataAccessObject<C
 				
 			tx.commit();
 		} catch (Exception ex) {
-			System.out.println("  $ Error storing Customer: " + ex.getMessage());
+			System.out.println("  $ Error storing VehicleData: " + ex.getMessage());
 		} finally {
 			if (tx != null && tx.isActive()) {
 				tx.rollback();
@@ -51,19 +52,19 @@ public class CustomerDAO extends DataAccessObject implements IDataAccessObject<C
 	}
 
 	@Override
-	public void delete(Customer object) {
+	public void delete(VehicleData object) {
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
 
 		try {
 			tx.begin();
 			
-			Customer storedObject = (Customer) em.find(Customer.class, object.geteMail());
+			VehicleData storedObject = (VehicleData) em.find(VehicleData.class, object.getNumberPlate());
 			em.remove(storedObject);
 			
 			tx.commit();
 		} catch (Exception ex) {
-			System.out.println("  $ Error removing a Customer: " + ex.getMessage());
+			System.out.println("  $ Error removing a VehicleData: " + ex.getMessage());
 		} finally {
 			if (tx != null && tx.isActive()) {
 				tx.rollback();
@@ -75,21 +76,21 @@ public class CustomerDAO extends DataAccessObject implements IDataAccessObject<C
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Customer> findAll() {
+	public List<VehicleData> findAll() {
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		
-		List<Customer> users = new ArrayList<>();
+		List<VehicleData> users = new ArrayList<>();
 
 		try {
 			tx.begin();
 			//TODO: modify query to work properly
-			Query q = em.createQuery("SELECT u FROM Customer u");
-			users = (List<Customer>) q.getResultList();
+			Query q = em.createQuery("SELECT u FROM VehicleData u");
+			users = (List<VehicleData>) q.getResultList();
 						
 			tx.commit();
 		} catch (Exception ex) {
-			System.out.println("  $ Error querying all customers: " + ex.getMessage());
+			System.out.println("  $ Error querying all Vehicles: " + ex.getMessage());
 		} finally {
 			if (tx != null && tx.isActive()) {
 				tx.rollback();
@@ -102,20 +103,20 @@ public class CustomerDAO extends DataAccessObject implements IDataAccessObject<C
 	}
 
 	@Override
-	public Customer find(String param) {		
+	public VehicleData find(String param) {		
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
 
-		Customer result = null; 
+		VehicleData result = null; 
 
 		try {
 			tx.begin();
 
-			result = (Customer) em.find(Customer.class, param);
+			result = (VehicleData) em.find(VehicleData.class, param);
 			
 			tx.commit();
 		} catch (Exception ex) {
-			System.out.println("  $ Error querying a Customer by email: " + ex.getMessage());
+			System.out.println("  $ Error querying a Vehicle by plate number: " + ex.getMessage());
 		} finally {
 			if (tx != null && tx.isActive()) {
 				tx.rollback();
@@ -127,4 +128,3 @@ public class CustomerDAO extends DataAccessObject implements IDataAccessObject<C
 		return result;
 	}
 }
-
