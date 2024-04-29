@@ -10,6 +10,7 @@ import es.deusto.spq.db.resources.Parameter;
 import java.awt.*;
 import java.sql.*;
 import java.util.Date;
+import java.util.Locale;
 import java.text.SimpleDateFormat;
 import es.deusto.spq.pojo.CustomerData;
 
@@ -21,6 +22,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ResourceBundle;
 
 /**
  * Class for customer registration and modification using a graphical user interface.
@@ -35,12 +38,18 @@ public class CustomerRegister extends JFrame {
     private JTextField emailField;
     private JButton submitButton;
 
+    private static final String SYSTEM_MESSAGES = "SystemMessages";
+    private ResourceBundle resourceBundle;
+    
+
     /**
      * Constructs a new CustomerRegister window for user registration.
      */
     public CustomerRegister() {
-        submitButton = new JButton("Register User");
-        setupUI("User Registration");
+        resourceBundle = ResourceBundle.getBundle(SYSTEM_MESSAGES, Locale.getDefault());
+
+        submitButton = new JButton(resourceBundle.getString("register_user_label"));
+        setupUI(resourceBundle.getString("register_user_label"));
 
         nameField = new JTextField();
         surnameField = new JTextField();
@@ -58,7 +67,8 @@ public class CustomerRegister extends JFrame {
      * @param eMail The email of the customer to modify.
      */
     public CustomerRegister(String eMail) {
-        submitButton = new JButton("Modify User");
+        submitButton = new JButton(resourceBundle.getString("register_user_label"));
+
         setupUI("User Modification");
 
         ResultSet rs = Database.getInstance().ejecutarConsulta(
@@ -72,10 +82,11 @@ public class CustomerRegister extends JFrame {
                 birthDateField = new JTextField(rs.getDate("birth_date").toString());
                 emailField = new JTextField(rs.getString("email"));
             } else {
-                JOptionPane.showMessageDialog(this, "Customer not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, resourceBundle.getString("customer_not_found_message"), "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException e) {
-            logger.info("Error loading customer data: " + e.getMessage());
+            logger.info(resourceBundle.getString("customer_not_found_message") + e.getMessage());
+            
         }
 
         addComponentsToForm();
@@ -106,17 +117,15 @@ public class CustomerRegister extends JFrame {
     private void addComponentsToForm() {
         JPanel formPanel = (JPanel) getContentPane().getComponent(0);
         formPanel.setLayout(new GridLayout(0, 2, 10, 10)); // Two columns layout
-    
-        formPanel.add(new JLabel("Name:"));
+        formPanel.add(new JLabel(resourceBundle.getString("name_label")));
         formPanel.add(nameField);
-        formPanel.add(new JLabel("Surname:"));
+        formPanel.add(new JLabel(resourceBundle.getString("surname_label")));
         formPanel.add(surnameField);
-        formPanel.add(new JLabel("Date of Birth (YYYY-MM-DD):"));
+        formPanel.add(new JLabel(resourceBundle.getString("birthdate_label")));
         formPanel.add(birthDateField);
-        formPanel.add(new JLabel("Email:"));
+        formPanel.add(new JLabel(resourceBundle.getString("email_label")));
         formPanel.add(emailField);
     
-        // Set blue borders to text fields
         nameField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
         surnameField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
         birthDateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
@@ -148,7 +157,7 @@ public class CustomerRegister extends JFrame {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             birth = dateFormat.parse(birthDate);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Invalid date of birth. Expected format: YYYY-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, resourceBundle.getString("invalid_date_message"), "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 

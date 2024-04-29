@@ -7,6 +7,9 @@ import es.deusto.spq.db.resources.Parameter;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import es.deusto.spq.pojo.VehicleData;
 
 import es.deusto.spq.client.ClientManager;
@@ -25,6 +28,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class VehicleRegistration extends JFrame {
     protected static final Logger logger = LogManager.getLogger();
+
+    private static final String SYSTEM_MESSAGES = "SystemMessages";
+    private ResourceBundle resourceBundle;
 
     private static final long serialVersionUID = 1L;
     private JTextField brandField;
@@ -49,8 +55,10 @@ public class VehicleRegistration extends JFrame {
      * Constructs a new vehicle registration window.
      */
     public VehicleRegistration() {
-        submitButton = new JButton("Register Vehicle");
-        setupUI("Vehicle Registration");
+        resourceBundle = ResourceBundle.getBundle(SYSTEM_MESSAGES, Locale.getDefault());
+
+        submitButton = new JButton(resourceBundle.getString("register_vehicle_label"));
+        setupUI(resourceBundle.getString("register_vehicle_label"));
 
         brandField = new JTextField();
         numberPlateField = new JTextField();
@@ -69,7 +77,9 @@ public class VehicleRegistration extends JFrame {
      * @param numberPlate The number plate of the vehicle to modify.
      */
     public VehicleRegistration(String numberPlate) {
-        submitButton = new JButton("Modify Vehicle");
+        resourceBundle = ResourceBundle.getBundle(SYSTEM_MESSAGES, Locale.getDefault());
+
+        submitButton = new JButton(resourceBundle.getString("register_vehicle_label"));
         setupUI("Vehicle Modification");
 
         ResultSet rs = Database.getInstance().ejecutarConsulta(
@@ -81,10 +91,11 @@ public class VehicleRegistration extends JFrame {
                 brandField = new JTextField(rs.getString("brand"));
                 numberPlateField = new JTextField(rs.getString("number_plate"));
                 modelField = new JTextField(rs.getString("model"));
-                readyToBorrowCheckbox = new JCheckBox("Ready to lend", rs.getBoolean("ready_to_borrow"));
-                onRepairCheckbox = new JCheckBox("In repair", rs.getBoolean("on_repair"));
+                readyToBorrowCheckbox = new JCheckBox("Ready to lend", true);
+                onRepairCheckbox = new JCheckBox("In repair", false);        
             } else {
-                JOptionPane.showMessageDialog(this, "Vehicle not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, resourceBundle.getString("vehicle_not_found_message"), "Error", JOptionPane.ERROR_MESSAGE);
+
             }
         } catch (SQLException e) {
             logger.info("Error loading vehicle data: " + e.getMessage());
@@ -119,11 +130,11 @@ public class VehicleRegistration extends JFrame {
         JPanel formPanel = (JPanel) getContentPane().getComponent(0);
         formPanel.setLayout(new GridLayout(0, 2, 10, 10)); // Two columns layout
 
-        formPanel.add(new JLabel("Brand:"));
+        formPanel.add(new JLabel(resourceBundle.getString("brand_label")));
         formPanel.add(brandField);
-        formPanel.add(new JLabel("Number Plate:"));
+        formPanel.add(new JLabel(resourceBundle.getString("number_plate_label")));
         formPanel.add(numberPlateField);
-        formPanel.add(new JLabel("Model:"));
+        formPanel.add(new JLabel(resourceBundle.getString("model_label")));
         formPanel.add(modelField);
         if (isModification) {
             formPanel.add(readyToBorrowCheckbox);
@@ -134,7 +145,6 @@ public class VehicleRegistration extends JFrame {
         }
         formPanel.add(new JPanel()); // Empty panel for alignment
 
-        // Set blue borders to text fields
         brandField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
         numberPlateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
         modelField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
@@ -165,9 +175,10 @@ public class VehicleRegistration extends JFrame {
 
         // Connect and update the database
         if (updateDatabase(newVehicle)) {
-            JOptionPane.showMessageDialog(this, "Vehicle registered successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, resourceBundle.getString("vehicle_registered_successfully"), "Success", JOptionPane.INFORMATION_MESSAGE);
+
         } else {
-            JOptionPane.showMessageDialog(this, "Error registering vehicle.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, resourceBundle.getString("error_registering_vehicle_message"), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
