@@ -50,7 +50,7 @@ import es.deusto.spq.pojo.VehicleData;
  * This class represents the main client application for managing customers and vehicles.
  */
 public class MainClient extends JFrame {
-    private ResourceBundle resourceBundle;
+    private static ResourceBundle resourceBundle;
 
     private JButton editClient;
     private JButton addClient;
@@ -71,17 +71,28 @@ public class MainClient extends JFrame {
 	private Client client;
 	private WebTarget webTarget;
 
+    static {
+        // English (default):
+        //resourceBundle = ResourceBundle.getBundle("SystemMessages", Locale.getDefault());
+
+        // Spanish:
+        resourceBundle = ResourceBundle.getBundle("SystemMessages", new Locale("es"));
+
+        // Basque:
+        //resourceBundle = ResourceBundle.getBundle("SystemMessages", new Locale("eu"));
+    }
+
+    // Static method to access the ResourceBundle instance
+    public static ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
     /**
      * Constructs a new MainClient object.
      * @param hostname The hostname of the server.
      * @param port The port of the server.
      */
     public MainClient(String hostname, String port) {
-        //English (default):
-        //resourceBundle = ResourceBundle.getBundle("SystemMessages", Locale.getDefault());
-        // Spanish:
-        resourceBundle = ResourceBundle.getBundle("SystemMessages", new Locale("es"));
-
         logger.info(resourceBundle.getString("starting_msg"));
 
     	

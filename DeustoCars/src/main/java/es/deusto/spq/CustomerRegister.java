@@ -3,6 +3,7 @@ package es.deusto.spq;
 import javax.swing.*;
 
 import es.deusto.spq.client.ClientManager;
+import es.deusto.spq.client.MainClient;
 import es.deusto.spq.db.Database;
 import es.deusto.spq.db.resources.DataType;
 import es.deusto.spq.db.resources.Parameter;
@@ -46,7 +47,7 @@ public class CustomerRegister extends JFrame {
      * Constructs a new CustomerRegister window for user registration.
      */
     public CustomerRegister() {
-        resourceBundle = ResourceBundle.getBundle(SYSTEM_MESSAGES, Locale.getDefault());
+        resourceBundle = MainClient.getResourceBundle();
 
         submitButton = new JButton(resourceBundle.getString("register_user_label"));
         setupUI(resourceBundle.getString("register_user_label"));
