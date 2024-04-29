@@ -10,10 +10,10 @@
 
         <properties>
 			<property name="javax.persistence.jdbc.driver" value="" />
-            <property name="javax.persistence.jdbc.url" value=""/>
-            <property name="javax.persistence.jdbc.user" value="" />
-            <property name="javax.persistence.jdbc.password" value=""/>
-            <property name="datanucleus.schema.autoCreateAll" value=""/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:8080/deustoCarsDB"/>
+            <property name="javax.persistence.jdbc.user" value="spq" />
+            <property name="javax.persistence.jdbc.password" value="spq"/>
+            <property name="datanucleus.schema.autoCreateAll" value="true"/>
         </properties>
     </persistence-unit>
 </persistence>
