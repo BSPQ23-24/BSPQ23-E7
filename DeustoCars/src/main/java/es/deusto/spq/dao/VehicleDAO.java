@@ -1,130 +1,78 @@
 package es.deusto.spq.dao;
 
-import java.util.ArrayList;
+import es.deusto.spq.serialization.Vehicle;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
 
-import es.deusto.spq.pojo.VehicleData;
+public class VehicleDAO extends DataAccessObject {
+    private static VehicleDAO instance;
 
-public class VehicleDAO extends DataAccessObject implements IDataAccessObject<VehicleData> {
-	//This class implements Singleton and DAO patterns
-	private static VehicleDAO instance;	
-		
-	private VehicleDAO() { }
-		
-	public static VehicleDAO getInstance() {
-		if (instance == null) {
-			instance = new VehicleDAO();
-		}		
-			
-		return instance;
-	}	
-		
-	@Override
-	public void store(VehicleData object) {
-		VehicleData storedObject = instance.find(object.getNumberPlate());
+    private VehicleDAO() {}
 
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+    public static VehicleDAO getInstance() {
+        if (instance == null) {
+            instance = new VehicleDAO();
+        }
+        return instance;
+    }
 
-		try {
-			tx.begin();
-				
-			if (storedObject != null) {
-				em.merge(object);
-			} else {
-				em.persist(object);
-			}
-				
-			tx.commit();
-		} catch (Exception ex) {
-			System.out.println("  $ Error storing VehicleData: " + ex.getMessage());
-		} finally {
-			if (tx != null && tx.isActive()) {
-				tx.rollback();
-			}
+    public void store(Vehicle vehicle) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            if (em.find(Vehicle.class, vehicle.getNumberPlate()) != null) {
+                em.merge(vehicle);
+            } else {
+                em.persist(vehicle);
+            }
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException("Error storing vehicle: " + ex.getMessage(), ex);
+        } finally {
+            em.close();
+        }
+    }
 
-			em.close();
-		}
-	}
+    public void delete(String numberPlate) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Vehicle vehicle = em.find(Vehicle.class, numberPlate);
+            if (vehicle != null) {
+                em.remove(vehicle);
+            }
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException("Error removing vehicle: " + ex.getMessage(), ex);
+        } finally {
+            em.close();
+        }
+    }
 
-	@Override
-	public void delete(VehicleData object) {
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+    public List<Vehicle> findAll() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("SELECT v FROM Vehicle v", Vehicle.class).getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
-		try {
-			tx.begin();
-			
-			VehicleData storedObject = (VehicleData) em.find(VehicleData.class, object.getNumberPlate());
-			em.remove(storedObject);
-			
-			tx.commit();
-		} catch (Exception ex) {
-			System.out.println("  $ Error removing a VehicleData: " + ex.getMessage());
-		} finally {
-			if (tx != null && tx.isActive()) {
-				tx.rollback();
-			}
-
-			em.close();
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<VehicleData> findAll() {
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		
-		List<VehicleData> users = new ArrayList<>();
-
-		try {
-			tx.begin();
-			//TODO: modify query to work properly
-			Query q = em.createQuery("SELECT u FROM VehicleData u");
-			users = (List<VehicleData>) q.getResultList();
-						
-			tx.commit();
-		} catch (Exception ex) {
-			System.out.println("  $ Error querying all Vehicles: " + ex.getMessage());
-		} finally {
-			if (tx != null && tx.isActive()) {
-				tx.rollback();
-			}
-
-			em.close();
-		}
-
-		return users;
-	}
-
-	@Override
-	public VehicleData find(String param) {		
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-
-		VehicleData result = null; 
-
-		try {
-			tx.begin();
-
-			result = (VehicleData) em.find(VehicleData.class, param);
-			
-			tx.commit();
-		} catch (Exception ex) {
-			System.out.println("  $ Error querying a Vehicle by plate number: " + ex.getMessage());
-		} finally {
-			if (tx != null && tx.isActive()) {
-				tx.rollback();
-			}
-
-			em.close();
-		}
-
-		return result;
-	}
+    public Vehicle find(String numberPlate) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.find(Vehicle.class, numberPlate);
+        } finally {
+            em.close();
+        }
+    }
 }

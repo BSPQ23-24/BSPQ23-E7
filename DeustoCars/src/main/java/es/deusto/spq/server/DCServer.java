@@ -16,91 +16,92 @@ import es.deusto.spq.dao.CustomerDAO;
 import es.deusto.spq.dao.VehicleDAO;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleData;
-import java.util.Date;
+import es.deusto.spq.serialization.Customer;
+import es.deusto.spq.serialization.Vehicle;
+import java.util.stream.Collectors;
 
-/**
- * Represents the server for handling customer and vehicle data.
- */
-@Path("/server") // general extension of the path for the server
+@Path("/server")
 @Produces(MediaType.APPLICATION_JSON)
 public class DCServer {
     protected static final Logger logger = LogManager.getLogger();
 
-    public DCServer() {
-        // When adding any pattern or class to connect to the database, instantiate and create the connection here
-    }
+    public DCServer() {}
 
     @POST
-    @Path("/customers") // extension for the method below
+    @Path("/customers")
     public Response addCustomer(CustomerData customerData) {
-        // Receive DTO and create CustomerData
-        String eMail = customerData.geteMail();
-        String name = customerData.getName();
-        String surname = customerData.getSurname();
-        Date birthDate = customerData.getDateOfBirth();
-        CustomerData c1 = new CustomerData(eMail, name, surname, birthDate);
-
-        CustomerDAO.getInstance().store(c1);
+        Customer customer = new Customer(
+            customerData.geteMail(), 
+            customerData.getName(), 
+            customerData.getSurname(), 
+            customerData.getDateOfBirth()
+        );
+        CustomerDAO.getInstance().store(customer);
         
-        logger.info("Adding customer: " + c1.toString());
-        logger.info("Customer registered.");
-        return Response.ok().build();
+        logger.info("Adding customer: " + customer);
+        return Response.ok().entity(customerData).build(); // Respond with the DTO for consistency
     }
 
     @POST
     @Path("/vehicles")
     public Response addVehicle(VehicleData vehicleData) {
-        String numberPlate = vehicleData.getNumberPlate();
-        String brand = vehicleData.getBrand();
-        String model = vehicleData.getModel();
-
-        // Receive the info from Client and add the parameters to the function
-        VehicleData v1 = new VehicleData(numberPlate, brand, model);
+        Vehicle vehicle = new Vehicle(
+            vehicleData.getNumberPlate(), 
+            vehicleData.getBrand(), 
+            vehicleData.getModel()
+        );
+        VehicleDAO.getInstance().store(vehicle);
         
-        VehicleDAO.getInstance().store(v1);
-        
-        logger.info("Adding vehicle: " + v1.toString());
-        logger.info("Vehicle registered.");
-        return Response.ok().build();
+        logger.info("Adding vehicle: " + vehicle);
+        return Response.ok().entity(vehicleData).build(); // Respond with the DTO for consistency
     }
 
     @GET
     @Path("/getcustomers")
     public Response getCustomers() {
-        // This data will be retrieved from the database
-        List<CustomerData> customers = CustomerDAO.getInstance().findAll();
-        return Response.ok(customers).build();
+        List<Customer> customers = CustomerDAO.getInstance().findAll();
+        List<CustomerData> customerDataList = customers.stream()
+            .map(c -> new CustomerData(c.geteMail(), c.getName(), c.getSurname(), c.getDateOfBirth()))
+            .collect(Collectors.toList());
+        return Response.ok(customerDataList).build();
     }
 
     @GET
     @Path("/getvehicles")
     public Response getVehicles() {
-        // This data will be retrieved from the database
-    	List<VehicleData> vehicles = VehicleDAO.getInstance().findAll();
-        return Response.ok(vehicles).build();
+        List<Vehicle> vehicles = VehicleDAO.getInstance().findAll();
+        List<VehicleData> vehicleDataList = vehicles.stream()
+            .map(v -> new VehicleData(v.getNumberPlate(), v.getBrand(), v.getModel()))
+            .collect(Collectors.toList());
+        return Response.ok(vehicleDataList).build();
     }
 
     @GET
     @Path("/getcustomer")
     public Response getCustomer(String eMail) {
-        // This data will be retrieved from the database
-        CustomerData customer = CustomerDAO.getInstance().find(eMail);
-        return Response.ok(customer).build();
+        Customer customer = CustomerDAO.getInstance().find(eMail);
+        if (customer != null) {
+            CustomerData customerData = new CustomerData(customer.geteMail(), customer.getName(), customer.getSurname(), customer.getDateOfBirth());
+            return Response.ok(customerData).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @GET
     @Path("/getvehicle")
     public Response getVehicle(String numberPlate) {
-        // This data will be retrieved from the database
-    	VehicleData vehicle = VehicleDAO.getInstance().find(numberPlate);
-        return Response.ok(vehicle).build();
+        Vehicle vehicle = VehicleDAO.getInstance().find(numberPlate);
+        if (vehicle != null) {
+            VehicleData vehicleData = new VehicleData(vehicle.getNumberPlate(), vehicle.getBrand(), vehicle.getModel());
+            return Response.ok(vehicleData).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @DELETE
     @Path("/deletevehicle")
     public Response deleteVehicle(String numberPlate) {
-    	VehicleData vehicleData = new VehicleData(numberPlate, null, null);
-        VehicleDAO.getInstance().delete(vehicleData);
+        VehicleDAO.getInstance().delete(numberPlate); // Assume DAO delete method accepts just the ID now
         logger.info("Deleting vehicle with number plate: " + numberPlate);
         return Response.ok().build();
     }
@@ -108,8 +109,7 @@ public class DCServer {
     @DELETE
     @Path("/deletecustomer")
     public Response deleteCustomer(String eMail) {
-    	CustomerData customerData = new CustomerData(eMail, null, null);
-        CustomerDAO.getInstance().delete(customerData);
+        CustomerDAO.getInstance().delete(eMail); // Assume DAO delete method accepts just the ID now
         logger.info("Deleting customer with eMail: " + eMail);
         return Response.ok().build();
     }

@@ -1,131 +1,84 @@
 package es.deusto.spq.dao;
 
-import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.serialization.Customer;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
+import javax.persistence.Persistence;
 
-public class CustomerDAO extends DataAccessObject implements IDataAccessObject<CustomerData> {
-	//This class implements Singleton and DAO patterns
-	private static CustomerDAO instance;	
-		
-	private CustomerDAO() { }
-		
-	public static CustomerDAO getInstance() {
-		if (instance == null) {
-			instance = new CustomerDAO();
-		}		
-			
-		return instance;
-	}	
-		
-	@Override
-	public void store(CustomerData object) {
-		CustomerData storedObject = instance.find(object.geteMail());
+public class CustomerDAO {
+    private static CustomerDAO instance;
+    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DeustoCars");
+    
+    private CustomerDAO() { }
+    
+    public static CustomerDAO getInstance() {
+        if (instance == null) {
+            instance = new CustomerDAO();
+        }       
+        return instance;
+    }   
+    
+    public void store(Customer customer) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
 
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            if (em.find(Customer.class, customer.geteMail()) != null) {
+                em.merge(customer);
+            } else {
+                em.persist(customer);
+            }
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException("Error storing customer", ex);
+        } finally {
+            em.close();
+        }
+    }
 
-		try {
-			tx.begin();
-				
-			if (storedObject != null) {
-				em.merge(object);
-			} else {
-				em.persist(object);
-			}
-				
-			tx.commit();
-		} catch (Exception ex) {
-			System.out.println("  $ Error storing Customer: " + ex.getMessage());
-		} finally {
-			if (tx != null && tx.isActive()) {
-				tx.rollback();
-			}
+    public void delete(String email) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
 
-			em.close();
-		}
-	}
+        try {
+            tx.begin();
+            Customer customer = em.find(Customer.class, email);
+            if (customer != null) {
+                em.remove(customer);
+            }
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException("Error deleting customer", ex);
+        } finally {
+            em.close();
+        }
+    }
 
-	@Override
-	public void delete(CustomerData object) {
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+    public List<Customer> findAll() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("SELECT c FROM Customer c", Customer.class).getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
-		try {
-			tx.begin();
-			
-			CustomerData storedObject = (CustomerData) em.find(CustomerData.class, object.geteMail());
-			em.remove(storedObject);
-			
-			tx.commit();
-		} catch (Exception ex) {
-			System.out.println("  $ Error removing a Customer: " + ex.getMessage());
-		} finally {
-			if (tx != null && tx.isActive()) {
-				tx.rollback();
-			}
-
-			em.close();
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<CustomerData> findAll() {
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		
-		List<CustomerData> users = new ArrayList<>();
-
-		try {
-			tx.begin();
-			//TODO: modify query to work properly
-			Query q = em.createQuery("SELECT u FROM Customer u");
-			users = (List<CustomerData>) q.getResultList();
-						
-			tx.commit();
-		} catch (Exception ex) {
-			System.out.println("  $ Error querying all customers: " + ex.getMessage());
-		} finally {
-			if (tx != null && tx.isActive()) {
-				tx.rollback();
-			}
-
-			em.close();
-		}
-
-		return users;
-	}
-
-	@Override
-	public CustomerData find(String param) {		
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
-
-		CustomerData result = null; 
-
-		try {
-			tx.begin();
-
-			result = (CustomerData) em.find(CustomerData.class, param);
-			
-			tx.commit();
-		} catch (Exception ex) {
-			System.out.println("  $ Error querying a Customer by email: " + ex.getMessage());
-		} finally {
-			if (tx != null && tx.isActive()) {
-				tx.rollback();
-			}
-
-			em.close();
-		}
-
-		return result;
-	}
+    public Customer find(String email) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.find(Customer.class, email);
+        } finally {
+            em.close();
+        }
+    }
 }
-

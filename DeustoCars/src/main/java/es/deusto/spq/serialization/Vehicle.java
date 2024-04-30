@@ -1,15 +1,36 @@
 package es.deusto.spq.serialization;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Represents a vehicle.
  */
+@Entity
+@Table(name = "vehicles")  // Specifies the table name
 public class Vehicle {
+    @Id
+    @Column(name = "number_plate", nullable = false)
     private String numberPlate;
+
+    @Column(name = "brand", nullable = false)
     private String brand;
+
+    @Column(name = "model", nullable = false)
     private String model;
+
+    @Column(name = "ready_to_borrow", nullable = false)
     private boolean readyToBorrow;
+
+    @Column(name = "on_repair", nullable = false)
     private boolean onRepair;
-    
+
+    /**
+     * Default constructor for JPA.
+     */
+    public Vehicle() {}
     /**
      * Constructs a Vehicle object with the specified number plate, brand, and model.
      * By default, the vehicle is ready to borrow and not on repair.

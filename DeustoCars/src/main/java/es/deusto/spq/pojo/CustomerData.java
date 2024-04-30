@@ -40,13 +40,6 @@ public class CustomerData {
     }
 
     /**
-     * Default constructor required for serialization.
-     */
-    public CustomerData() {
-        // Required for serialization
-    }
-
-    /**
      * Retrieves the email of the customer.
      *
      * @return The email of the customer.

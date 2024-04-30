@@ -2,14 +2,35 @@ package es.deusto.spq.serialization;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 /**
  * Represents a customer.
  */
+@Entity
+@Table(name = "customers") // Specifies table name
 public class Customer {
+    @Id
+    @Column(name = "email", nullable = false)
     private String eMail;
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "surname", nullable = false)
     private String surname;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "date_of_birth", nullable = true)
     private Date dateOfBirth;
+
+    // Default constructor required for JPA
+    public Customer() {}
 
     /**
      * Constructs a Customer object with the specified email, name, surname, and date of birth.
