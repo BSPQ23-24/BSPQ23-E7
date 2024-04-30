@@ -16,7 +16,7 @@ public class Database {
     private static Database instance;
     private Connection connection;
     
-    private final String url = "jdbc:mysql://localhost:3306/deustoCarsDB";
+    private final String url = "jdbc:mysql://localhost:8080/deustoCarsDB";
     private final String user = "spq";
     private final String password = "spq";
     protected static final Logger logger = LogManager.getLogger();

@@ -281,7 +281,7 @@
 		    </dependencies>
 		    <configuration>
 		        <!-- Specify database connection parameters -->
-		        <url>jdbc:mysql://localhost:3306/deustoCarsDB</url>
+		        <url>jdbc:mysql://localhost:8080/deustoCarsDB</url>
 		        <username>spq</username>
 		        <password>spq</password>
 		        <!-- Specify directory containing SQL scripts -->
