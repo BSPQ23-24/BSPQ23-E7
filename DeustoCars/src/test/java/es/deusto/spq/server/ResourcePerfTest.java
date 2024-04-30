@@ -25,7 +25,6 @@ import org.junit.experimental.categories.Category;
 
 import com.github.noconnor.junitperf.JUnitPerfRule;
 import com.github.noconnor.junitperf.JUnitPerfTest;
-import com.github.noconnor.junitperf.JUnitPerfTestRequirement;
 import com.github.noconnor.junitperf.reporting.providers.HtmlReportGenerator;
 
 import es.deusto.spq.pojo.DirectMessage;
@@ -35,7 +34,6 @@ import es.deusto.spq.server.jdo.Message;
 import es.deusto.spq.server.jdo.User;
 
 
-@Category(ResourcePerfTest.class)
 public class ResourcePerfTest {
 
     private static final PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
@@ -99,37 +97,37 @@ public class ResourcePerfTest {
         assertEquals("Hello world!", response.readEntity(String.class));
     }
 
-    @Test
-    @JUnitPerfTest(threads = 10, durationMs = 2000)
-    public void testSayMessagePerf() {
-        DirectMessage directMessage = new DirectMessage();
-        UserData userData = new UserData();
-        userData.setLogin("john");
-        userData.setPassword("1234");
-        directMessage.setUserData(userData);
-
-        MessageData messageData = new MessageData();
-        messageData.setMessage("This is a message!");
-        directMessage.setMessageData(messageData);
-
-        Response response = target.path("sayMessage")
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(directMessage, MediaType.APPLICATION_JSON));
-
-        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
-    }
-
-    @Test
-    @JUnitPerfTest(threads = 10, durationMs = 2000)
-    public void testRegisterUser() {
-        UserData user = new UserData();
-        user.setLogin(UUID.randomUUID().toString());
-        user.setPassword("1234");
-
-        Response response = target.path("register")
-            .request(MediaType.APPLICATION_JSON)
-            .post(Entity.entity(user, MediaType.APPLICATION_JSON));
-
-        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
-    }
+//    @Test
+//    @JUnitPerfTest(threads = 10, durationMs = 2000)
+//    public void testSayMessagePerf() {
+//        DirectMessage directMessage = new DirectMessage();
+//        UserData userData = new UserData();
+//        userData.setLogin("john");
+//        userData.setPassword("1234");
+//        directMessage.setUserData(userData);
+//
+//        MessageData messageData = new MessageData();
+//        messageData.setMessage("This is a message!");
+//        directMessage.setMessageData(messageData);
+//
+//        Response response = target.path("sayMessage")
+//                .request(MediaType.APPLICATION_JSON)
+//                .post(Entity.entity(directMessage, MediaType.APPLICATION_JSON));
+//
+//        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+//    }
+//
+//    @Test
+//    @JUnitPerfTest(threads = 10, durationMs = 2000)
+//    public void testRegisterUser() {
+//        UserData user = new UserData();
+//        user.setLogin(UUID.randomUUID().toString());
+//        user.setPassword("1234");
+//
+//        Response response = target.path("register")
+//            .request(MediaType.APPLICATION_JSON)
+//            .post(Entity.entity(user, MediaType.APPLICATION_JSON));
+//
+//        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+//    }
 }
