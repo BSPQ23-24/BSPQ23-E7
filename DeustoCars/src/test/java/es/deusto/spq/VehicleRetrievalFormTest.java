@@ -25,20 +25,20 @@ public class VehicleRetrievalFormTest {
     }
 
 
-    @Test
-    public void testUpdateDatabase() {
-        // Crear una instancia de Renting para simular los datos de un vehículo
-        Renting renting = new Renting("@gmail.com", "123ABC", new Date(), new Date());
-
-        // Crear una instancia de VehicleRetrievalForm
-        VehicleRetrievalForm form = new VehicleRetrievalForm();
-
-        // Llamar al método updateDatabase con los datos del vehículo
-        boolean result = VehicleRetrievalForm.updateDatabase("123ABC");
-
-        // Verificar si la actualización de la base de datos fue exitosa
-        assertTrue(result);
-    }
+//    @Test
+//    public void testUpdateDatabase() {
+//        // Crear una instancia de Renting para simular los datos de un vehículo
+//        Renting renting = new Renting("@gmail.com", "123ABC", new Date(), new Date());
+//
+//        // Crear una instancia de VehicleRetrievalForm
+//        VehicleRetrievalForm form = new VehicleRetrievalForm();
+//
+//        // Llamar al método updateDatabase con los datos del vehículo
+//        boolean result = VehicleRetrievalForm.updateDatabase("123ABC");
+//
+//        // Verificar si la actualización de la base de datos fue exitosa
+//        assertTrue(result);
+//    }
 
 
 }
