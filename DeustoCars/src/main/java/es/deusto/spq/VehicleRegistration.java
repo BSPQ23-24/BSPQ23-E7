@@ -120,7 +120,16 @@ public class VehicleRegistration extends JFrame {
         submitButton.setFocusPainted(false);
         submitButton.setFont(new Font("Arial", Font.BOLD, 16));
 
-        submitButton.addActionListener(e -> registerVehicle());
+        submitButton.addActionListener(e -> {
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    registerVehicle();
+                    return null;
+                }
+            };
+            worker.execute();
+        });
 
         add(formPanel, BorderLayout.CENTER);
         add(submitButton, BorderLayout.SOUTH);

@@ -109,7 +109,16 @@ public class CustomerRegister extends JFrame {
         submitButton.setFocusPainted(false);
         submitButton.setFont(new Font("Arial", Font.BOLD, 16));
 
-        submitButton.addActionListener(e -> registerUser());
+        submitButton.addActionListener(e -> {
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    registerUser();
+                    return null;
+                }
+            };
+            worker.execute();
+        });
 
         add(formPanel, BorderLayout.CENTER);
         add(submitButton, BorderLayout.SOUTH);

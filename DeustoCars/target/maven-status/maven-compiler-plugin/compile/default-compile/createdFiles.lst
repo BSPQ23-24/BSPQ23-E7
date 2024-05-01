@@ -10,10 +10,12 @@ es\deusto\spq\VehicleRentingForm.class
 es\deusto\spq\server\jdo\Message.class
 es\deusto\spq\db\Database$1.class
 es\deusto\spq\db\resources\Parameter.class
+es\deusto\spq\CustomerRegister$1.class
 es\deusto\spq\pojo\CustomerData.class
 es\deusto\spq\client\MainClient$1.class
 es\deusto\spq\CustomerRegister.class
 es\deusto\spq\server\jdo\VehicleJDO.class
+es\deusto\spq\VehicleRegistration$1.class
 es\deusto\spq\VehicleRetrievalForm.class
 es\deusto\spq\client\ClientManager.class
 es\deusto\spq\pojo\DirectMessage.class

@@ -46,36 +46,44 @@ public class DCServer {
     @Path("/customers")
     public Response addCustomer(CustomerData customerData) {
         try {
-            tx.begin();
             logger.info("Adding customer...");
+            tx.begin(); // Begin transaction
             CustomerJDO customer = null;
             try {
                 customer = pm.getObjectById(CustomerJDO.class, customerData.geteMail());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.info("New customer will be added to database");
             }
             logger.info("Customer: {}", customer);
-			if (customer != null) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Customer with that email already exists.").build();
-			} else {
-				logger.info("Creating customer: {}", customer);
-				customer = new CustomerJDO(
+            if (customer != null) {
+                logger.info("Customer with that email already exists");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Customer with that email already exists.").build();
+            } else {
+                logger.info("Creating customer: {}", customer);
+                customer = new CustomerJDO(
                     customerData.geteMail(), 
                     customerData.getName(), 
                     customerData.getSurname(), 
                     customerData.getDateOfBirth()
                 );
-				pm.makePersistent(customer);					 
-				logger.info("Customer created: {}", customer);
-			}
-            tx.commit();
+                pm.makePersistent(customer); // Persist the customer object
+                logger.info("Customer added: {}", customer);
+            }
+            tx.commit(); // Commit the transaction
             return Response.ok().build();
-        } finally {
+        } catch (Exception e) {
             if (tx.isActive()) {
-				tx.rollback();
-			}
+                tx.rollback(); // Rollback the transaction in case of an exception
+            }
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while adding customer.").build();
+        } finally {
+            logger.info("Closing");
+            pm.close(); // Close the PersistenceManager
         }
     }
+    
+
 
     @POST
     @Path("/vehicles")
