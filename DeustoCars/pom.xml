@@ -207,26 +207,6 @@
 		</plugin>
 
         <plugin>
-          <groupId>org.datanucleus</groupId>
-          <artifactId>datanucleus-maven-plugin</artifactId>
-          <version>6.0.0-release</version>
-          <configuration>
-            <api>JDO</api>
-            <verbose>true</verbose>
-            <fork>false</fork>
-            <props>${config.files.dir}/datanucleus.properties</props>
-          </configuration>
-          <executions>
-            <execution>
-              <!-- links the enhance to the compile phase -->
-              <phase>compile</phase>
-              <goals>
-                <goal>enhance</goal>
-              </goals>
-            </execution>
-          </executions>
-			  </plugin>
-        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
           <version>1.2.1</version>
@@ -265,6 +245,28 @@
 
       </plugins>
     </pluginManagement>
+    <plugins>
+            <plugin>
+          <groupId>org.datanucleus</groupId>
+          <artifactId>datanucleus-maven-plugin</artifactId>
+          <version>6.0.0-release</version>
+          <configuration>
+            <api>JDO</api>
+            <verbose>true</verbose>
+            <fork>false</fork>
+            <props>${config.files.dir}/datanucleus.properties</props>
+          </configuration>
+          <executions>
+            <execution>
+              <!-- links the enhance to the compile phase -->
+              <phase>compile</phase>
+              <goals>
+                <goal>enhance</goal>
+              </goals>
+            </execution>
+          </executions>
+			  </plugin>
+    </plugins>
   </build>
 
 	<profiles>
