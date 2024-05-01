@@ -1,4 +1,4 @@
-# BSPQ23-E7: DeustoCars
+# 🏁BSPQ23-E7: DeustoCars 🚗🛵🏎️
 ## Index
 1. [Introduction](#introduction)
 2. [Steps to run it](#run)
@@ -12,30 +12,40 @@ This project is deployed in Java using Maven. The App implements the REST patter
 
 <a id="run"></a>
 ## Steps to run it
-1 - First, compile the project to create the .class files:
+1 - First, go to the `Deustocars` folder and compile the project to create the .class files and enhace the JDOs:
 ```
 mvn clean compile
 ```
-2 - Next, start the database (TBD)
+2 - Next, move to the `sql` folder and start the database:
 ```
+cd sql
+mysql -u root -p < create-deustoCars.sql
+```
+(Note: You will be asked to input the mysql root password)
+
+3 - Then, return to the `Deustocars` folder  and create the db schema:
+```
+cd ..
 mvn datanucleus:schema-create
 ```
 
-3 -  Then, start the server:
+4 -  Finally, start the server:
 ```
 mvn jetty:run
 ```
-You can check this works by entering the URL (Example: `localhost:8080`)
+5 - Optionally, you may run some tests to check the app is working properly
+```
+mvn test
+```
+You can check this works by entering the URL `localhost:8080`.
 
-4 - Now, in a different command line window, launch the client and server profiles:
+6 - Now, in a <u>different command line window</u>, launch the client profile:
 ```
 mvn compile exec:java -Pclient
 ```
-Launching the server profile is not necessary for the application to work. You may launch the server manager for some real time testing of the communications.
+Launching the server profile is not necessary for the application to work. However, you may launch the server manager for some real time testing of the communications:
 ```
 mvn compile exec:java -Pserver
-
 ```
 
-5 - Finally, you can run some tests to check the app is working properly
-
+<code style="color : Cyan">Thanks for visiting our project. If you have any suggestion, please contact us.😊</code>

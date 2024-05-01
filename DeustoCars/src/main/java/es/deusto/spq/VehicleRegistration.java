@@ -139,10 +139,10 @@ public class VehicleRegistration extends JFrame {
         JPanel formPanel = (JPanel) getContentPane().getComponent(0);
         formPanel.setLayout(new GridLayout(0, 2, 10, 10)); // Two columns layout
 
-        formPanel.add(new JLabel(resourceBundle.getString("brand_label")));
-        formPanel.add(brandField);
         formPanel.add(new JLabel(resourceBundle.getString("number_plate_label")));
         formPanel.add(numberPlateField);
+        formPanel.add(new JLabel(resourceBundle.getString("brand_label")));
+        formPanel.add(brandField);
         formPanel.add(new JLabel(resourceBundle.getString("model_label")));
         formPanel.add(modelField);
         if (isModification) {
@@ -164,9 +164,9 @@ public class VehicleRegistration extends JFrame {
      */
     private void registerVehicle() {
         // Create the new vehicle
-        VehicleData newVehicle = new VehicleData(brandField.getText(), numberPlateField.getText(), modelField.getText());
+        VehicleData newVehicle = new VehicleData(numberPlateField.getText(), brandField.getText(), modelField.getText());
 
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/vehicles");
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addvehicle");
         Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
         if (response.getStatus() != Status.OK.getStatusCode()) {

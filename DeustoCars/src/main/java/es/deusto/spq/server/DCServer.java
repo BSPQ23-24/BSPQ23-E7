@@ -15,6 +15,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -43,7 +44,7 @@ public class DCServer {
     }
 
     @POST
-    @Path("/customers")
+    @Path("/addcustomer")
     public Response addCustomer(CustomerData customerData) {
         try {
             logger.info("Adding customer...");
@@ -86,67 +87,159 @@ public class DCServer {
 
 
     @POST
-    @Path("/vehicles")
-    public Response addVehicle(VehicleData vehicleData) {
-        VehicleData vehicle = new VehicleData(
-            vehicleData.getNumberPlate(), 
-            vehicleData.getBrand(), 
-            vehicleData.getModel()
-        );
-        
-        logger.info("Adding vehicle: " + vehicle);
-        return Response.ok().entity(vehicleData).build(); // Respond with the DTO for consistency
+    @Path("/addvehicle")
+    public Response addVehicle(VehicleData vehicleData) {   
+        try {
+            logger.info("Adding vehicle...");
+            tx.begin(); // Begin transaction
+            VehicleJDO vehicle = null;
+            try {
+                vehicle = pm.getObjectById(VehicleJDO.class, vehicleData.getNumberPlate());
+            } catch (Exception e) {
+                logger.info("New vehicle will be added to database");
+            }
+            logger.info("Vehicle: {}", vehicle);
+            if (vehicle != null) {
+                logger.info("Vehicle with that number plate already exists");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Vehicle with that number plate already exists.").build();
+            } else {
+                logger.info("Creating vehicle: {}", vehicle);
+                    vehicle = new VehicleJDO(
+                    vehicleData.getNumberPlate(), 
+                    vehicleData.getBrand(), 
+                    vehicleData.getModel()
+                );
+                
+                pm.makePersistent(vehicle); // Persist the vehicle object
+                logger.info("Vehicle added: {}", vehicle);
+            }
+            tx.commit(); // Commit the transaction
+            return Response.ok().build();
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback(); // Rollback the transaction in case of an exception
+            }
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while adding vehicle.").build();
+        } finally {
+            logger.info("Closing");
+            pm.close(); // Close the PersistenceManager
+        }
     }
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/getcustomers")
     public Response getCustomers() {
-        List<CustomerData> customers = new ArrayList<CustomerData>();
-        customers.add(new CustomerData("test@gmail.com", "Billy", "Bob"));
-        customers.add(new CustomerData("test2@gmail.com", "Johnny", "Jones"));
-        customers.add(new CustomerData("test3@gmail.com", "Evelyn", "Easton"));
-        return Response.ok(customers).build();
+        try {
+            Query query = pm.newQuery(CustomerJDO.class);
+            List<CustomerJDO> customers = (List<CustomerJDO>) query.execute();
+            if (!customers.isEmpty()) {
+                return Response.ok(customers).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("No customers found").build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while fetching customers.").build();
+        } finally {
+            pm.close();
+        }
     }
 
     @GET
     @Path("/getvehicles")
     public Response getVehicles() {
-        List<VehicleData> vehicles = new ArrayList<VehicleData>();
-        vehicles.add(new VehicleData("9872SLY", "Toyota", "Corolla"));
-        vehicles.add(new VehicleData("1234QWR", "Opel", "Corsa"));
-        vehicles.add(new VehicleData("5678BNM", "Volkswagen", "Golf"));
-        return Response.ok(vehicles).build();
+        try {
+            Query query = pm.newQuery(VehicleJDO.class);
+            List<VehicleJDO> vehicles = (List<VehicleJDO>) query.execute();
+            if (!vehicles.isEmpty()) {
+                return Response.ok(vehicles).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("No vehicles found").build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while fetching vehicles.").build();
+        } finally {
+            pm.close();
+        }
     }
 
     @GET
     @Path("/getcustomer")
-    public Response getCustomer(String eMail) {
-
-        CustomerData customerData = new CustomerData(eMail, "Billy", "Bob");
-        return Response.ok(customerData).build();
-
+    public Response getCustomer(@QueryParam("eMail") String eMail) {
+        try {
+            CustomerJDO customer = pm.getObjectById(CustomerJDO.class, eMail);
+            if (customer != null) {
+                return Response.ok(customer).build();
+            } else {
+                logger.info("Customer not found");
+                return Response.status(Response.Status.NOT_FOUND).entity("Customer not found").build();
+            }
+        } catch (Exception e) {
+            logger.info("Error occurred while fetching customer");
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while fetching customer.").build();
+        } finally {
+            pm.close();
+        }
     }
 
     @GET
     @Path("/getvehicle")
-    public Response getVehicle(String numberPlate) {
-
-        VehicleData vehicleData = new VehicleData(numberPlate, "Toyota", "Corolla");
-        return Response.ok(vehicleData).build();
-
+    public Response getVehicle(@QueryParam("numberPlate") String numberPlate) {
+        try {
+            VehicleJDO vehicle = pm.getObjectById(VehicleJDO.class, numberPlate);
+            if (vehicle != null) {
+                return Response.ok(vehicle).build();
+            } else {
+                logger.info("Vehicle not found");
+                return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
+            }
+        } catch (Exception e) {
+            logger.info("Error occurred while fetching vehicle");
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while fetching vehicle.").build();
+        } finally {
+            pm.close();
+        }
     }
+
 
     @DELETE
     @Path("/deletevehicle")
-    public Response deleteVehicle(String numberPlate) {
-        logger.info("Deleting vehicle with number plate: " + numberPlate);
-        return Response.ok().build();
+    public Response deleteVehicle(@QueryParam("numberPlate") String email) {
+        try {
+            VehicleJDO vehicle = pm.getObjectById(VehicleJDO.class, email);
+            if (vehicle != null) {
+                pm.deletePersistent(vehicle);
+                return Response.ok("Vehicle deleted successfully").build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
+            }
+        } catch (Exception e) {
+            logger.info("Error occurred while deleting vehicle");
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while deleting vehicle.").build();
+        } finally {
+            pm.close();
+        }
     }
 
     @DELETE
     @Path("/deletecustomer")
-    public Response deleteCustomer(String eMail) {
-        logger.info("Deleting customer with eMail: " + eMail);
-        return Response.ok().build();
+    public Response deleteCustomer(@QueryParam("eMail") String email) {
+        try {
+            CustomerJDO customer = pm.getObjectById(CustomerJDO.class, email);
+            if (customer != null) {
+                pm.deletePersistent(customer);
+                return Response.ok("Customer deleted successfully").build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("Customer not found").build();
+            }
+        } catch (Exception e) {
+            logger.info("Error occurred while deleting customer");
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while deleting customer.").build();
+        } finally {
+            pm.close();
+        }
     }
 }

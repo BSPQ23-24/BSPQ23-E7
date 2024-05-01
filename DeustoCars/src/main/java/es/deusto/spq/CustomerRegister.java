@@ -172,7 +172,7 @@ public class CustomerRegister extends JFrame {
         }
 
         CustomerData newUser = new CustomerData(email, name, surname, birth);
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/customers");
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addcustomer");
 		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(newUser, MediaType.APPLICATION_JSON));
 		if (response.getStatus() != Status.OK.getStatusCode()) {

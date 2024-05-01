@@ -23,8 +23,10 @@ es\deusto\spq\db\Database.class
 es\deusto\spq\client\gui\ClientGUI.class
 es\deusto\spq\client\MainClient.class
 es\deusto\spq\App.class
+es\deusto\spq\client\MainClient$3.class
 es\deusto\spq\pojo\Renting.class
 es\deusto\spq\server\DCServerManager.class
 es\deusto\spq\server\jdo\Main.class
 es\deusto\spq\VehicleRegistration.class
+es\deusto\spq\client\MainClient$4.class
 es\deusto\spq\pojo\MessageData.class
