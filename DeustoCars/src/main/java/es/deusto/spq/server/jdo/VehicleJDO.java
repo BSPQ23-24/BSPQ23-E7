@@ -12,13 +12,9 @@ public class VehicleJDO {
     @PrimaryKey
     @Persistent
     String numberPlate;
-    @Persistent
     String brand;
-    @Persistent
     String model;
-    @Persistent
     boolean readyToBorrow;
-    @Persistent
     boolean onRepair;
     
     /**

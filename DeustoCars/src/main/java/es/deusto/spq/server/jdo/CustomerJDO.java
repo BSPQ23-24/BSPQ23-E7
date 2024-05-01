@@ -1,8 +1,6 @@
 package es.deusto.spq.server.jdo;
 
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.PrimaryKey;
-import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.*;
 
 import java.util.Date;
 
@@ -14,11 +12,8 @@ public class CustomerJDO {
     @PrimaryKey
     @Persistent
     private String eMail;
-    @Persistent
     private String name;
-    @Persistent
     private String surname;
-    @Persistent
     private Date dateOfBirth;
 
     /**
