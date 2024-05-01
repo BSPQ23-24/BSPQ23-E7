@@ -73,11 +73,6 @@
       		<version>1.35.0</version>
     	</dependency>
 		<dependency>
-		    <groupId>javax.persistence</groupId>
-		    <artifactId>javax.persistence-api</artifactId>
-		    <version>2.2</version>
-		</dependency>
-		<dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>[2.17.1, 2.39.1]</version>
@@ -266,41 +261,7 @@
 				  <artifactId>jetty-maven-plugin</artifactId>
 				  <version>9.4.46.v20220331</version>
         </plugin>
-        <!-- Add sql-maven-plugin configuration -->
-		<plugin>
-		    <groupId>org.codehaus.mojo</groupId>
-		    <artifactId>sql-maven-plugin</artifactId>
-		    <version>1.5</version>
-		    <dependencies>
-		        <!-- Add MySQL JDBC driver dependency -->
-		        <dependency>
-		            <groupId>mysql</groupId>
-		            <artifactId>mysql-connector-java</artifactId>
-		            <version>8.0.29</version>
-		        </dependency>
-		    </dependencies>
-		    <configuration>
-		        <!-- Specify database connection parameters -->
-		        <url>jdbc:mysql://localhost:8080/deustoCarsDB</url>
-		        <username>spq</username>
-		        <password>spq</password>
-		        <!-- Specify directory containing SQL scripts -->
-		        <srcFiles>
-		            <srcFile>src/main/sql/create-deustoCars.sql</srcFile>
-		            <srcFile>src/main/sql/populate.sql</srcFile>
-		        </srcFiles>
-		    </configuration>
-		    <executions>
-		        <!-- Execute SQL scripts during Maven build phases -->
-		        <execution>
-		            <id>create-deustoCars</id>
-		            <phase>process-resources</phase>
-		            <goals>
-		                <goal>execute</goal>
-		            </goals>
-		        </execution>
-		    </executions>
-		</plugin>
+
       </plugins>
     </pluginManagement>
   </build>

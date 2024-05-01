@@ -1,46 +1,42 @@
-package es.deusto.spq.serialization;
+package es.deusto.spq.server.jdo;
+
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.PrimaryKey;
+import javax.jdo.annotations.Persistent;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 /**
- * Represents a customer.
+ * Represents customer data.
  */
-@Entity
-@Table(name = "customers") // Specifies table name
-public class Customer {
-    @Id
-    @Column(name = "email", nullable = false)
+@PersistenceCapable
+public class CustomerJDO {
+    @PrimaryKey
+    @Persistent
     private String eMail;
-
-    @Column(name = "name", nullable = false)
+    @Persistent
     private String name;
-
-    @Column(name = "surname", nullable = false)
+    @Persistent
     private String surname;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "date_of_birth", nullable = true)
+    @Persistent
     private Date dateOfBirth;
 
-    // Default constructor required for JPA
-    public Customer() {}
+    /**
+     * Default constructor required for serialization.
+     */
+    public CustomerJDO() {
+        // Required for serialization
+    }
 
     /**
-     * Constructs a Customer object with the specified email, name, surname, and date of birth.
+     * Constructs a customer data object with the specified email, name, surname, and date of birth.
      *
      * @param eMail       The email of the customer.
      * @param name        The name of the customer.
      * @param surname     The surname of the customer.
      * @param dateOfBirth The date of birth of the customer.
      */
-    public Customer(String eMail, String name, String surname, Date dateOfBirth) {
+    public CustomerJDO(String eMail, String name, String surname, Date dateOfBirth) {
         this.eMail = eMail;
         this.name = name;
         this.surname = surname;
@@ -48,18 +44,18 @@ public class Customer {
     }
 
     /**
-     * Constructs a Customer object with the specified email, name, and surname.
+     * Constructs a customer data object with the specified email, name, and surname.
      *
      * @param eMail   The email of the customer.
      * @param name    The name of the customer.
      * @param surname The surname of the customer.
      */
-    public Customer(String eMail, String name, String surname) {
+    public CustomerJDO(String eMail, String name, String surname) {
         this.eMail = eMail;
         this.name = name;
         this.surname = surname;
     }
-    
+
     /**
      * Retrieves the email of the customer.
      *
@@ -133,17 +129,17 @@ public class Customer {
     }
 
     /**
-     * Returns a string representation of the Customer object.
+     * Returns a string representation of the CustomerData object.
      *
-     * @return A string representation of the Customer object.
+     * @return A string representation of the CustomerData object.
      */
     @Override
     public String toString() {
-        return "Customer{" +
-               "eMail='" + eMail + '\'' +
-               ", name='" + name + '\'' +
-               ", surname='" + surname + '\'' +
-               //", dateOfBirth=" + dateOfBirth +
-               '}';
+        return "CustomerJDO{" +
+                "eMail='" + eMail + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                //", dateOfBirth=" + dateOfBirth +
+                '}';
     }
 }

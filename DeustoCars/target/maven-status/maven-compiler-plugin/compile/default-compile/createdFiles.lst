@@ -3,9 +3,9 @@ es\deusto\spq\pojo\VehicleData.class
 es\deusto\spq\client\MainClient$2.class
 es\deusto\spq\db\resources\DataType.class
 es\deusto\spq\pojo\UserData.class
+es\deusto\spq\server\jdo\CustomerJDO.class
 es\deusto\spq\server\DCServer.class
 es\deusto\spq\server\Main.class
-es\deusto\spq\dao\VehicleDAO.class
 es\deusto\spq\VehicleRentingForm.class
 es\deusto\spq\server\jdo\Message.class
 es\deusto\spq\db\Database$1.class
@@ -13,7 +13,7 @@ es\deusto\spq\db\resources\Parameter.class
 es\deusto\spq\pojo\CustomerData.class
 es\deusto\spq\client\MainClient$1.class
 es\deusto\spq\CustomerRegister.class
-es\deusto\spq\dao\DataAccessObject.class
+es\deusto\spq\server\jdo\VehicleJDO.class
 es\deusto\spq\VehicleRetrievalForm.class
 es\deusto\spq\client\ClientManager.class
 es\deusto\spq\pojo\DirectMessage.class
@@ -21,12 +21,8 @@ es\deusto\spq\db\Database.class
 es\deusto\spq\client\gui\ClientGUI.class
 es\deusto\spq\client\MainClient.class
 es\deusto\spq\App.class
-es\deusto\spq\serialization\Vehicle.class
 es\deusto\spq\pojo\Renting.class
 es\deusto\spq\server\DCServerManager.class
-es\deusto\spq\dao\CustomerDAO.class
 es\deusto\spq\server\jdo\Main.class
 es\deusto\spq\VehicleRegistration.class
-es\deusto\spq\dao\IDataAccessObject.class
 es\deusto\spq\pojo\MessageData.class
-es\deusto\spq\serialization\Customer.class

@@ -97,7 +97,7 @@ public class MainClient extends JFrame {
 
     	
 		client = ClientBuilder.newClient();
-		webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
+		webTarget = ClientManager.getInstance().getWebTarget();
     	
         setTitle(resourceBundle.getString("main_client_title"));
         setSize(900, 400);

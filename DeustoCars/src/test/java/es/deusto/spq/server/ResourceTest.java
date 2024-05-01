@@ -20,8 +20,6 @@ import org.mockito.MockitoAnnotations;
 
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleData;
-import es.deusto.spq.serialization.Customer;
-import es.deusto.spq.serialization.Vehicle;
 
 
 
