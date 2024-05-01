@@ -129,6 +129,9 @@
 					<include>**/*.properties</include>
 				</includes>
 			</resource>
+			<resource>
+            	<directory>src/main/resources</directory>
+        	</resource>
 		</resources>
 
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
@@ -272,12 +275,24 @@
 		    <artifactId>sql-maven-plugin</artifactId>
 		    <version>1.5</version>
 		    <dependencies>
-		        <!-- Add MySQL JDBC driver dependency -->
+				<!-- Add MySQL JDBC driver dependency -->
 		        <dependency>
 		            <groupId>mysql</groupId>
 		            <artifactId>mysql-connector-java</artifactId>
 		            <version>8.0.29</version>
 		        </dependency>
+			    <!-- JPA API -->
+			    <dependency>
+			        <groupId>javax.persistence</groupId>
+			        <artifactId>javax.persistence-api</artifactId>
+			        <version>2.2</version>
+			    </dependency>
+			    <!-- Hibernate -->
+			    <dependency>
+			        <groupId>org.hibernate</groupId>
+			        <artifactId>hibernate-core</artifactId>
+			        <version>5.4.12.Final</version>
+			    </dependency>
 		    </dependencies>
 		    <configuration>
 		        <!-- Specify database connection parameters -->
