@@ -13,12 +13,6 @@
 //import javax.ws.rs.client.Entity;
 //import javax.ws.rs.client.WebTarget;
 //import javax.ws.rs.core.MediaType;
-//import javax.jdo.JDOHelper;
-//import javax.jdo.PersistenceManager;
-//import javax.jdo.PersistenceManagerFactory;
-//import javax.jdo.Transaction;
-//import javax.ws.rs.client.ClientBuilder;
-//import javax.ws.rs.client.WebTarget;
 //import javax.ws.rs.core.Response;
 //import javax.ws.rs.core.Response.Status.Family;
 //import org.glassfish.grizzly.http.server.HttpServer;
@@ -174,5 +168,5 @@
 //        logger.info("Tiempo máximo: {} ms", updateVehicleMaxTime);
 //    }
 //}
-
-
+//
+//
