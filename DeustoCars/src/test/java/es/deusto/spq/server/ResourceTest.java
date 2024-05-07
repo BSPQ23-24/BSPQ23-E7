@@ -64,7 +64,7 @@ public class ResourceTest {
     public void testDeleteCustomer() {
     	CustomerData customer= new CustomerData("x@gmail.com", "xx", "xxxx");
     	when(persistenceManager.getObjectById(CustomerData.class, customer.geteMail())).thenReturn(customer);
-        Response response = dcserver.deleteVehicle("x@gmail.com");
+        Response response = dcserver.deleteCustomer("x@gmail.com");
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
     
