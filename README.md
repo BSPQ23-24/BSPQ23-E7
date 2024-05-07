@@ -33,9 +33,10 @@ mvn datanucleus:schema-create
 ```
 mvn jetty:run
 ```
-5 - Optionally, you may run some tests to check the app is working properly
+5 - Optionally, you may run some tests to check the app is working properly and generate code coverage reports using JaCoCo
 ```
 mvn test
+mvn jacoco:prepare-agent test jacoco:report
 ```
 You can check this works by entering the URL `localhost:8080`.
 
