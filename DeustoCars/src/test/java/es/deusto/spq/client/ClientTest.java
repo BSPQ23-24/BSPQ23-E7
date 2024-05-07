@@ -64,16 +64,17 @@ public class ClientTest {
         try (MockedStatic<ClientBuilder> clientBuilder = Mockito.mockStatic(ClientBuilder.class)) {
             clientBuilder.when(ClientBuilder::newClient).thenReturn(client);
             when(client.target("http://localhost:8080/deustocars")).thenReturn(webTarget);
+            mainclient = new MainClient("localhost", "8080");
         }
-
-        mainclient = new MainClient("localhost", "8080");
+//        ClientManager.getInstance().setWebTarget("localhost", "8080");
+//        mainclient = new MainClient("localhost", "8080");
     }
 
     
  
     @Test
     public void testDeleteVehicle() {
-        when(webTarget.path("delete")).thenReturn(webTarget);
+        when(webTarget.path("server/deletevehicle")).thenReturn(webTarget);
 
         Response response = Response.ok().build();
         when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);

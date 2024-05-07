@@ -14,4 +14,5 @@ VALUES
     ('9872SLY', 'Toyota', 'Corolla', true, false),
     ('1234QWR', 'Opel', 'Corsa', true, false),
     ('5678BNM', 'Volkswagen', 'Golf', true, false),
+    ('123AB', 'Toyota', 'Corolla', true, false),
     ('123ABC', 'Toyota', 'Corolla', true, false);
