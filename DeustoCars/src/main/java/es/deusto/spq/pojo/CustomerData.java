@@ -12,6 +12,13 @@ public class CustomerData {
     private Date dateOfBirth;
 
     /**
+     * Default constructor required for serialization.
+     */
+    public CustomerData() {
+        // Required for serialization
+    }
+
+    /**
      * Constructs a customer data object with the specified email, name, surname, and date of birth.
      *
      * @param eMail       The email of the customer.

@@ -1,55 +1,47 @@
-package es.deusto.spq.serialization;
+package es.deusto.spq.server.jdo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.PrimaryKey;
+import javax.jdo.annotations.Persistent;
 
 /**
  * Represents a vehicle.
  */
-@Entity
-@Table(name = "vehicles")  // Specifies the table name
-public class Vehicle {
-    @Id
-    @Column(name = "number_plate", nullable = false)
-    private String numberPlate;
-
-    @Column(name = "brand", nullable = false)
-    private String brand;
-
-    @Column(name = "model", nullable = false)
-    private String model;
-
-    @Column(name = "ready_to_borrow", nullable = false)
-    private boolean readyToBorrow;
-
-    @Column(name = "on_repair", nullable = false)
-    private boolean onRepair;
-
+@PersistenceCapable
+public class VehicleJDO {
+    @PrimaryKey
+    @Persistent
+    String numberPlate;
+    String brand;
+    String model;
+    boolean readyToBorrow;
+    boolean onRepair;
+    
     /**
-     * Default constructor for JPA.
+     * Default constructor required for serialization.
      */
-    public Vehicle() {}
+    public VehicleJDO(){
+        // Required for serialization
+    }
+
     /**
-     * Constructs a Vehicle object with the specified number plate, brand, and model.
-     * By default, the vehicle is ready to borrow and not on repair.
-     * 
+     * Constructs a VehicleData object with the specified number plate, brand, and model.
+     *
      * @param numberPlate The number plate of the vehicle.
      * @param brand       The brand of the vehicle.
      * @param model       The model of the vehicle.
      */
-    public Vehicle(String numberPlate, String brand, String model) {
+    public VehicleJDO(String numberPlate, String brand,  String model) {
         this.numberPlate = numberPlate;
         this.brand = brand;
         this.model = model;
         this.readyToBorrow = true;
         this.onRepair = false;
     }
-    
+
     /**
      * Retrieves the number plate of the vehicle.
-     * 
+     *
      * @return The number plate of the vehicle.
      */
     public String getNumberPlate() {
@@ -58,7 +50,7 @@ public class Vehicle {
 
     /**
      * Sets the number plate of the vehicle.
-     * 
+     *
      * @param numberPlate The number plate to set.
      */
     public void setNumberPlate(String numberPlate) {
@@ -67,7 +59,7 @@ public class Vehicle {
 
     /**
      * Retrieves the brand of the vehicle.
-     * 
+     *
      * @return The brand of the vehicle.
      */
     public String getBrand() {
@@ -76,7 +68,7 @@ public class Vehicle {
 
     /**
      * Sets the brand of the vehicle.
-     * 
+     *
      * @param brand The brand to set.
      */
     public void setBrand(String brand) {
@@ -85,7 +77,7 @@ public class Vehicle {
 
     /**
      * Retrieves the model of the vehicle.
-     * 
+     *
      * @return The model of the vehicle.
      */
     public String getModel() {
@@ -94,7 +86,7 @@ public class Vehicle {
 
     /**
      * Sets the model of the vehicle.
-     * 
+     *
      * @param model The model to set.
      */
     public void setModel(String model) {
@@ -103,17 +95,17 @@ public class Vehicle {
 
     /**
      * Checks if the vehicle is ready to borrow.
-     * 
-     * @return True if the vehicle is ready to borrow, otherwise false.
+     *
+     * @return True if the vehicle is ready to borrow, false otherwise.
      */
     public boolean isReadyToBorrow() {
         return readyToBorrow;
     }
 
     /**
-     * Sets the status of the vehicle whether it is ready to borrow.
-     * 
-     * @param readyToBorrow The status to set.
+     * Sets whether the vehicle is ready to borrow.
+     *
+     * @param readyToBorrow True if the vehicle is ready to borrow, false otherwise.
      */
     public void setReadyToBorrow(boolean readyToBorrow) {
         this.readyToBorrow = readyToBorrow;
@@ -121,35 +113,35 @@ public class Vehicle {
 
     /**
      * Checks if the vehicle is on repair.
-     * 
-     * @return True if the vehicle is on repair, otherwise false.
+     *
+     * @return True if the vehicle is on repair, false otherwise.
      */
     public boolean isOnRepair() {
         return onRepair;
     }
 
     /**
-     * Sets the status of the vehicle whether it is on repair.
-     * 
-     * @param onRepair The status to set.
+     * Sets whether the vehicle is on repair.
+     *
+     * @param onRepair True if the vehicle is on repair, false otherwise.
      */
     public void setOnRepair(boolean onRepair) {
         this.onRepair = onRepair;
     }
     
     /**
-     * Returns a string representation of the Vehicle object.
-     * 
-     * @return A string representation of the Vehicle object.
+     * Returns a string representation of the VehicleData object.
+     *
+     * @return A string representation of the VehicleData object.
      */
     @Override
     public String toString() {
-        return "Vehicle{" +
-               "numberPlate='" + numberPlate + '\'' +
-               ", brand='" + brand + '\'' +
-               ", model='" + model + '\'' +
-               ", readyToBorrow=" + readyToBorrow +
-               ", onRepair=" + onRepair +
+        return "VehicleJDO{" +
+               "\nNumber Plate: " + numberPlate +
+               "\nBrand: " + brand +
+               "\nModel: " + model +
+               "\nReady to Borrow: " + readyToBorrow +
+               "\nOn Repair: " + onRepair +
                '}';
     }
 }

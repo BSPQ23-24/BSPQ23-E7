@@ -11,6 +11,13 @@ public class VehicleData {
     private boolean onRepair;
     
     /**
+     * Default constructor required for serialization.
+     */
+    public VehicleData(){
+        // Required for serialization
+    }
+
+    /**
      * Constructs a VehicleData object with the specified number plate, brand, and model.
      *
      * @param numberPlate The number plate of the vehicle.
@@ -23,13 +30,6 @@ public class VehicleData {
         this.model = model;
         this.readyToBorrow = true;
         this.onRepair = false;
-    }
-
-    /**
-     * Default constructor required for serialization.
-     */
-    public VehicleData(){
-        // Required for serialization
     }
 
     /**

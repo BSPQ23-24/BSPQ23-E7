@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.html.parser.Entity;
 import javax.ws.rs.client.Client;
@@ -65,8 +66,8 @@ public class MainClient extends JFrame {
     private JTextField eMail;
     protected static final Logger logger = LogManager.getLogger();
     
-	private static final String USER = "dipina";
-	private static final String PASSWORD = "dipina";
+	private static final String USER = "spq";
+	private static final String PASSWORD = "spq";
 	
 	private Client client;
 	private WebTarget webTarget;
@@ -76,10 +77,10 @@ public class MainClient extends JFrame {
         //resourceBundle = ResourceBundle.getBundle("SystemMessages", Locale.getDefault());
 
         // Spanish:
-        resourceBundle = ResourceBundle.getBundle("SystemMessages", new Locale("es"));
+        resourceBundle = ResourceBundle.getBundle("SystemMessages", Locale.forLanguageTag("es"));
 
         // Basque:
-        //resourceBundle = ResourceBundle.getBundle("SystemMessages", new Locale("eu"));
+        //resourceBundle = ResourceBundle.getBundle("SystemMessages", Locale.forLanguageTag("eu"));
     }
 
     // Static method to access the ResourceBundle instance
@@ -97,7 +98,7 @@ public class MainClient extends JFrame {
 
     	
 		client = ClientBuilder.newClient();
-		webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
+		webTarget = ClientManager.getInstance().getWebTarget();
     	
         setTitle(resourceBundle.getString("main_client_title"));
         setSize(900, 400);
@@ -188,14 +189,31 @@ public class MainClient extends JFrame {
         searchDeletePanel.add(deleteCustomer);
         searchDeletePanel.add(new JLabel()); // Empty label for spacing
 
-        // Add blue border to text fields
         numberPlate.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
         eMail.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
 
         addClient.addActionListener(e -> new CustomerRegister());
         addVehicle.addActionListener(e -> new VehicleRegistration());
-        editClient.addActionListener(e -> TableCustomersWindow());
-        editVehicle.addActionListener(e -> TableVehicleWindow());
+        editClient.addActionListener(e -> {
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    TableCustomersWindow();
+                    return null;
+                }
+            };
+            worker.execute();
+        });
+        editVehicle.addActionListener(e -> {
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    TableVehicleWindow();
+                    return null;
+                }
+            };
+            worker.execute();
+        });
         getVehicle.addActionListener(e -> getVehicle(numberPlate.getText()));
         getCustomer.addActionListener(e -> getCustomer(eMail.getText()));
         deleteVehicle.addActionListener(e -> deleteVehicle(numberPlate.getText()));
@@ -443,11 +461,10 @@ public class MainClient extends JFrame {
 
 
     /**
-     * Deletes a customer from the server based on the provided email.
+     * Deletes a vehicle from the server based on the provided email.
      *
-     * @param eMail The email of the customer to delete.
+     * @param numberPlate The number plate of the vehicle to delete.
      */
-    
     public boolean deleteVehicleBoolean(String numberPlate) {
         WebTarget deleteVehicleWebTarget = webTarget.path("deletevehicle");
 
@@ -463,7 +480,12 @@ public class MainClient extends JFrame {
         }
     }
     
-    
+  
+    /**
+     * Deletes a customer from the server based on the provided email.
+     *
+     * @param eMail The email of the customer to delete.
+     */
     public void deleteCustomer(String eMail) {
         Response response = ClientManager.getInstance().getWebTarget()
                 .path("server/deletecustomer")

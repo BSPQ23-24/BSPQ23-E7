@@ -109,7 +109,16 @@ public class CustomerRegister extends JFrame {
         submitButton.setFocusPainted(false);
         submitButton.setFont(new Font("Arial", Font.BOLD, 16));
 
-        submitButton.addActionListener(e -> registerUser());
+        submitButton.addActionListener(e -> {
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    registerUser();
+                    return null;
+                }
+            };
+            worker.execute();
+        });
 
         add(formPanel, BorderLayout.CENTER);
         add(submitButton, BorderLayout.SOUTH);
@@ -163,7 +172,7 @@ public class CustomerRegister extends JFrame {
         }
 
         CustomerData newUser = new CustomerData(email, name, surname, birth);
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/customers");
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addcustomer");
 		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(newUser, MediaType.APPLICATION_JSON));
 		if (response.getStatus() != Status.OK.getStatusCode()) {

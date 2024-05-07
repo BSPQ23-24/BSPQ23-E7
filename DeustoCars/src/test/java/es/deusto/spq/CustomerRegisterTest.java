@@ -58,10 +58,10 @@ public class CustomerRegisterTest {
     }
     
     //DATABASE DOEST WORK
-//
-//    @Test
-//    public void testUpdateDatabase() {
-//        CustomerData customer = new CustomerData("john@example.com", "John", "Doe", new Date(1990, 1, 1));
-//        assertTrue(form.updateDatabase(customer));
-//    }
+
+    @Test
+    public void testUpdateDatabase() {
+        CustomerData customer = new CustomerData("john@example.com", "John", "Doe", new Date(1990, 1, 1));
+        assertTrue(form.updateDatabase(customer));
+    }
 }
