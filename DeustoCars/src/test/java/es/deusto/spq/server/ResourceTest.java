@@ -71,22 +71,22 @@ public class ResourceTest {
         Response response = dcserver.deleteCustomer("x@gmail.com");
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
-//    
-//    @Test
-//    public void getVehicle() {
-//    	VehicleData vehicle= new VehicleData("123ABC", "Toyota", "Corolla");
-//    	when(persistenceManager.getObjectById(VehicleData.class, vehicle.getNumberPlate())).thenReturn(vehicle);
-//        Response response = dcserver.getVehicle("123ABC");
-//        assertEquals(Response.Status.OK, response.getStatusInfo());
-//    }
-//    
-//    @Test
-//    public void getCustomer() {
-//    	CustomerData customer= new CustomerData("x@gmail.com", "xx", "xxxx");
-//    	when(persistenceManager.getObjectById(CustomerData.class, customer.geteMail())).thenReturn(customer);
-//        Response response = dcserver.getCustomer("x@gmail.com");
-//        assertEquals(Response.Status.OK, response.getStatusInfo());
-//    }
+    
+    @Test
+    public void getVehicle() {
+    	VehicleJDO vehicle= new VehicleJDO("123ABC", "Toyota", "Corolla");
+    	when(persistenceManager.getObjectById(VehicleJDO.class, vehicle.getNumberPlate())).thenReturn(vehicle);
+        Response response = dcserver.getVehicle("123ABC");
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+    
+    @Test
+    public void getCustomer() {
+    	CustomerJDO customer= new CustomerJDO("x@gmail.com", "xx", "xxxx");
+    	when(persistenceManager.getObjectById(CustomerJDO.class, customer.geteMail())).thenReturn(customer);
+        Response response = dcserver.getCustomer("x@gmail.com");
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
     
     @Test
     public void addVehicle() {
