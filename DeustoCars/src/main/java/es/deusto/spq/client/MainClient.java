@@ -9,7 +9,6 @@ import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
-import java.io.ObjectInputFilter.Status;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -480,7 +479,7 @@ public class MainClient extends JFrame {
         }
     }
     
-  
+    
     /**
      * Deletes a customer from the server based on the provided email.
      *

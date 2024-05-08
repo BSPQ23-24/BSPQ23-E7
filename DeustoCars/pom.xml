@@ -25,6 +25,7 @@
 	<doxygen.config.file>${basedir}/src/main/resources/Doxyfile</doxygen.config.file>
   </properties>
 
+
   <dependencyManagement>
       <dependencies>
           <dependency>
