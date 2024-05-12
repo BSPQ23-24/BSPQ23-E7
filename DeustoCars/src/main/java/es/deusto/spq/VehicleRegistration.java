@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.ResourceBundle;
 
 import es.deusto.spq.pojo.VehicleData;
-
+import javassist.convert.TransformNewClass;
 import es.deusto.spq.client.ClientManager;
 import es.deusto.spq.client.MainClient;
 
@@ -44,6 +44,16 @@ public class VehicleRegistration extends JFrame {
         resourceBundle = MainClient.getResourceBundle();
 
         submitButton = new JButton(resourceBundle.getString("register_vehicle_label"));
+        submitButton.addActionListener(e -> {
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    registerVehicle();
+                    return null;
+                }
+            };
+            worker.execute();
+        });
         setupUI(resourceBundle.getString("register_vehicle_label"));
 
         brandField = new JTextField();
@@ -66,6 +76,16 @@ public class VehicleRegistration extends JFrame {
     	resourceBundle = MainClient.getResourceBundle();
     	
         submitButton = new JButton(resourceBundle.getString("register_vehicle_label"));
+        submitButton.addActionListener(e -> {
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    modifyVehicle();
+                    return null;
+                }
+            };
+            worker.execute();
+        });
         setupUI("Vehicle Modification");
 
         VehicleData vehicle = MainClient.getVehicle(numberPlate);
@@ -98,17 +118,6 @@ public class VehicleRegistration extends JFrame {
         submitButton.setForeground(Color.WHITE);
         submitButton.setFocusPainted(false);
         submitButton.setFont(new Font("Arial", Font.BOLD, 16));
-
-        submitButton.addActionListener(e -> {
-            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-                @Override
-                protected Void doInBackground() throws Exception {
-                    registerVehicle();
-                    return null;
-                }
-            };
-            worker.execute();
-        });
 
         add(formPanel, BorderLayout.CENTER);
         add(submitButton, BorderLayout.SOUTH);
@@ -160,14 +169,6 @@ public class VehicleRegistration extends JFrame {
         modelField.setText("");
         readyToBorrowCheckbox.setSelected(true);
         onRepairCheckbox.setSelected(false);
-
-        // Connect and update the database
-        if (updateDatabase(newVehicle)) {
-            JOptionPane.showMessageDialog(this, resourceBundle.getString("vehicle_registered_successfully"), "Success", JOptionPane.INFORMATION_MESSAGE);
-
-        } else {
-            JOptionPane.showMessageDialog(this, resourceBundle.getString("error_registering_vehicle_message"), "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
     /**
@@ -176,9 +177,34 @@ public class VehicleRegistration extends JFrame {
      * @param vehicle The vehicle data to update in the database.
      * @return True if the database was successfully updated, false otherwise.
      */
-    boolean updateDatabase(VehicleData vehicle) {
-    	// TODO Add modify method to server
-    	return false;
+    public void modifyVehicle() {
+    	VehicleData newVehicle = new VehicleData(numberPlateField.getText(), brandField.getText(), modelField.getText());
+    	
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addvehicle");
+        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
+        
+        if (response.getStatus() != Status.OK.getStatusCode()) {
+            logger.info("Vehicle to modify found.");
+            
+            MainClient.deleteVehicle(numberPlateField.getText());
+
+            response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
+            if (response.getStatus() != Status.OK.getStatusCode()) {
+                logger.error("Error connecting with the server. Code: {}", response.getStatus());
+            } else {
+                logger.info("Vehicle Correctly Modified :)");
+            }
+
+            // Clear input fields
+            brandField.setText("");
+            numberPlateField.setText("");
+            modelField.setText("");
+            readyToBorrowCheckbox.setSelected(true);
+            onRepairCheckbox.setSelected(false);
+        } else {
+            logger.error("Vehicle doesnt exist. Code: {}", response.getStatus());
+        }
     }
     
     
