@@ -19,13 +19,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+import es.deusto.spq.pojo.CustomerAssembler;
 import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.VehicleAssembler;
 import es.deusto.spq.pojo.VehicleData;
 
 @Path("/server")
@@ -61,12 +61,7 @@ public class DCServer {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Customer with that email already exists.").build();
             } else {
                 logger.info("Creating customer: {}", customer);
-                customer = new CustomerJDO(
-                    customerData.geteMail(), 
-                    customerData.getName(), 
-                    customerData.getSurname(), 
-                    customerData.getDateOfBirth()
-                );
+                customer = CustomerAssembler.getInstance().CustomerDataToJDO(customerData);
                 pm.makePersistent(customer); // Persist the customer object
                 logger.info("Customer added: {}", customer);
             }
@@ -104,11 +99,7 @@ public class DCServer {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Vehicle with that number plate already exists.").build();
             } else {
                 logger.info("Creating vehicle: {}", vehicle);
-                    vehicle = new VehicleJDO(
-                    vehicleData.getNumberPlate(), 
-                    vehicleData.getBrand(), 
-                    vehicleData.getModel()
-                );
+                vehicle = VehicleAssembler.getInstance().VehicleDataToJDO(vehicleData);
                 
                 pm.makePersistent(vehicle); // Persist the vehicle object
                 logger.info("Vehicle added: {}", vehicle);
@@ -135,7 +126,7 @@ public class DCServer {
             Query query = pm.newQuery(CustomerJDO.class);
             List<CustomerJDO> customers = (List<CustomerJDO>) query.execute();
             if (!customers.isEmpty()) {
-                return Response.ok(customers).build();
+                return Response.ok(CustomerAssembler.getInstance().CustomerJDOListToData(customers)).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).entity("No customers found").build();
             }
@@ -154,7 +145,7 @@ public class DCServer {
             Query query = pm.newQuery(VehicleJDO.class);
             List<VehicleJDO> vehicles = (List<VehicleJDO>) query.execute();
             if (!vehicles.isEmpty()) {
-                return Response.ok(vehicles).build();
+                return Response.ok(VehicleAssembler.getInstance().VehicleJDOListToData(vehicles)).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).entity("No vehicles found").build();
             }
@@ -172,7 +163,7 @@ public class DCServer {
         try {
             CustomerJDO customer = pm.getObjectById(CustomerJDO.class, eMail);
             if (customer != null) {
-                return Response.ok(customer).build();
+                return Response.ok(CustomerAssembler.getInstance().CustomerJDOToData(customer)).build();
             } else {
                 logger.info("Customer not found");
                 return Response.status(Response.Status.NOT_FOUND).entity("Customer not found").build();
@@ -191,7 +182,7 @@ public class DCServer {
         try {
             VehicleJDO vehicle = pm.getObjectById(VehicleJDO.class, numberPlate);
             if (vehicle != null) {
-                return Response.ok(vehicle).build();
+                return Response.ok(VehicleAssembler.getInstance().VehicleJDOToData(vehicle)).build();
             } else {
                 logger.info("Vehicle not found");
                 return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
