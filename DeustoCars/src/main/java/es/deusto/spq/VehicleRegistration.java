@@ -5,9 +5,6 @@ import es.deusto.spq.db.Database;
 import es.deusto.spq.db.resources.DataType;
 import es.deusto.spq.db.resources.Parameter;
 import java.awt.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import es.deusto.spq.pojo.VehicleData;
@@ -30,7 +27,6 @@ import org.apache.logging.log4j.Logger;
 public class VehicleRegistration extends JFrame {
     protected static final Logger logger = LogManager.getLogger();
 
-    private static final String SYSTEM_MESSAGES = "SystemMessages";
     private ResourceBundle resourceBundle;
 
     private static final long serialVersionUID = 1L;
@@ -40,17 +36,6 @@ public class VehicleRegistration extends JFrame {
     private JCheckBox readyToBorrowCheckbox;
     private JCheckBox onRepairCheckbox;
     private JButton submitButton;
-
-    private Database database;
-
-    /**
-     * Sets the database instance for this vehicle registration.
-     * 
-     * @param database The database instance to set.
-     */
-    public void setDatabase(Database database) {
-        this.database = database;
-    }
 
     /**
      * Constructs a new vehicle registration window.
@@ -78,27 +63,21 @@ public class VehicleRegistration extends JFrame {
      * @param numberPlate The number plate of the vehicle to modify.
      */
     public VehicleRegistration(String numberPlate) {
-
+    	resourceBundle = MainClient.getResourceBundle();
+    	
         submitButton = new JButton(resourceBundle.getString("register_vehicle_label"));
         setupUI("Vehicle Modification");
 
-        ResultSet rs = Database.getInstance().ejecutarConsulta(
-                "SELECT brand, number_plate, model, ready_to_borrow, on_repair FROM vehicles WHERE number_plate = ?",
-                new Parameter(numberPlate, DataType.STRING)
-        );
-        try {
-            if (rs != null && rs.next()) {
-                brandField = new JTextField(rs.getString("brand"));
-                numberPlateField = new JTextField(rs.getString("number_plate"));
-                modelField = new JTextField(rs.getString("model"));
-                readyToBorrowCheckbox = new JCheckBox("Ready to lend", true);
-                onRepairCheckbox = new JCheckBox("In repair", false);        
-            } else {
-                JOptionPane.showMessageDialog(this, resourceBundle.getString("vehicle_not_found_message"), "Error", JOptionPane.ERROR_MESSAGE);
-
-            }
-        } catch (SQLException e) {
-            logger.info("Error loading vehicle data: " + e.getMessage());
+        VehicleData vehicle = MainClient.getVehicle(numberPlate);
+        
+        if (vehicle != null) {
+	        brandField = new JTextField(vehicle.getBrand());
+	        numberPlateField = new JTextField(vehicle.getNumberPlate());
+	        modelField = new JTextField(vehicle.getModel());
+	        readyToBorrowCheckbox = new JCheckBox("Ready to lend", vehicle.isReadyToBorrow());
+	        onRepairCheckbox = new JCheckBox("In repair", vehicle.isOnRepair());
+        } else {
+        	JOptionPane.showMessageDialog(this, resourceBundle.getString("vehicle_not_found_message"), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         addComponentsToForm(true);
@@ -198,14 +177,11 @@ public class VehicleRegistration extends JFrame {
      * @return True if the database was successfully updated, false otherwise.
      */
     boolean updateDatabase(VehicleData vehicle) {
-        return Database.getInstance().ejecutarActualizacion("INSERT INTO vehicles (brand, number_plate, model, ready_to_borrow, on_repair) VALUES (?, ?, ?, ?, ?)",
-                new Parameter(vehicle.getBrand(), DataType.STRING),
-                new Parameter(vehicle.getNumberPlate(), DataType.STRING),
-                new Parameter(vehicle.getModel(), DataType.STRING),
-                new Parameter(vehicle.isReadyToBorrow(), DataType.BOOLEAN),
-                new Parameter(vehicle.isOnRepair(), DataType.BOOLEAN)
-        );
+    	// TODO Add modify method to server
+    	return false;
     }
+    
+    
 
     /**
      * Main method to launch the VehicleRegistration window for vehicle registration.
