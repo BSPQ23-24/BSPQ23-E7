@@ -24,12 +24,12 @@ public class VehicleData {
      * @param brand       The brand of the vehicle.
      * @param model       The model of the vehicle.
      */
-    public VehicleData(String numberPlate, String brand,  String model) {
+    public VehicleData(String numberPlate, String brand,  String model, boolean borrow, boolean repair) {
         this.numberPlate = numberPlate;
         this.brand = brand;
         this.model = model;
-        this.readyToBorrow = true;
-        this.onRepair = false;
+        this.readyToBorrow = borrow;
+        this.onRepair = repair;
     }
 
     /**

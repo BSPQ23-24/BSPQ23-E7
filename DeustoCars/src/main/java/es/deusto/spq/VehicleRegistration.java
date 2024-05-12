@@ -152,7 +152,8 @@ public class VehicleRegistration extends JFrame {
      */
     private void registerVehicle() {
         // Create the new vehicle
-        VehicleData newVehicle = new VehicleData(numberPlateField.getText(), brandField.getText(), modelField.getText());
+        VehicleData newVehicle = new VehicleData(numberPlateField.getText(), brandField.getText(), modelField.getText(), 
+        		readyToBorrowCheckbox.isSelected(), onRepairCheckbox.isSelected());
 
         WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addvehicle");
         Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
@@ -167,7 +168,7 @@ public class VehicleRegistration extends JFrame {
         brandField.setText("");
         numberPlateField.setText("");
         modelField.setText("");
-        readyToBorrowCheckbox.setSelected(true);
+        readyToBorrowCheckbox.setSelected(false);
         onRepairCheckbox.setSelected(false);
     }
 
@@ -178,7 +179,8 @@ public class VehicleRegistration extends JFrame {
      * @return True if the database was successfully updated, false otherwise.
      */
     public void modifyVehicle() {
-    	VehicleData newVehicle = new VehicleData(numberPlateField.getText(), brandField.getText(), modelField.getText());
+    	VehicleData newVehicle = new VehicleData(numberPlateField.getText(), brandField.getText(), modelField.getText(), 
+    			readyToBorrowCheckbox.isSelected(), onRepairCheckbox.isSelected());
     	
         WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addvehicle");
         Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
@@ -200,7 +202,7 @@ public class VehicleRegistration extends JFrame {
             brandField.setText("");
             numberPlateField.setText("");
             modelField.setText("");
-            readyToBorrowCheckbox.setSelected(true);
+            readyToBorrowCheckbox.setSelected(false);
             onRepairCheckbox.setSelected(false);
         } else {
             logger.error("Vehicle doesnt exist. Code: {}", response.getStatus());
