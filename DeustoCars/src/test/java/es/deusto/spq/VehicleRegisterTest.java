@@ -25,7 +25,7 @@ public class VehicleRegisterTest {
     @Test
     public void testCreateVehicleWithConstructor() {
         // Crear un objeto Vehicle llamando al constructor
-        VehicleData vehicle = new VehicleData("123ABC", "Toyota", "Corolla");
+        VehicleData vehicle = new VehicleData("123ABC", "Toyota", "Corolla", true, false);
 
         // Verificar que los atributos se hayan establecido correctamente
         assertEquals("123ABC", vehicle.getNumberPlate());

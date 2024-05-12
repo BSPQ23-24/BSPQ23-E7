@@ -90,7 +90,7 @@ public class ResourceTest {
     
     @Test
     public void addVehicle() {
-    	VehicleData vehicle= new VehicleData("123ABC", "Toyota", "Corolla");
+    	VehicleData vehicle= new VehicleData("123ABC", "Toyota", "Corolla", true, false);
     	when(persistenceManager.getObjectById(VehicleData.class, vehicle.getNumberPlate())).thenReturn(vehicle);
         Response response = dcserver.addVehicle(vehicle);
         assertEquals(Response.Status.OK, response.getStatusInfo());
