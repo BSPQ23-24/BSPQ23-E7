@@ -250,44 +250,30 @@ public class MainClient extends JFrame {
         searchPanel.setBackground(Color.white);
         tableFrame.setContentPane(searchPanel);
 
-        try {
-            ResultSet allCustomers = Database.getInstance().ejecutarConsulta("SELECT * FROM customers");
-            java.sql.ResultSetMetaData metaData = allCustomers.getMetaData();
+        List <CustomerData> allCustomers = getCustomers();
+        
+        Object[][] dataArray = new Object[allCustomers.size()][];
+        allCustomers.toArray(dataArray);
 
-            List<Object[]> data = new ArrayList<>();
-            while (allCustomers.next()) {
-                Object[] row = new Object[metaData.getColumnCount()];
-                for (int columnIndex = 1; columnIndex <= metaData.getColumnCount(); columnIndex++) {
-                    row[columnIndex - 1] = allCustomers.getObject(columnIndex);
-                }
-                data.add(row);
+        String[] column = {"eMail", "Name", "Surname", "Date of Birth"};
+        JTable table = new JTable(dataArray, column);
+
+        JScrollPane pane = new JScrollPane(table);
+        searchPanel.add(pane, BorderLayout.CENTER);
+
+        JPanel editPane = new JPanel(new GridLayout(2, 1, 0, 0));
+        editPane.setBackground(Color.white);
+        searchPanel.add(editPane, BorderLayout.SOUTH);
+
+        JButton editButton = new JButton("Edit Customer");
+        editButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow >= 0) {
+                String email = table.getValueAt(selectedRow, 0).toString();
+                new CustomerRegister(email); 
             }
-            Object[][] dataArray = new Object[data.size()][];
-            data.toArray(dataArray);
-
-            String[] column = {"eMail", "Name", "Surname", "Date of Birth"};
-            JTable table = new JTable(dataArray, column);
-
-            JScrollPane pane = new JScrollPane(table);
-            searchPanel.add(pane, BorderLayout.CENTER);
-
-            JPanel editPane = new JPanel(new GridLayout(2, 1, 0, 0));
-            editPane.setBackground(Color.white);
-            searchPanel.add(editPane, BorderLayout.SOUTH);
-
-            JButton editButton = new JButton("Edit Customer");
-            editButton.addActionListener(e -> {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow >= 0) {
-                    String email = table.getValueAt(selectedRow, 0).toString();
-                    new CustomerRegister(email); 
-                }
-            });
-            editPane.add(editButton);
-        } catch (SQLException e) {
-            logger.info("Error accessing database: " + e.getMessage());
-            e.printStackTrace();
-        }
+        });
+        editPane.add(editButton);
 
         tableFrame.setVisible(true);
     }
@@ -358,7 +344,7 @@ public class MainClient extends JFrame {
      * @param eMail The email of the customer to retrieve.
      * @return The Customer object retrieved from the server, or null if not found or an error occurred.
      */
-    public CustomerData getCustomer(String eMail) {
+    public static CustomerData getCustomer(String eMail) {
         Response response = ClientManager.getInstance().getWebTarget()
                 .path("server/getcustomer")
                 .queryParam("eMail", eMail)
@@ -401,7 +387,7 @@ public class MainClient extends JFrame {
      *
      * @return A list of Customer objects retrieved from the server, or an empty list if no customers found or an error occurred.
      */
-    public List<CustomerData> getCustomers() {
+    public static List<CustomerData> getCustomers() {
         Response response = ClientManager.getInstance().getWebTarget()
                 .path("server/getcustomers")
                 .request(MediaType.APPLICATION_JSON)

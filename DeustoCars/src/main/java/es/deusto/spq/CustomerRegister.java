@@ -68,25 +68,18 @@ public class CustomerRegister extends JFrame {
      * @param eMail The email of the customer to modify.
      */
     public CustomerRegister(String eMail) {
+    	resourceBundle = MainClient.getResourceBundle();
         submitButton = new JButton(resourceBundle.getString("register_user_label"));
 
         setupUI("User Modification");
-
-        ResultSet rs = Database.getInstance().ejecutarConsulta(
-                "SELECT email, name, surname, birth_date FROM customers WHERE email = ?",
-                new Parameter(eMail, DataType.STRING)
-        );
-        try {
-            if (rs != null && rs.next()) {
-                nameField = new JTextField(rs.getString("name"));
-                surnameField = new JTextField(rs.getString("surname"));
-                birthDateField = new JTextField(rs.getDate("birth_date").toString());
-                emailField = new JTextField(rs.getString("email"));
-            } else {
-                JOptionPane.showMessageDialog(this, resourceBundle.getString("customer_not_found_message"), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (SQLException e) {
-            logger.info(resourceBundle.getString("customer_not_found_message") + e.getMessage());
+        CustomerData customer = MainClient.getCustomer(eMail);
+        if(customer!=null) {
+        	nameField = new JTextField(customer.getName());
+            surnameField = new JTextField(customer.getSurname());
+            birthDateField = new JTextField(customer.getDateOfBirth().toString());
+            emailField = new JTextField(eMail);
+        } else {
+        	JOptionPane.showMessageDialog(this, resourceBundle.getString("customer_not_found_message"), "Error", JOptionPane.ERROR_MESSAGE);
             
         }
 
@@ -200,6 +193,8 @@ public class CustomerRegister extends JFrame {
      * @return True if the database was successfully updated, false otherwise.
      */
     boolean updateDatabase(CustomerData customer) {
+    	return false;
+    	/*
         return Database.getInstance().ejecutarActualizacion("INSERT INTO customers (email, name, surname, birth_date)",
                 new Parameter(customer.geteMail(), DataType.STRING),
                 new Parameter(customer.getName(), DataType.STRING),
@@ -207,6 +202,7 @@ public class CustomerRegister extends JFrame {
                 new Parameter(new java.sql.Date(customer.getDateOfBirth().getTime()), DataType.DATE)
 
         );
+        */
     }
 
     /**
