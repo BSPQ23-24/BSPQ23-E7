@@ -20,6 +20,7 @@ mvn clean compile
 ```
 cd sql
 mysql -u root -p < create-deustoCars.sql
+mysql -u root -p < populate.sql
 ```
 (Note: You will be asked to input the mysql root password)
 
