@@ -128,6 +128,7 @@ public class DCServer {
             if (!customers.isEmpty()) {
                 return Response.ok(CustomerAssembler.getInstance().CustomerJDOListToData(customers)).build();
             } else {
+            	logger.info("No customers found");
                 return Response.status(Response.Status.NOT_FOUND).entity("No customers found").build();
             }
         } catch (Exception e) {

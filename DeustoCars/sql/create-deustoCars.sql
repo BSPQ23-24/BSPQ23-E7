@@ -11,28 +11,28 @@ CREATE USER IF NOT EXISTS 'spq'@'localhost' IDENTIFIED BY 'spq';
 GRANT ALL ON deustoCarsDB.* TO 'spq'@'localhost';
 USE deustoCarsDB;
 /* Create 'customers' */
-CREATE TABLE customers (
+CREATE TABLE customerjdo (
     email VARCHAR(255) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     surname VARCHAR(255) NOT NULL,
-    birth_date DATE NOT NULL
+    dateOfBirth DATE NOT NULL
 );
 /* Create 'vehicles' */
-CREATE TABLE vehicles (
-	number_plate VARCHAR(255) PRIMARY KEY,
+CREATE TABLE vehiclejdo (
+	numberPlate VARCHAR(255) PRIMARY KEY,
     brand VARCHAR(255) NOT NULL,
     model VARCHAR(255) NOT NULL,
-    ready_to_borrow BOOLEAN NOT NULL,
-    on_repair BOOLEAN NOT NULL
+    readyToBorrow BOOLEAN NOT NULL,
+    onRepair BOOLEAN NOT NULL
 );
 
 CREATE TABLE renting (
     id INT PRIMARY KEY,
-    customer_email VARCHAR(255) NOT NULL,
-    number_plate VARCHAR(255) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    FOREIGN KEY (customer_email) REFERENCES customers(email),
-    FOREIGN KEY (number_plate) REFERENCES vehicles(number_plate)
+    email VARCHAR(255) NOT NULL,
+    licensePlate VARCHAR(255) NOT NULL,
+    startDate DATE NOT NULL,
+    endDate DATE NOT NULL,
+    FOREIGN KEY (email) REFERENCES customerjdo(email),
+    FOREIGN KEY (licensePlate) REFERENCES vehiclejdo(numberPlate)
 );
 

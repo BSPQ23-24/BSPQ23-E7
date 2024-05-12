@@ -74,9 +74,10 @@ public class CustomerRegister extends JFrame {
         setupUI("User Modification");
         CustomerData customer = MainClient.getCustomer(eMail);
         if(customer!=null) {
+        	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         	nameField = new JTextField(customer.getName());
             surnameField = new JTextField(customer.getSurname());
-            birthDateField = new JTextField(customer.getDateOfBirth().toString());
+            birthDateField = new JTextField(dateFormat.format(customer.getDateOfBirth()));
             emailField = new JTextField(eMail);
         } else {
         	JOptionPane.showMessageDialog(this, resourceBundle.getString("customer_not_found_message"), "Error", JOptionPane.ERROR_MESSAGE);

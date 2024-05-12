@@ -1,5 +1,6 @@
 package es.deusto.spq.pojo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**

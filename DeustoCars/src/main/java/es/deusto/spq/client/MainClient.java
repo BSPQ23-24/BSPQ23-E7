@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -236,7 +237,7 @@ public class MainClient extends JFrame {
         JFrame tableFrame = new JFrame();
         tableFrame.setTitle("Customers Window");
         tableFrame.setSize(600, 600);
-        tableFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        tableFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         Toolkit screen = Toolkit.getDefaultToolkit();
         tableFrame.setLocation((screen.getScreenSize().width - tableFrame.getSize().width) / 2,
@@ -247,10 +248,18 @@ public class MainClient extends JFrame {
         searchPanel.setBackground(Color.white);
         tableFrame.setContentPane(searchPanel);
 
-        List <CustomerData> allCustomers = getCustomers();
-        
-        Object[][] dataArray = new Object[allCustomers.size()][];
-        allCustomers.toArray(dataArray);
+        List<CustomerData> allCustomers = getCustomers();
+
+        // Ensure dataArray is properly formatted
+        Object[][] dataArray = new Object[allCustomers.size()][4];
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        for (int i = 0; i < allCustomers.size(); i++) {
+            CustomerData customer = allCustomers.get(i);
+            dataArray[i][0] = customer.geteMail();
+            dataArray[i][1] = customer.getName();
+            dataArray[i][2] = customer.getSurname();
+            dataArray[i][3] = dateFormat.format(customer.getDateOfBirth());  // Ensure Date is converted to a suitable format if necessary
+        }
 
         String[] column = {"eMail", "Name", "Surname", "Date of Birth"};
         JTable table = new JTable(dataArray, column);
@@ -295,8 +304,15 @@ public class MainClient extends JFrame {
 
         List<VehicleData> allVehicles = getVehicles();
         
-        Object[][] dataArray = new Object[allVehicles.size()][];
-        allVehicles.toArray(dataArray);
+        Object[][] dataArray = new Object[allVehicles.size()][5];
+        for (int i = 0; i < allVehicles.size(); i++) {
+            VehicleData vehicle = allVehicles.get(i);
+            dataArray[i][0] = vehicle.getNumberPlate();
+            dataArray[i][1] = vehicle.getBrand();
+            dataArray[i][2] = vehicle.getModel();
+            dataArray[i][3] = vehicle.isReadyToBorrow();  
+            dataArray[i][4] = vehicle.isOnRepair(); 
+        }
 
         String[] columnNames = {"Plate", "Brand", "Model", "Ready To Borrow", "On Repair"};
         JTable table = new JTable(dataArray, columnNames);
@@ -379,7 +395,7 @@ public class MainClient extends JFrame {
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
             return response.readEntity(new GenericType<List<CustomerData>>() {});
         } else {
-            logger.info("ERROR getting customers");
+        	logger.info("ERROR getting customers Code: {}", response.getStatus());
             return Collections.emptyList();
         }
     }
