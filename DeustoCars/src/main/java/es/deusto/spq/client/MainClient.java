@@ -64,9 +64,6 @@ public class MainClient extends JFrame {
     private JTextField numberPlate;
     private JTextField eMail;
     protected static final Logger logger = LogManager.getLogger();
-    
-	private static final String USER = "spq";
-	private static final String PASSWORD = "spq";
 	
 	private Client client;
 	private WebTarget webTarget;
@@ -226,7 +223,7 @@ public class MainClient extends JFrame {
      * @param args Command line arguments containing the hostname and port of the server.
      */
     public static void main(String[] args) {
-        String hostname = args[0];
+    	String hostname = args[0];
         String port = args[1];
         ClientManager.getInstance().setWebTarget(hostname, port);
         new MainClient(hostname, port);
@@ -310,44 +307,30 @@ public class MainClient extends JFrame {
         searchPanel.setBackground(Color.white);
         tableFrame.setContentPane(searchPanel);
 
-        try {
-            ResultSet allVehicles = Database.getInstance().ejecutarConsulta("SELECT * FROM vehicles");
-            java.sql.ResultSetMetaData metaData = allVehicles.getMetaData();
+        List<VehicleData> allVehicles = getVehicles();
+        
+        Object[][] dataArray = new Object[allVehicles.size()][];
+        allVehicles.toArray(dataArray);
 
-            List<Object[]> data2 = new ArrayList<>();
-            while (allVehicles.next()) {
-                Object[] row2 = new Object[metaData.getColumnCount()];
-                for (int columnIndex = 1; columnIndex <= metaData.getColumnCount(); columnIndex++) {
-                    row2[columnIndex - 1] = allVehicles.getObject(columnIndex);
-                }
-                data2.add(row2);
+        String[] columnNames = {"Plate", "Brand", "Model", "Ready To Borrow", "On Repair"};
+        JTable table = new JTable(dataArray, columnNames);
+
+        JScrollPane pane = new JScrollPane(table);
+        searchPanel.add(pane, BorderLayout.CENTER);
+
+        JPanel editPane = new JPanel(new GridLayout(2, 1, 0, 0));
+        editPane.setBackground(Color.white);
+        searchPanel.add(editPane, BorderLayout.SOUTH);
+
+        JButton editButton = new JButton("Edit Vehicle");
+        editButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow >= 0) {
+                String plate = (String) table.getValueAt(selectedRow, 0);
+                new VehicleRegistration(plate);
             }
-            Object[][] dataArray2 = new Object[data2.size()][];
-            data2.toArray(dataArray2);
-
-            String[] column2 = {"Plate", "Brand", "Model", "Ready To Borrow", "On Repair"};
-            JTable table = new JTable(dataArray2, column2);
-
-            JScrollPane pane = new JScrollPane(table);
-            searchPanel.add(pane, BorderLayout.CENTER);
-
-            JPanel editPane = new JPanel(new GridLayout(2, 1, 0, 0));
-            editPane.setBackground(Color.white);
-            searchPanel.add(editPane, BorderLayout.SOUTH);
-
-            JButton editButton = new JButton("Edit Vehicle");
-            editButton.addActionListener(e -> {
-                int selectedRow2 = table.getSelectedRow();
-                if (selectedRow2 >= 0) {
-                    String Plate2 = (String) table.getValueAt(selectedRow2, 0);
-                    new VehicleRegistration(Plate2); 
-                }
-            });
-            editPane.add(editButton);
-        } catch (SQLException e) {
-            logger.info("Error accessing database: " + e.getMessage());
-            e.printStackTrace();
-        }
+        });
+        editPane.add(editButton);
 
         tableFrame.setVisible(true);
     }
@@ -380,7 +363,7 @@ public class MainClient extends JFrame {
      * @param numberPlate The number plate of the vehicle to retrieve.
      * @return The Vehicle object retrieved from the server, or null if not found or an error occurred.
      */
-    public VehicleData getVehicle(String numberPlate) {
+    public static VehicleData getVehicle(String numberPlate) {
         Response response = ClientManager.getInstance().getWebTarget()
                 .path("server/getvehicle")
                 .queryParam("numberPlate", numberPlate)
@@ -420,7 +403,7 @@ public class MainClient extends JFrame {
      *
      * @return A list of Vehicle objects retrieved from the server, or an empty list if no vehicles found or an error occurred.
      */
-    public List<VehicleData> getVehicles() {
+    public static List<VehicleData> getVehicles() {
         Response response = ClientManager.getInstance().getWebTarget()
                 .path("server/getvehicles")
                 .request(MediaType.APPLICATION_JSON)
