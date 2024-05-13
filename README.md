@@ -51,3 +51,19 @@ mvn compile exec:java -Pserver
 ```
 
 <code style="color : Cyan">Thanks for visiting our project. If you have any suggestion, please contact us.😊</code>
+
+7- To generate doxygen reports
+```
+mvn doxygen:report
+```
+
+8- To copy generated html directory into docs folder
+```
+mvn validate
+```
+
+9- To remove generated target files including dir docs with html code
+```
+mvn clean
+```
+
