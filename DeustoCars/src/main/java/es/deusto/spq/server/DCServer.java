@@ -1,3 +1,8 @@
+/**
+ * @file DCServer.java
+ * @brief Contains the implementation of the DCServer class.
+ */
+
 package es.deusto.spq.server;
 
 import javax.jdo.PersistenceManager;
@@ -28,6 +33,12 @@ import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleAssembler;
 import es.deusto.spq.pojo.VehicleData;
 
+/**
+ * @class DCServer
+ * @brief Represents the server-side implementation for managing customers and vehicles.
+ */
+
+
 @Path("/server")
 @Produces(MediaType.APPLICATION_JSON)
 public class DCServer {
@@ -37,12 +48,23 @@ public class DCServer {
 	private PersistenceManager pm=null;
 	private Transaction tx=null;
     
+	/**
+     * Constructor for the DCServer class.
+     */
+	
+	
     public DCServer() {	
         PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
         this.pm = pmf.getPersistenceManager();
         this.tx = pm.currentTransaction();
     }
 
+    /**
+     * Adds a new customer to the database.
+     * @param customerData The data of the customer to be added.
+     * @return Response indicating success or failure of the operation.
+     */
+    
     @POST
     @Path("/addcustomer")
     public Response addCustomer(CustomerData customerData) {
@@ -79,7 +101,11 @@ public class DCServer {
         }
     }
     
-
+    /**
+     * Adds a new vehicle to the database.
+     * @param vehicleData The data of the vehicle to be added.
+     * @return Response indicating success or failure of the operation.
+     */
 
     @POST
     @Path("/addvehicle")
@@ -117,6 +143,11 @@ public class DCServer {
             pm.close(); // Close the PersistenceManager
         }
     }
+    
+    /**
+     * Retrieves all customers from the database.
+     * @return Response containing the list of customers or an error message if no customers are found.
+     */
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -138,7 +169,12 @@ public class DCServer {
             pm.close();
         }
     }
-
+    
+    /**
+     * Retrieves all vehicles from the database.
+     * @return Response containing the list of vehicles or an error message if no vehicles are found.
+     */
+    
     @GET
     @Path("/getvehicles")
     public Response getVehicles() {
@@ -157,6 +193,12 @@ public class DCServer {
             pm.close();
         }
     }
+    
+    /**
+     * Retrieves a customer by email from the database.
+     * @param eMail The email of the customer to retrieve.
+     * @return Response containing the customer data or an error message if the customer is not found.
+     */
 
     @GET
     @Path("/getcustomer")
@@ -176,6 +218,12 @@ public class DCServer {
             pm.close();
         }
     }
+    
+    /**
+     * Retrieves a vehicle by number plate from the database.
+     * @param numberPlate The number plate of the vehicle to retrieve.
+     * @return Response containing the vehicle data or an error message if the vehicle is not found.
+     */
 
     @GET
     @Path("/getvehicle")
@@ -195,7 +243,12 @@ public class DCServer {
             pm.close();
         }
     }
-
+    
+    /**
+     * Deletes a vehicle from the database.
+     * @param email The email of the vehicle to delete.
+     * @return Response indicating success or failure of the operation.
+     */
 
     @DELETE
     @Path("/deletevehicle")
@@ -215,6 +268,12 @@ public class DCServer {
             pm.close();
         }
     }
+    
+    /**
+     * Deletes a customer from the database.
+     * @param email The email of the customer to delete.
+     * @return Response indicating success or failure of the operation.
+     */
 
     @DELETE
     @Path("/deletecustomer")
