@@ -19,7 +19,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Navigate to project directory
-      run: cd C:\Users\Asier\Documents\GitHub\BSPQ23-E7\DeustoCars
+      run: cd "C:\Users\Asier\Documents\GitHub\BSPQ23-E7\DeustoCars"
 
     - name: Build with Maven
       run: mvn --batch-mode --update-snapshots package
