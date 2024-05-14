@@ -99,7 +99,7 @@ public class MainClient extends JFrame {
     	
 		client = ClientBuilder.newClient();
 		ClientManager.getInstance().setWebTarget(hostname, port);
-		webTarget = ClientManager.getInstance().getWebTarget();
+		//webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
     	
         setTitle(resourceBundle.getString("main_client_title"));
         setSize(900, 400);
@@ -430,6 +430,8 @@ public class MainClient extends JFrame {
      */
     public static void deleteVehicle(String numberPlate) {
         WebTarget webTarget = ClientManager.getInstance().getWebTarget();
+        logger.info("NumberPlate: " + numberPlate);
+        logger.info("WebTarget: " + webTarget);
         if (webTarget != null) {
             Response response = webTarget
                     .path("server/deletevehicle")
@@ -490,6 +492,7 @@ public class MainClient extends JFrame {
     
     public static void addCustomer(CustomerData customer) {
         WebTarget webTarget = ClientManager.getInstance().getWebTarget();
+        logger.info("WebTarget: " + webTarget);
         if (webTarget != null) {
             Response response = webTarget
                     .path("server/addcustomer")
@@ -503,6 +506,26 @@ public class MainClient extends JFrame {
             }
         } else {
             logger.error("WebTarget is null. Unable to add customer.");
+        }
+    }
+    
+    
+    public static void addVehicle(VehicleData vehicle) {
+        WebTarget webTarget = ClientManager.getInstance().getWebTarget();
+        logger.info("WebTarget: " + webTarget);
+        if (webTarget != null) {
+            Response response = webTarget
+                    .path("server/addvehicle")
+                    .request(MediaType.APPLICATION_JSON)
+                    .post(Entity.entity(vehicle, MediaType.APPLICATION_JSON));
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                logger.info("Adding vehicle: " + response.toString());
+            } else {
+                logger.info("ERROR adding vehicle: " + response.getStatus());
+            }
+        } else {
+            logger.error("WebTarget is null. Unable to add vehicle.");
         }
     }
 }

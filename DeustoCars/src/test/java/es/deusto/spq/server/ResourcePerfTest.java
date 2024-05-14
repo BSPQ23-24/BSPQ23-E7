@@ -66,15 +66,15 @@ public class ResourcePerfTest {
 //        }
 //    }
 
-    @Before
-    public void setUp() {
-        // create the client
-    	String hostname = "localhost";
-    	String port = "8080";
-        Client c = ClientBuilder.newClient();
-        target = c.target(String.format("http://%s:%s/deustocars", hostname, port));
-
-    }
+//    @Before
+//    public void setUp() {
+//        // create the client
+//    	String hostname = "localhost";
+//    	String port = "8080";
+//        Client c = ClientBuilder.newClient();
+//        target = c.target(String.format("http://%s:%s/deustocars", hostname, port));
+//
+//    }
 
 //    @AfterClass
 //    public static void tearDownServer() throws Exception {
@@ -108,7 +108,7 @@ public class ResourcePerfTest {
 //
 //        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
 //    }
-
+//
 //    @Test
 //    @JUnitPerfTest(threads = 10, durationMs=1000)
 //    @JUnitPerfTestRequirement(maxLatency=1000)

@@ -68,22 +68,20 @@ public class ClientTest {
             when(client.target("http://localhost:8080/deustocars")).thenReturn(webTarget);
 
             mainclient = new MainClient("localhost", "8080");
-            VehicleRegistration registration = new VehicleRegistration();
         }
         
     }
 
     
  
-//    @Test
-//    public void testDeleteVehicle() {
-//        when(webTarget.path("server/deletevehicle")).thenReturn(webTarget);
-//
-//        Response response = Response.ok().build();
-//        when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
-//        MainClient.deleteVehicle("1234QWR");
-//
-//    }
+    @Test
+    public void testDeleteVehicle() {
+        when(webTarget.path("server/deletevehicle")).thenReturn(webTarget);
+        Response response = Response.ok().build();
+        when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
+        MainClient.deleteVehicle("1234QWR");
+
+    }
     
     @Test
     public void testInsertCustomer() {
@@ -92,6 +90,16 @@ public class ClientTest {
         when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
         CustomerData customer = new CustomerData("a@gmail.com", "a", "a", new Date());
         MainClient.addCustomer(customer);
+
+    }
+    
+    @Test
+    public void testInsertVehicle() {
+    	when(webTarget.path("server/addvehicle")).thenReturn(webTarget);
+    	Response response = Response.ok().build();
+        when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
+        VehicleData vehicle = new VehicleData("a@gmail.com", "a", "a", true, false);
+        MainClient.addVehicle(vehicle);
 
     }
     
