@@ -37,18 +37,6 @@ public class VehicleRentingFormTest {
         assertEquals(new Date(), renting.getEndDate());
     }
 
-//    @Test
-//    public void testUpdateDatabase() {
-//        // Crear una instancia de VehicleData para simular los datos de un vehículo
-//    	Renting renting = new Renting("@gmail.com", "123ABC", new Date(), new Date());
-//
-//        // Llamar a la función updateDatabase con los datos del vehículo
-//        boolean result = VehicleRentingForm.updateDatabase(renting);
-//
-//        // Verificar si la actualización de la base de datos fue exitosa
-//        assertTrue(result);
-//    }
-
 }
 
 

@@ -29,7 +29,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.html.parser.Entity;
+//import javax.swing.text.html.parser.Entity;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -90,11 +91,14 @@ public class MainClient extends JFrame {
      * @param hostname The hostname of the server.
      * @param port The port of the server.
      */
+    
+    
     public MainClient(String hostname, String port) {
         logger.info(resourceBundle.getString("starting_msg"));
 
     	
 		client = ClientBuilder.newClient();
+		ClientManager.getInstance().setWebTarget(hostname, port);
 		webTarget = ClientManager.getInstance().getWebTarget();
     	
         setTitle(resourceBundle.getString("main_client_title"));
@@ -481,6 +485,24 @@ public class MainClient extends JFrame {
             logger.info("Deleting customer: " + response.toString());
         } else {
             logger.info("ERROR deleting customer");
+        }
+    }
+    
+    public static void addCustomer(CustomerData customer) {
+        WebTarget webTarget = ClientManager.getInstance().getWebTarget();
+        if (webTarget != null) {
+            Response response = webTarget
+                    .path("server/addcustomer")
+                    .request(MediaType.APPLICATION_JSON)
+                    .post(Entity.entity(customer, MediaType.APPLICATION_JSON));
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                logger.info("Adding customer: " + response.toString());
+            } else {
+                logger.info("ERROR adding customer: " + response.getStatus());
+            }
+        } else {
+            logger.error("WebTarget is null. Unable to add customer.");
         }
     }
 }

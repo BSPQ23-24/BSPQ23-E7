@@ -15,6 +15,7 @@ import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -29,6 +30,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import es.deusto.spq.VehicleRegistration;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.DirectMessage;
 import es.deusto.spq.pojo.Renting;
@@ -64,23 +66,36 @@ public class ClientTest {
         try (MockedStatic<ClientBuilder> clientBuilder = Mockito.mockStatic(ClientBuilder.class)) {
             clientBuilder.when(ClientBuilder::newClient).thenReturn(client);
             when(client.target("http://localhost:8080/deustocars")).thenReturn(webTarget);
+
             mainclient = new MainClient("localhost", "8080");
+            VehicleRegistration registration = new VehicleRegistration();
         }
-//        ClientManager.getInstance().setWebTarget("localhost", "8080");
-//        mainclient = new MainClient("localhost", "8080");
+        
     }
 
     
  
+//    @Test
+//    public void testDeleteVehicle() {
+//        when(webTarget.path("server/deletevehicle")).thenReturn(webTarget);
+//
+//        Response response = Response.ok().build();
+//        when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
+//        MainClient.deleteVehicle("1234QWR");
+//
+//    }
+    
     @Test
-    public void testDeleteVehicle() {
-        when(webTarget.path("server/deletevehicle")).thenReturn(webTarget);
-
-        Response response = Response.ok().build();
+    public void testInsertCustomer() {
+    	when(webTarget.path("server/addcustomer")).thenReturn(webTarget);
+    	Response response = Response.ok().build();
         when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
-        MainClient.deleteVehicle("123AB");
+        CustomerData customer = new CustomerData("a@gmail.com", "a", "a", new Date());
+        MainClient.addCustomer(customer);
 
     }
+    
+  
     
 
 }
