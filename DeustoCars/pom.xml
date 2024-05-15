@@ -157,10 +157,40 @@
                 </systemPropertyVariables>
             </configuration>
         </plugin>
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
+		<plugin>
+			<artifactId>maven-resources-plugin</artifactId>
+			<version>3.0.2</version>
+			<executions>
+				<execution>
+					<id>copy-resources</id>
+					<!-- here the phase you need -->
+					<phase>validate</phase>
+					<goals>
+						<goal>copy-resources</goal>
+					</goals>
+					<configuration>
+						<outputDirectory>${basedir}/docs</outputDirectory>
+							<resources>          
+								<resource>
+								<directory>${basedir}/target/doxygen/html</directory>
+								<filtering>true</filtering>
+								</resource>
+							</resources>              
+					</configuration>            
+				</execution>
+			</executions>
+		</plugin>
+		<plugin>
+			<artifactId>maven-clean-plugin</artifactId>
+			<version>3.0.0</version>
+			<configuration>
+			<filesets>
+				<fileset>
+					<directory>${basedir}/docs</directory>
+				</fileset>
+			</filesets>
+			</configuration>
+		</plugin>		
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
