@@ -144,6 +144,9 @@
                   <include>*.ods</include>
                 </includes>
               </fileset>
+              <fileset>
+                <directory>${basedir}/docs</directory>
+              </fileset>
             </filesets>
 				  </configuration>
         </plugin>
@@ -180,36 +183,21 @@
 				</execution>
 			</executions>
 		</plugin>
-		<plugin>
-			<artifactId>maven-clean-plugin</artifactId>
-			<version>3.0.0</version>
-			<configuration>
-			<filesets>
-				<fileset>
-					<directory>${basedir}/docs</directory>
-				</fileset>
-			</filesets>
-			</configuration>
-		</plugin>		
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
-          <configuration>
-                <archive>
-                    <manifest>
-                        <mainClass>es.deusto.spq.client.gui.ClientGUI</mainClass>
-                    </manifest>
-                </archive>
-            </configuration>
-        </plugin>
+    <plugin>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>3.8.1</version>
+    </plugin>
+    <plugin>
+      <artifactId>maven-jar-plugin</artifactId>
+      <version>3.0.2</version>
+      <configuration>
+            <archive>
+                <manifest>
+                    <mainClass>es.deusto.spq.client.gui.ClientGUI</mainClass>
+                </manifest>
+            </archive>
+        </configuration>
+    </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
           <version>2.5.2</version>
