@@ -66,15 +66,15 @@ public class ResourcePerfTest {
 //        }
 //    }
 
-//    @Before
-//    public void setUp() {
-//        // create the client
-//    	String hostname = "localhost";
-//    	String port = "8080";
-//        Client c = ClientBuilder.newClient();
-//        target = c.target(String.format("http://%s:%s/deustocars", hostname, port));
-//
-//    }
+    @Before
+    public void setUp() {
+        // create the client
+    	String hostname = "localhost";
+    	String port = "8080";
+        Client c = ClientBuilder.newClient();
+        target = c.target(String.format("http://%s:%s/deustocars", hostname, port));
+
+    }
 
 //    @AfterClass
 //    public static void tearDownServer() throws Exception {
@@ -109,18 +109,22 @@ public class ResourcePerfTest {
 //        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
 //    }
 //
-//    @Test
-//    @JUnitPerfTest(threads = 10, durationMs=1000)
-//    @JUnitPerfTestRequirement(maxLatency=1000)
-//    public void testInsertVehicle() {
-//        VehicleData vehicle = new VehicleData("PruebasSQL", "Toyota", "Corolla", true, true);
-//
-//        Response response = target.path("server/addvehicle")
-//            .request(MediaType.APPLICATION_JSON)
-//            .post(Entity.entity(vehicle, MediaType.APPLICATION_JSON));
-//
-//        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
-//    }
+    @Test
+    @JUnitPerfTest(threads = 10, durationMs=1000)
+    @JUnitPerfTestRequirement(maxLatency=1000)
+    public void testInsertVehicle() {
+        VehicleData vehicle = new VehicleData("PruebasSQL", "Toyota", "Corolla", true, true);
+        logger.info("Error");
+
+        Response response = target.path("server/addvehicle")
+            .request(MediaType.APPLICATION_JSON)
+            .post(Entity.entity(vehicle, MediaType.APPLICATION_JSON));
+        logger.info(response.toString());
+        
+        logger.info("Error22");
+
+        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+    }
     
 //    @Test
 //    @JUnitPerfTest(threads = 10, durationMs=1000)
