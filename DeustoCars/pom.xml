@@ -22,7 +22,7 @@
 		<server.hostname>127.0.0.1</server.hostname>
 		<server.port>8080</server.port>
     <maven.compiler.release>8</maven.compiler.release>
-	<doxygen.config.file>${basedir}/src/main/resources/Doxyfile</doxygen.config.file>
+	  <doxygen.config.file>${basedir}/src/main/resources/Doxyfile</doxygen.config.file>
   </properties>
 
 
@@ -308,14 +308,15 @@
             </execution>
           </executions>
 			  </plugin>
-			  <plugin>
-			  	<groupId>com.soebes.maven.plugins</groupId>
-			  	<artifactId>doxygen-maven-plugin</artifactId>
-			  	<version>1.1.0</version>
-			  	<configuration>
-			  		<configurationFile>${doxygen.config.file}</configurationFile>
-			  	</configuration>
-			  </plugin>
+			  
+        <plugin>
+          <groupId>com.soebes.maven.plugins</groupId>
+          <artifactId>doxygen-maven-plugin</artifactId>
+          <version>1.1.0</version>
+          <configuration>
+            <configurationFile>${doxygen.config.file}</configurationFile>
+          </configuration>
+        </plugin>
     </plugins>
   </build>
 
