@@ -145,7 +145,7 @@
                 </includes>
               </fileset>
               <fileset>
-                <directory>${basedir}/docs</directory>
+                <directory>${basedir}/../docs</directory>
               </fileset>
             </filesets>
 				  </configuration>
@@ -172,7 +172,7 @@
 						<goal>copy-resources</goal>
 					</goals>
 					<configuration>
-						<outputDirectory>${basedir}/docs</outputDirectory>
+						<outputDirectory>${basedir}/../docs</outputDirectory>
 							<resources>          
 								<resource>
 								<directory>${basedir}/target/doxygen/html</directory>
