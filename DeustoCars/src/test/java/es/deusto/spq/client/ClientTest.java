@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -79,7 +80,7 @@ public class ClientTest {
         when(webTarget.path("server/deletevehicle")).thenReturn(webTarget);
         Response response = Response.ok().build();
         when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
-        MainClient.deleteVehicle("1234QWR");
+        mainclient.deleteVehicle("1234QWR");
 
     }
     
@@ -88,8 +89,10 @@ public class ClientTest {
     	when(webTarget.path("server/addcustomer")).thenReturn(webTarget);
     	Response response = Response.ok().build();
         when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
-        CustomerData customer = new CustomerData("a@gmail.com", "a", "a", new Date());
-        MainClient.addCustomer(customer);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date(dateFormat.format("2002-12-12"));
+        CustomerData customer = new CustomerData("a@gmail.com", "a", "a", date);
+        mainclient.addCustomer(customer);
 
     }
     
@@ -99,7 +102,7 @@ public class ClientTest {
     	Response response = Response.ok().build();
         when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
         VehicleData vehicle = new VehicleData("a@gmail.com", "a", "a", true, false);
-        MainClient.addVehicle(vehicle);
+        mainclient.addVehicle(vehicle);
 
     }
     

@@ -7,7 +7,6 @@ import es.deusto.spq.db.resources.Parameter;
 import java.awt.*;
 import java.util.ResourceBundle;
 
-import es.deusto.spq.pojo.VehicleData;
 import javassist.convert.TransformNewClass;
 import es.deusto.spq.client.ClientManager;
 import es.deusto.spq.client.MainClient;

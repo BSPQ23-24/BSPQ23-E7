@@ -48,6 +48,7 @@ import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.UserData;
 import es.deusto.spq.pojo.VehicleData;
 
+
 /**
  * This class represents the main client application for managing customers and vehicles.
  */
@@ -67,8 +68,8 @@ public class MainClient extends JFrame {
     private JTextField eMail;
     protected static final Logger logger = LogManager.getLogger();
 	
-	private Client client;
-	private WebTarget webTarget;
+	protected Client client;
+	protected WebTarget webTarget;
 
     static {
         // English (default):
@@ -98,8 +99,8 @@ public class MainClient extends JFrame {
 
     	
 		client = ClientBuilder.newClient();
-		ClientManager.getInstance().setWebTarget(hostname, port);
-		//webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
+		//ClientManager.getInstance().setWebTarget(hostname, port);
+		webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
     	
         setTitle(resourceBundle.getString("main_client_title"));
         setSize(900, 400);
@@ -428,8 +429,8 @@ public class MainClient extends JFrame {
      *
      * @param numberPlate The number plate of the vehicle to delete.
      */
-    public static void deleteVehicle(String numberPlate) {
-        WebTarget webTarget = ClientManager.getInstance().getWebTarget();
+    public void deleteVehicle(String numberPlate) {
+        //WebTarget webTarget = ClientManager.getInstance().getWebTarget();
         logger.info("NumberPlate: " + numberPlate);
         logger.info("WebTarget: " + webTarget);
         if (webTarget != null) {
