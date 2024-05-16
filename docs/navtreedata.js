@@ -26,7 +26,7 @@ var NAVTREE =
 [
   [ "Doxygen Example", "index.html", [
     [ "Packages", "namespaces.html", [
-      [ "Packages", "namespaces.html", "namespaces_dup" ]
+      [ "Package List", "namespaces.html", null ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
@@ -46,8 +46,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_app_8java.html",
-"classes_1_1deusto_1_1spq_1_1pojo_1_1_vehicle_data.html#afec08058317b0dced446bf9b4ad96802"
+"_app_8java.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

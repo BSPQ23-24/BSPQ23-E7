@@ -1,0 +1,21 @@
+volumes:
+    db_data:
+
+services:
+    database:
+        image: mysql:8.4.0
+        volumes:
+        - db_data:/var/lib/mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: deustoCarsDB
+            MYSQL_USER: spq
+            MYSQL_PASSWORD: spq
+    server:
+        image: simple-jersey
+        depends_on:
+        - database
+        ports:
+        - "9080:8080"
+        restart: always
