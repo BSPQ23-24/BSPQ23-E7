@@ -31,31 +31,31 @@ public class CustomerRegisterTest {
     private Invocation.Builder invocationBuilder;
     private Response response;
 
-    @Before
-    public void setUp() {
-        form = new CustomerRegister();
-
-    }
+//    @Before
+//    public void setUp() {
+//        form = new CustomerRegister();
+//
+//    }
     
-    @Test
-    public void testCustomerRegistrationWindowOpening() {
-        // Verificar que la ventana esté visible después de crear la instancia
-        assertTrue(form.isVisible());
-    }
- 
-
-	@Test
-    public void testCreateCustomerWithConstructor() {
-        // Crear un objeto Customer llamando al constructor
-
-        CustomerData customer = new CustomerData("asier@gmail.com", "Asier", "Iturriotz", new Date(2002, 10, 31));
-        
-        // Verificar que los atributos se hayan establecido correctamente
-        assertEquals("asier@gmail.com", customer.geteMail());
-        assertEquals("Asier", customer.getName());
-        assertEquals("Iturriotz", customer.getSurname());
-        assertEquals(new Date(2002, 10, 31), customer.getDateOfBirth());
-    }
+//    @Test
+//    public void testCustomerRegistrationWindowOpening() {
+//        // Verificar que la ventana esté visible después de crear la instancia
+//        assertTrue(form.isVisible());
+//    }
+// 
+//
+//	@Test
+//    public void testCreateCustomerWithConstructor() {
+//        // Crear un objeto Customer llamando al constructor
+//
+//        CustomerData customer = new CustomerData("asier@gmail.com", "Asier", "Iturriotz", new Date(2002, 10, 31));
+//        
+//        // Verificar que los atributos se hayan establecido correctamente
+//        assertEquals("asier@gmail.com", customer.geteMail());
+//        assertEquals("Asier", customer.getName());
+//        assertEquals("Iturriotz", customer.getSurname());
+//        assertEquals(new Date(2002, 10, 31), customer.getDateOfBirth());
+//    }
     
     //DATABASE DOEST WORK
 

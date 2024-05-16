@@ -423,7 +423,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <mainClass>es.deusto.spq.client.MainClient</mainClass>
+                            <mainClass>es.deusto.spq.client.TestForClient</mainClass>
                             <arguments>
                               <argument>${server.hostname}</argument>
                               <argument>${server.port}</argument>

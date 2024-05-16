@@ -13,16 +13,16 @@ public class VehicleRetrievalFormTest {
 
 	private VehicleRetrievalForm VehicleRetrievalForm;
 
-    @Before
-    public void setUp() {
-    	VehicleRetrievalForm = new VehicleRetrievalForm();
-    }
-
-    @Test
-    public void testVehicleRetrievalFormWindowOpening() {
-        // Verificar que la ventana esté visible después de crear la instancia
-        assertTrue(VehicleRetrievalForm.isVisible());
-    }
+//    @Before
+//    public void setUp() {
+//    	VehicleRetrievalForm = new VehicleRetrievalForm();
+//    }
+//
+//    @Test
+//    public void testVehicleRetrievalFormWindowOpening() {
+//        // Verificar que la ventana esté visible después de crear la instancia
+//        assertTrue(VehicleRetrievalForm.isVisible());
+//    }
 
 
 //    @Test

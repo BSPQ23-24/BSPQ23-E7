@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,7 +56,7 @@ public class ClientTest {
     @Captor
     private ArgumentCaptor<Entity<DirectMessage>> directMessageEntityCaptor;
 
-    private MainClient mainclient;
+    private TestForClient mainclient;
     
     //private DCServerManager cdservermanager;
 
@@ -67,7 +69,7 @@ public class ClientTest {
             clientBuilder.when(ClientBuilder::newClient).thenReturn(client);
             when(client.target("http://localhost:8080/deustocars")).thenReturn(webTarget);
 
-            mainclient = new MainClient("localhost", "8080");
+            mainclient = new TestForClient("localhost", "8080");
         }
         
     }
@@ -78,8 +80,23 @@ public class ClientTest {
     public void testDeleteVehicle() {
         when(webTarget.path("server/deletevehicle")).thenReturn(webTarget);
         Response response = Response.ok().build();
-        when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
-        MainClient.deleteVehicle("1234QWR");
+        when(webTarget.queryParam(eq("numberPlate"), anyString())
+                .request(MediaType.APPLICATION_JSON)
+                .delete())
+                .thenReturn(response);  
+        mainclient.deleteVehicle("1234QWR");
+
+    }
+    
+    @Test
+    public void testDeleteCustomer() {
+        when(webTarget.path("server/deletecustomer")).thenReturn(webTarget);
+        Response response = Response.ok().build();
+        when(webTarget.queryParam(eq("eMail"), anyString())
+                .request(MediaType.APPLICATION_JSON)
+                .delete())
+                .thenReturn(response);        
+        mainclient.deleteCustomer("test@gmail.com");
 
     }
     
@@ -89,7 +106,7 @@ public class ClientTest {
     	Response response = Response.ok().build();
         when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
         CustomerData customer = new CustomerData("a@gmail.com", "a", "a", new Date());
-        MainClient.addCustomer(customer);
+        mainclient.addCustomer(customer);
 
     }
     
@@ -99,7 +116,7 @@ public class ClientTest {
     	Response response = Response.ok().build();
         when(webTarget.request(MediaType.APPLICATION_JSON).post(any(Entity.class))).thenReturn(response);
         VehicleData vehicle = new VehicleData("a@gmail.com", "a", "a", true, false);
-        MainClient.addVehicle(vehicle);
+        mainclient.addVehicle(vehicle);
 
     }
     

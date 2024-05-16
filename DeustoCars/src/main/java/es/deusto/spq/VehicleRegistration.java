@@ -189,7 +189,7 @@ public class VehicleRegistration extends JFrame {
         if (response.getStatus() != Status.OK.getStatusCode()) {
             logger.info("Vehicle to modify found.");
             
-            MainClient.deleteVehicle(numberPlateField.getText());
+            //MainClient.deleteVehicle(numberPlateField.getText());
 
             response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
             if (response.getStatus() != Status.OK.getStatusCode()) {

@@ -98,8 +98,8 @@ public class MainClient extends JFrame {
 
     	
 		client = ClientBuilder.newClient();
-		ClientManager.getInstance().setWebTarget(hostname, port);
-		//webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
+		//ClientManager.getInstance().setWebTarget(hostname, port);
+		webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
     	
         setTitle(resourceBundle.getString("main_client_title"));
         setSize(900, 400);
@@ -428,8 +428,8 @@ public class MainClient extends JFrame {
      *
      * @param numberPlate The number plate of the vehicle to delete.
      */
-    public static void deleteVehicle(String numberPlate) {
-        WebTarget webTarget = ClientManager.getInstance().getWebTarget();
+    public void deleteVehicle(String numberPlate) {
+        //WebTarget webTarget = ClientManager.getInstance().getWebTarget();
         logger.info("NumberPlate: " + numberPlate);
         logger.info("WebTarget: " + webTarget);
         if (webTarget != null) {
@@ -477,7 +477,7 @@ public class MainClient extends JFrame {
      * @param eMail The email of the customer to delete.
      */
     public void deleteCustomer(String eMail) {
-        Response response = ClientManager.getInstance().getWebTarget()
+        Response response = webTarget
                 .path("server/deletecustomer")
                 .queryParam("eMail", eMail)
                 .request(MediaType.APPLICATION_JSON)
@@ -490,8 +490,8 @@ public class MainClient extends JFrame {
         }
     }
     
-    public static void addCustomer(CustomerData customer) {
-        WebTarget webTarget = ClientManager.getInstance().getWebTarget();
+    public void addCustomer(CustomerData customer) {
+        //WebTarget webTarget = ClientManager.getInstance().getWebTarget();
         logger.info("WebTarget: " + webTarget);
         if (webTarget != null) {
             Response response = webTarget
@@ -510,8 +510,8 @@ public class MainClient extends JFrame {
     }
     
     
-    public static void addVehicle(VehicleData vehicle) {
-        WebTarget webTarget = ClientManager.getInstance().getWebTarget();
+    public void addVehicle(VehicleData vehicle) {
+        //WebTarget webTarget = ClientManager.getInstance().getWebTarget();
         logger.info("WebTarget: " + webTarget);
         if (webTarget != null) {
             Response response = webTarget

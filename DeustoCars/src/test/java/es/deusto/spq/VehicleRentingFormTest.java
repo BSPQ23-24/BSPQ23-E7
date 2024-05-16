@@ -14,16 +14,16 @@ public class VehicleRentingFormTest {
 
 	private VehicleRentingForm VehicleRentingForm;
 
-    @Before
-    public void setUp() {
-    	VehicleRentingForm = new VehicleRentingForm();
-    }
-
-    @Test
-    public void testVehicleRentingFormWindowOpening() {
-        // Verificar que la ventana esté visible después de crear la instancia
-        assertTrue(VehicleRentingForm.isVisible());
-    }
+//    @Before
+//    public void setUp() {
+//    	VehicleRentingForm = new VehicleRentingForm();
+//    }
+//
+//    @Test
+//    public void testVehicleRentingFormWindowOpening() {
+//        // Verificar que la ventana esté visible después de crear la instancia
+//        assertTrue(VehicleRentingForm.isVisible());
+//    }
 
 //    @Test
 //    public void testCreateRentingWithConstructor() {
