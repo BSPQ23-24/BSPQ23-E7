@@ -1,0 +1,12 @@
+// SERVER //
+mvn clean compile
+cd sql
+mysql -u root -p < create-deustoCars.sql
+mysql -u root -p < populate.sql
+cd ..
+mvn datanucleus:schema-create
+mvn jetty:run
+
+
+// CLIENT //
+mvn exec:java -Pclient

@@ -95,6 +95,7 @@ public class DeustoCarsLogin extends JFrame {
         backgroundPanel.add(enterButton, gbc);
 
         add(backgroundPanel);
+        validate();
         setVisible(true);
 
     }

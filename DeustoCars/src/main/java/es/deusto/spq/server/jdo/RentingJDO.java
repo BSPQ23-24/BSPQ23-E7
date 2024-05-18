@@ -1,13 +1,15 @@
-package es.deusto.spq.pojo;
+package es.deusto.spq.server.jdo;
 
 import java.util.Date;
+import javax.jdo.annotations.PersistenceCapable;
 
 /**
  * Represents a renting.
  */
-public class Renting {
-    private CustomerData customer;
-    private VehicleData vehicle;
+@PersistenceCapable
+public class RentingJDO {
+    private CustomerJDO customer;
+    private VehicleJDO vehicle;
     private Date startDate;
     private Date endDate;
 
@@ -19,7 +21,7 @@ public class Renting {
      * @param startDate    The start date of the renting.
      * @param endDate      The end date of the renting.
      */
-    public Renting(CustomerData customer, VehicleData vehicle, Date startDate, Date endDate) {
+    public RentingJDO(CustomerJDO customer, VehicleJDO vehicle, Date startDate, Date endDate) {
         this.customer = customer;
         this.vehicle = vehicle;
         this.startDate = startDate;
@@ -31,7 +33,7 @@ public class Renting {
      *
      * @return The customer associated with the renting.
      */
-    public CustomerData getCustomer() {
+    public CustomerJDO getCustomer() {
         return customer;
     }
 
@@ -40,7 +42,7 @@ public class Renting {
      *
      * @param customer The customer to set.
      */
-    public void setCustomer(CustomerData customer) {
+    public void setCustomer(CustomerJDO customer) {
         this.customer = customer;
     }
 
@@ -49,7 +51,7 @@ public class Renting {
      *
      * @return The vehicle associated with the renting.
      */
-    public VehicleData getVehicle() {
+    public VehicleJDO getVehicle() {
         return vehicle;
     }
 
@@ -58,7 +60,7 @@ public class Renting {
      *
      * @param vehicle The vehicle to set.
      */
-    public void setVehicle(VehicleData vehicle) {
+    public void setVehicle(VehicleJDO vehicle) {
         this.vehicle = vehicle;
     }
 

@@ -1,4 +1,4 @@
-package es.deusto.spq;
+package es.deusto.spq.client;
 
 import javax.swing.*;
 import javax.ws.rs.client.Entity;
@@ -16,6 +16,8 @@ import es.deusto.spq.db.Database;
 import es.deusto.spq.db.resources.DataType;
 import es.deusto.spq.db.resources.Parameter;
 import es.deusto.spq.pojo.Renting;
+import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.VehicleData;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -108,15 +110,17 @@ public class VehicleRentingForm extends JFrame {
             return;
         }
         
-        Renting newRenting = new Renting(email, plate, start, end);
+        CustomerData customer = MainClient.getCustomer(email);
+        VehicleData vehicle = MainClient.getVehicle(plate);
+        Renting newRenting = new Renting(customer, vehicle, start, end);
 
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/vehicles");
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/rent");
 		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(newRenting, MediaType.APPLICATION_JSON));
 		if (response.getStatus() != Status.OK.getStatusCode()) {
-			logger.error("Error connecting with the server. Code: {}",response.getStatus());
+			logger.error("Error creating Rent in the server. Code: {}",response.getStatus());
 		} else {
-			logger.info("Vehicle Correctly Registered :)");
+			logger.info("Renting Correctly Registered :)");
 		}
 
         // Clear input fields
@@ -141,13 +145,14 @@ public class VehicleRentingForm extends JFrame {
      * @return True if the database was successfully updated, false otherwise.
      */
     boolean updateDatabase(Renting renting) {
-        return Database.getInstance().ejecutarActualizacion("INSERT INTO renting (id, email, licensePlate, startDate, endDate) VALUES (?, ?, ?, ?, ?)",
-                new Parameter(renting.getId(), DataType.INTEGER),
-                new Parameter(renting.getEmail(), DataType.STRING),
-                new Parameter(renting.getLicensePlate(), DataType.STRING),
-                new Parameter(new java.sql.Date(renting.getStartDate().getTime()), DataType.DATE),
-                new Parameter(new java.sql.Date(renting.getEndDate().getTime()), DataType.DATE)
-        );
+        //return Database.getInstance().ejecutarActualizacion("INSERT INTO renting (id, email, licensePlate, startDate, endDate) VALUES (?, ?, ?, ?, ?)",
+                //new Parameter(renting.getId(), DataType.INTEGER),
+                //new Parameter(renting.getEmail(), DataType.STRING),
+                //new Parameter(renting.getLicensePlate(), DataType.STRING),
+                //new Parameter(new java.sql.Date(renting.getStartDate().getTime()), DataType.DATE),
+                //new Parameter(new java.sql.Date(renting.getEndDate().getTime()), DataType.DATE)
+        //);
+        return true;
     }
 
     /**
