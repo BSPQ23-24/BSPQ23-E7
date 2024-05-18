@@ -41,8 +41,6 @@ import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import es.deusto.spq.CustomerRegister;
-import es.deusto.spq.VehicleRegistration;
 import es.deusto.spq.db.Database;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.UserData;
@@ -529,3 +527,4 @@ public class MainClient extends JFrame {
         }
     }
 }
+

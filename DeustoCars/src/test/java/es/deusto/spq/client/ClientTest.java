@@ -32,7 +32,6 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import es.deusto.spq.VehicleRegistration;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.DirectMessage;
 import es.deusto.spq.pojo.Renting;

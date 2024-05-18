@@ -3,6 +3,8 @@
  */
 package es.deusto.spq.client;
 
+import es.deusto.spq.client.MainClient;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,27 +15,56 @@ public class DeustoCarsLogin extends JFrame {
     private JPasswordField passwordField;
     private JCheckBox policyCheckbox;
 
-    public DeustoCarsLogin() {
+    public DeustoCarsLogin(String hostname, String port) {
         setTitle("DeustoCars Login");
-        setSize(300, 200);
+        setSize(650, 350);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 1));
+        ImageIcon img = new ImageIcon("src/resources/bottom-bar-icon.png");
+        setIconImage(img.getImage());
 
+        ImageIcon imgIcon = new ImageIcon("src/resources/loginBackground.png");
+        Image imgScaled = imgIcon.getImage().getScaledInstance(600, 350, java.awt.Image.SCALE_SMOOTH);
+        
+        JPanel backgroundPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(imgScaled, 0, 0, this.getWidth(), this.getHeight(), null);
+            }
+        };
+        backgroundPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc =  new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        
         JLabel emailLabel = new JLabel("Email:");
+        gbc.gridx = 0;
+        gbc.gridy = 0;       
+        backgroundPanel.add(emailLabel, gbc);
+ 
         emailField = new JTextField();
-        panel.add(emailLabel);
-        panel.add(emailField);
+        emailField.setPreferredSize(new Dimension(200, 30));
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        backgroundPanel.add(emailField, gbc);
 
         JLabel passwordLabel = new JLabel("Password:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;   
+        backgroundPanel.add(passwordLabel, gbc);
+        
         passwordField = new JPasswordField();
-        panel.add(passwordLabel);
-        panel.add(passwordField);
+        passwordField.setPreferredSize(new Dimension(200, 30));
+        gbc.gridx = 1;
+        gbc.gridy = 1;         
+        backgroundPanel.add(passwordField, gbc);
 
         policyCheckbox = new JCheckBox("I accept the DeustoCars Data Treatment policy");
-        panel.add(policyCheckbox);
+        policyCheckbox.setOpaque(false);
+        gbc.gridx = 0;
+        gbc.gridy = 2;   
+        backgroundPanel.add(policyCheckbox, gbc);
 
         JButton enterButton = new JButton("Enter");
         enterButton.addActionListener(new ActionListener() {
@@ -46,7 +77,8 @@ public class DeustoCarsLogin extends JFrame {
                 if (!policyAccepted) {
                     JOptionPane.showMessageDialog(null, "To enter you need to accept our Data Treatment Policy");
                 } else if (email.equals("user@user.com") && password.equals("user")) {
-                    MainClient mainClient = new MainClient();
+                    ClientManager.getInstance().setWebTarget(hostname, port);
+                    MainClient mainClient = new MainClient(hostname, port);
                     mainClient.setVisible(true);
                     dispose();
                 } else if (email.equals("admin@admin.com") && password.equals("admin")) {
@@ -58,25 +90,19 @@ public class DeustoCarsLogin extends JFrame {
                 }
             }
         });
-        panel.add(enterButton);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        backgroundPanel.add(enterButton, gbc);
 
-        add(panel);
+        add(backgroundPanel);
         setVisible(true);
+
     }
 
     public static void main(String[] args) {
-        new DeustoCarsLogin();
-    }
-}
-
-class MainClient extends JWindow {
-    public MainClient() {
-        setSize(400, 300);
-        setLocationRelativeTo(null);
-        setBackground(new Color(0, 0, 0, 0));
-
-        JLabel label = new JLabel("Welcome to DeustoCars!");
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        getContentPane().add(label, BorderLayout.CENTER);
+        String hostname = args[0];
+        String port = args[1];
+        new DeustoCarsLogin(hostname, port);
+        
     }
 }

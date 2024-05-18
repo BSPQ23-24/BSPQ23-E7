@@ -1,9 +1,7 @@
-package es.deusto.spq;
+package es.deusto.spq.client;
 
 import javax.swing.*;
 
-import es.deusto.spq.client.ClientManager;
-import es.deusto.spq.client.MainClient;
 import es.deusto.spq.db.Database;
 import es.deusto.spq.db.resources.DataType;
 import es.deusto.spq.db.resources.Parameter;
@@ -94,6 +92,9 @@ public class CustomerRegister extends JFrame {
         setSize(400, 300);
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
+
+        ImageIcon img = new ImageIcon("src/resources/registerUserIcon.png");
+        setIconImage(img.getImage());
 
         JPanel formPanel = new JPanel(new GridLayout(5, 1, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));

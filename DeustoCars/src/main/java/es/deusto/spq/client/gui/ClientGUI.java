@@ -23,8 +23,8 @@ import javax.swing.border.EmptyBorder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import es.deusto.spq.CustomerRegister;
-import es.deusto.spq.VehicleRegistration;
+import es.deusto.spq.client.CustomerRegister;
+import es.deusto.spq.client.VehicleRegistration;
 import es.deusto.spq.db.Database;
 
 /**

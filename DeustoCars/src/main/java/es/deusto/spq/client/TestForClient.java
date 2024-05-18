@@ -1,4 +1,3 @@
-
 package es.deusto.spq.client;
 
 import javax.ws.rs.client.Client;

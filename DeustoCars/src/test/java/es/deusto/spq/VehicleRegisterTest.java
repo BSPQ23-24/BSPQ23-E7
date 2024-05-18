@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import es.deusto.spq.client.VehicleRegistration;
 import es.deusto.spq.pojo.VehicleData;
 
 public class VehicleRegisterTest {
