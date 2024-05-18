@@ -12,7 +12,7 @@ import es.deusto.spq.pojo.VehicleData;
 
 public class VehicleRentingFormTest {
 
-	private VehicleRentingForm VehicleRentingForm;
+	//private VehicleRentingForm VehicleRentingForm;
 
 //    @Before
 //    public void setUp() {

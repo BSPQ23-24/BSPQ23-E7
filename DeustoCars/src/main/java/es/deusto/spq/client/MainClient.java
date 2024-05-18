@@ -60,6 +60,8 @@ public class MainClient extends JFrame {
     private JButton getVehicle;
     private JButton deleteCustomer;
     private JButton deleteVehicle;
+    private JButton retrieveVehicle;
+    private JButton makeRent;
 
     private JTextField numberPlate;
     private JTextField eMail;
@@ -164,6 +166,9 @@ public class MainClient extends JFrame {
         deleteVehicle = new JButton(resourceBundle.getString("delete_vehicle_button"));
         deleteVehicle.setBackground(new Color(231, 76, 60));
         deleteVehicle.setForeground(Color.WHITE);
+        retrieveVehicle = new JButton(resourceBundle.getString("retrieve_vehicle_button"));
+        retrieveVehicle.setBackground(new Color(255, 168, 54));
+        retrieveVehicle.setForeground(Color.WHITE);
 
         JLabel getCustomerLabel = new JLabel(resourceBundle.getString("search_delete_by_email_label"));
         eMail = new JTextField();
@@ -173,20 +178,22 @@ public class MainClient extends JFrame {
         deleteCustomer = new JButton(resourceBundle.getString("delete_customer_button"));
         deleteCustomer.setBackground(new Color(231, 76, 60));
         deleteCustomer.setForeground(Color.WHITE);
+        makeRent = new JButton(resourceBundle.getString("make_a_rent_button"));
+        makeRent.setBackground(new Color(255, 168, 54));
+        makeRent.setForeground(Color.WHITE);
 
         searchDeletePanel.add(getVehicleLabel);
         searchDeletePanel.add(numberPlate);
+        searchDeletePanel.add(makeRent);
         searchDeletePanel.add(getVehicle);
-        searchDeletePanel.add(new JLabel()); // Empty label for spacing
         searchDeletePanel.add(deleteVehicle);
-        searchDeletePanel.add(new JLabel()); // Empty label for spacing
-
+        searchDeletePanel.add(retrieveVehicle);
+        
         searchDeletePanel.add(getCustomerLabel);
         searchDeletePanel.add(eMail);
+        searchDeletePanel.add(new JLabel()); // Empty label for spacing
         searchDeletePanel.add(getCustomer);
-        searchDeletePanel.add(new JLabel()); // Empty label for spacing
         searchDeletePanel.add(deleteCustomer);
-        searchDeletePanel.add(new JLabel()); // Empty label for spacing
 
         numberPlate.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
         eMail.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
@@ -217,6 +224,8 @@ public class MainClient extends JFrame {
         getCustomer.addActionListener(e -> getCustomer(eMail.getText()));
         deleteVehicle.addActionListener(e -> deleteVehicle(numberPlate.getText()));
         deleteCustomer.addActionListener(e -> deleteCustomer(eMail.getText()));
+        retrieveVehicle.addActionListener(e -> new VehicleRetrievalForm());
+        makeRent.addActionListener(e -> new VehicleRentingForm());
 
         setVisible(true);
     }

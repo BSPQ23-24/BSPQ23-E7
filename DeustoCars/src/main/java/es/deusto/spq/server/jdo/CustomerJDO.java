@@ -1,8 +1,12 @@
 package es.deusto.spq.server.jdo;
 
-import javax.jdo.annotations.*;
-
 import java.util.Date;
+import java.util.Set;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.PrimaryKey;
+import javax.jdo.annotations.Join;
+import javax.jdo.annotations.Persistent;
+import java.util.HashSet;
 
 /**
  * Represents customer data.
@@ -10,11 +14,15 @@ import java.util.Date;
 @PersistenceCapable
 public class CustomerJDO {
     @PrimaryKey
-    @Persistent
     private String eMail;
+    @Persistent
     private String name;
     private String surname;
     private Date dateOfBirth;
+
+    @Persistent(mappedBy="customer", dependentElement="true")
+	@Join
+	Set<RentingJDO> rents = new HashSet<>();
 
     /**
      * Default constructor required for serialization.
@@ -122,6 +130,16 @@ public class CustomerJDO {
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+    public void addRent(RentingJDO rent) {
+		rents.add(rent);
+	}
+
+	public void removeRent(RentingJDO rent) {
+		rents.remove(rent);
+	}
+
+    public Set<RentingJDO> getRents() {return this.rents;}
 
     /**
      * Returns a string representation of the CustomerData object.

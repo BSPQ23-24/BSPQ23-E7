@@ -1,4 +1,4 @@
-package es.deusto.spq;
+package es.deusto.spq.client;
 
 import javax.swing.*;
 import javax.ws.rs.client.Entity;

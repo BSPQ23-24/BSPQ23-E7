@@ -11,7 +11,7 @@ import es.deusto.spq.pojo.VehicleData;
 
 public class VehicleRetrievalFormTest {
 
-	private VehicleRetrievalForm VehicleRetrievalForm;
+	//private VehicleRetrievalForm VehicleRetrievalForm;
 
 //    @Before
 //    public void setUp() {

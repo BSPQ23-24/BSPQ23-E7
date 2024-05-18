@@ -13,6 +13,7 @@ import javax.jdo.Transaction;
 
 import es.deusto.spq.server.jdo.VehicleJDO;
 import es.deusto.spq.server.jdo.CustomerJDO;
+import es.deusto.spq.server.jdo.RentingJDO;
 import es.deusto.spq.server.jdo.User;
 
 import javax.ws.rs.GET;
@@ -32,6 +33,7 @@ import es.deusto.spq.pojo.CustomerAssembler;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleAssembler;
 import es.deusto.spq.pojo.VehicleData;
+import es.deusto.spq.pojo.Renting;
 
 /**
  * @class DCServer
@@ -138,6 +140,71 @@ public class DCServer {
             }
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while adding vehicle.").build();
+        } finally {
+            logger.info("Closing");
+            pm.close(); // Close the PersistenceManager
+        }
+    }
+
+    /**
+     * Adds a new Renting to the database.
+     * @param renting The data of the Renting to be added.
+     * @return Response indicating success or failure of the operation.
+     */
+
+    @POST
+    @Path("/rent")
+    public Response addRenting(Renting renting) {   
+        try {
+            logger.info("Searching for vehicle to rent...");
+            tx.begin(); // Begin transaction
+            VehicleJDO vehicle = null;
+            try {
+                vehicle = pm.getObjectById(VehicleJDO.class, renting.getVehicle().getNumberPlate());
+            } catch (Exception e) {
+                logger.info("Vehicle not available to rent");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Vehicle with that number plate does not exists.").build();
+            }
+            logger.info("Vehicle: {}", vehicle);
+            if (vehicle == null) {
+                logger.info("Vehicle not available to rent");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Vehicle with that number plate does not exists.").build();
+            } else {
+                logger.info("Retrieved vehicle for Renting: {}", vehicle);
+                if (!vehicle.isReadyToBorrow()) {
+                    logger.info("Retrieved vehicle is not Ready to borrow: {}", vehicle);
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Vehicle with that number plate is not ready to borrow.").build();
+                }
+                vehicle = VehicleAssembler.getInstance().VehicleDataToJDO(renting.getVehicle());
+            }
+            CustomerJDO customer = null;
+            try {
+                customer = pm.getObjectById(CustomerJDO.class, renting.getCustomer().geteMail());
+            } catch (Exception e) {
+                logger.info("Customer not available to rent");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Customer with that e-Mail does not exists.").build();
+            }
+            logger.info("Customer: {}", customer);
+            if (customer == null) {
+                logger.info("Customer not available to rent");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Customer with that e-Mail does not exists.").build();
+            } else {
+                logger.info("Retrieved customer for Renting: {}", customer);
+                customer = CustomerAssembler.getInstance().CustomerDataToJDO(renting.getCustomer());
+            }
+
+            RentingJDO rentToSave = new RentingJDO(customer, vehicle, renting.getStartDate(), renting.getEndDate());
+            customer.getRents().add(rentToSave);
+            pm.makePersistent(customer);
+
+            tx.commit(); // Commit the transaction
+            return Response.ok().build();
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback(); // Rollback the transaction in case of an exception
+            }
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while adding a renting.").build();
         } finally {
             logger.info("Closing");
             pm.close(); // Close the PersistenceManager
@@ -293,4 +360,6 @@ public class DCServer {
             pm.close();
         }
     }
+
+
 }
