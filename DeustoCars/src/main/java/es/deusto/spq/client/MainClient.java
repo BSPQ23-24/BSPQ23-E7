@@ -43,7 +43,6 @@ import java.awt.event.MouseEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import es.deusto.spq.db.Database;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.UserData;
 import es.deusto.spq.pojo.VehicleData;

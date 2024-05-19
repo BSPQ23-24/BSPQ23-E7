@@ -12,9 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import es.deusto.spq.client.ClientManager;
-import es.deusto.spq.db.Database;
-import es.deusto.spq.db.resources.DataType;
-import es.deusto.spq.db.resources.Parameter;
 import es.deusto.spq.pojo.Renting;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleData;

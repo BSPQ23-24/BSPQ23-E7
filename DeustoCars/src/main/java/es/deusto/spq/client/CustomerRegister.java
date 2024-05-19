@@ -2,14 +2,8 @@ package es.deusto.spq.client;
 
 import javax.swing.*;
 
-import es.deusto.spq.db.Database;
-import es.deusto.spq.db.resources.DataType;
-import es.deusto.spq.db.resources.Parameter;
-
 import java.awt.*;
-import java.sql.*;
 import java.util.Date;
-import java.util.Locale;
 import java.text.SimpleDateFormat;
 import es.deusto.spq.pojo.CustomerData;
 

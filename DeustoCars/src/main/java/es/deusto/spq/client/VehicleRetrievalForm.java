@@ -12,9 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import es.deusto.spq.client.ClientManager;
-import es.deusto.spq.db.Database;
-import es.deusto.spq.db.resources.DataType;
-import es.deusto.spq.db.resources.Parameter;
 
 import java.awt.*;
 
@@ -22,7 +19,9 @@ import java.awt.*;
  * Class for retrieving a vehicle using a graphical user interface.
  */
 public class VehicleRetrievalForm extends JFrame {
-    protected static final Logger logger = LogManager.getLogger();
+	private static final long serialVersionUID = 1L;
+
+	protected static final Logger logger = LogManager.getLogger();
 	
     private JTextField emailField;	
     private JTextField plateField;

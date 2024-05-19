@@ -1,14 +1,10 @@
 package es.deusto.spq.client;
 
 import javax.swing.*;
-import es.deusto.spq.db.Database;
-import es.deusto.spq.db.resources.DataType;
-import es.deusto.spq.db.resources.Parameter;
 import java.awt.*;
 import java.util.ResourceBundle;
 
 import es.deusto.spq.pojo.VehicleData;
-import javassist.convert.TransformNewClass;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
