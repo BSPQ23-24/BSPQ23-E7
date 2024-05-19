@@ -22,6 +22,7 @@ public class CustomerDetailWindow extends JFrame{
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
+        
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -113,7 +114,7 @@ public class CustomerDetailWindow extends JFrame{
     }
 	
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             CustomerData customer = new CustomerData("John", "Doe", "john.doe@example.com", new Date(90, 5, 19)); // Example date
             new CustomerDetailWindow(customer).setVisible(true);
         });

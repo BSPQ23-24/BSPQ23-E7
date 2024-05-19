@@ -16,11 +16,12 @@ import es.deusto.spq.pojo.VehicleData;
 
 public class VehicleDetailWindow extends JFrame{
 	
-	public VehicleDetailWindow(VehicleData vehicleData) {
+	public VehicleDetailWindow(VehicleData vehicle) {
         setTitle("Vehicle Detail");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
+        
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -56,21 +57,21 @@ public class VehicleDetailWindow extends JFrame{
         detailsPanel.add(new JLabel("Plate Number:"), gbc);
 
         gbc.gridx = 1;
-        detailsPanel.add(new JLabel(vehicleData.getNumberPlate()), gbc);
+        detailsPanel.add(new JLabel(vehicle.getNumberPlate()), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
         detailsPanel.add(new JLabel("Brand:"), gbc);
 
         gbc.gridx = 1;
-        detailsPanel.add(new JLabel(vehicleData.getBrand()), gbc);
+        detailsPanel.add(new JLabel(vehicle.getBrand()), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
         detailsPanel.add(new JLabel("Model:"), gbc);
 
         gbc.gridx = 1;
-        detailsPanel.add(new JLabel(vehicleData.getModel()), gbc);
+        detailsPanel.add(new JLabel(vehicle.getModel()), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -78,7 +79,7 @@ public class VehicleDetailWindow extends JFrame{
 
         gbc.gridx = 1;
         JCheckBox readyToBorrowCheckBox = new JCheckBox();
-        readyToBorrowCheckBox.setSelected(vehicleData.isReadyToBorrow());
+        readyToBorrowCheckBox.setSelected(vehicle.isReadyToBorrow());
         readyToBorrowCheckBox.setEnabled(false);
         detailsPanel.add(readyToBorrowCheckBox, gbc);
 
@@ -88,7 +89,7 @@ public class VehicleDetailWindow extends JFrame{
 
         gbc.gridx = 1;
         JCheckBox onRepairCheckBox = new JCheckBox();
-        onRepairCheckBox.setSelected(vehicleData.isOnRepair());
+        onRepairCheckBox.setSelected(vehicle.isOnRepair());
         onRepairCheckBox.setEnabled(false);
         detailsPanel.add(onRepairCheckBox, gbc);
 

@@ -23,6 +23,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -37,7 +38,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -220,8 +222,25 @@ public class MainClient extends JFrame {
             };
             worker.execute();
         });
-        getVehicle.addActionListener(e -> getVehicle(numberPlate.getText()));
-        getCustomer.addActionListener(e -> getCustomer(eMail.getText()));
+        getVehicle.addActionListener(e -> {
+            String nPlate_search = numberPlate.getText();
+            VehicleData vehicle = getVehicle(nPlate_search); 
+            if (vehicle != null) {
+                new VehicleDetailWindow(vehicle).setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Vehicle not found for plate: " + nPlate_search);
+            }
+        });
+        getCustomer.addActionListener(e -> {
+            String email_search = eMail.getText();
+            CustomerData customer = getCustomer(email_search); 
+            if (customer != null) {
+                // Open CustomerDetailWindow with the retrieved customer
+                new CustomerDetailWindow(customer).setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Customer not found for email: " + email_search);
+            }
+        });
         deleteVehicle.addActionListener(e -> deleteVehicle(numberPlate.getText()));
         deleteCustomer.addActionListener(e -> deleteCustomer(eMail.getText()));
         retrieveVehicle.addActionListener(e -> new VehicleRetrievalForm());
@@ -290,6 +309,18 @@ public class MainClient extends JFrame {
                 new CustomerRegister(email); 
             }
         });
+        table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int row = table.getSelectedRow();
+                    if (row != -1) {
+                        String email = table.getValueAt(row, 0).toString();
+                        CustomerData customer = getCustomer(email); 
+                        new CustomerDetailWindow(customer).setVisible(true);
+                    }
+                }
+            }
+        });
         editPane.add(editButton);
 
         tableFrame.setVisible(true);
@@ -344,7 +375,20 @@ public class MainClient extends JFrame {
             }
         });
         editPane.add(editButton);
-
+        
+        table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int row = table.getSelectedRow();
+                    if (row != -1) {
+                        String nPlate = table.getValueAt(row, 0).toString();
+                        VehicleData vehicle = getVehicle(nPlate); 
+                        new VehicleDetailWindow(vehicle).setVisible(true);
+                    }
+                }
+            }
+        });
+        
         tableFrame.setVisible(true);
     }
 
