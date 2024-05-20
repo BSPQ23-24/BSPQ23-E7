@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
-import org.datanucleus.store.types.wrappers.List;
+import java.util.List;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -146,7 +146,7 @@ public class AdminClient extends JFrame {
     }
 
     private void updateDatasetFromServer(DefaultPieDataset<String> dataset) {
-        List<VehicleData> vehicles = (List<VehicleData>) MainClient.getVehicles();
+        List<VehicleData> vehicles = MainClient.getVehicles();
         Map<String, Integer> brandCount = new HashMap<>();
         for (VehicleData vehicle : vehicles) {
             brandCount.merge(vehicle.getBrand(), 1, Integer::sum);
@@ -156,7 +156,7 @@ public class AdminClient extends JFrame {
 
 
     private void updateDatasetFromServer(DefaultCategoryDataset dataset) {
-        List<VehicleData> vehicles = (List<VehicleData>) MainClient.getVehicles();
+        List<VehicleData> vehicles =  MainClient.getVehicles();
         int readyToBorrow = 0, onRepair = 0;
         for (VehicleData vehicle : vehicles) {
             if (vehicle.isReadyToBorrow()) readyToBorrow++;
@@ -167,7 +167,7 @@ public class AdminClient extends JFrame {
     }
 
     private void updateDatasetFromServer(XYSeriesCollection dataset) {
-        List<CustomerData> customers = (List<CustomerData>) MainClient.getCustomers();
+        List<CustomerData> customers = MainClient.getCustomers();
         Map<Integer, Integer> registrationsPerYear = new TreeMap<>();
         SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
