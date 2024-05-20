@@ -32,6 +32,8 @@ public class DeustoCarsLogin extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(imgScaled, 0, 0, this.getWidth(), this.getHeight(), null);
+                this.repaint();
+    
             }
         };
         backgroundPanel.setLayout(new GridBagLayout());

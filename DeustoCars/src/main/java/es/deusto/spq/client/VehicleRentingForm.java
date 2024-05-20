@@ -66,7 +66,7 @@ public class VehicleRentingForm extends JFrame {
     private void setupUI(String title) {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle(title);
-        setSize(400, 400);
+        setSize(400, 300);
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 

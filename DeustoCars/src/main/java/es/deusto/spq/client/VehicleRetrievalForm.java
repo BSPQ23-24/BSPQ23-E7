@@ -54,7 +54,7 @@ public class VehicleRetrievalForm extends JFrame {
     private void setupUI(String title) {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle(title);
-        setSize(400, 300);
+        setSize(400, 200);
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
