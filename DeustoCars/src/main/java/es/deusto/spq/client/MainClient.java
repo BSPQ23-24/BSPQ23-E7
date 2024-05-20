@@ -653,7 +653,7 @@ public class MainClient extends JFrame {
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
             return response.readEntity(new GenericType<List<Renting>>() {});
         } else {
-        	logger.info("ERROR getting rentings Code: {}", response.getStatus());
+        	logger.info("ERROR getting rentings (There might be no rentings for this vehicle) Code: {}", response.getStatus());
             return Collections.emptyList();
         }
     }

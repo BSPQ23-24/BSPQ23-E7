@@ -3,6 +3,7 @@ package es.deusto.spq.client;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -23,6 +24,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleData;
+import es.deusto.spq.pojo.Renting;
 
 import org.jfree.chart.plot.PlotOrientation;
 
@@ -117,9 +119,9 @@ public class AdminClient extends JFrame {
         XYSeriesCollection dataset = new XYSeriesCollection();
         updateDatasetFromServer(dataset);
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "Customer Birth Year Distribution",
-                "X",
-                "Y",
+                "Vehicles Rented per Year Distribution",
+                "Year",
+                "Number of Rents",
                 dataset,
                 PlotOrientation.VERTICAL, 
                 true, true, false);
@@ -170,17 +172,21 @@ public class AdminClient extends JFrame {
     }
 
     private void updateDatasetFromServer(XYSeriesCollection dataset) {
-        List<CustomerData> customers = MainClient.getCustomers();
-        Map<Integer, Integer> registrationsPerYear = new TreeMap<>();
+        dataset.removeAllSeries();
+        List<VehicleData> vehicles = MainClient.getVehicles();
+        List<Renting> rentings = new ArrayList<>();
+        for (VehicleData vehicle : vehicles) {
+            rentings.addAll(MainClient.getVehicleRents(vehicle.getNumberPlate()));
+        }
+        Map<Integer, Integer> rentsPerYear = new TreeMap<>();
         SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
-
-        for (CustomerData customer : customers) {
-            int year = Integer.parseInt(yearFormat.format(customer.getDateOfBirth()));
-            registrationsPerYear.merge(year, 1, Integer::sum);
+        for (Renting rent : rentings) {
+            int year = Integer.parseInt(yearFormat.format(rent.getStartDate()));
+            rentsPerYear.merge(year, 1, Integer::sum);
         }
 
-        XYSeries series = new XYSeries("Registrations");
-        registrationsPerYear.forEach(series::add);
+        XYSeries series = new XYSeries("Vehicles rented");
+        rentsPerYear.forEach(series::add);
         dataset.addSeries(series);
     }
 
