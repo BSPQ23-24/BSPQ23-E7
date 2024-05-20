@@ -1,4 +1,4 @@
-name: Java CI
+name: Deustocars CI
 
 on: [push]
 
@@ -18,37 +18,28 @@ jobs:
 
       - name: Clean and compile the project
         run: |
-          cd DeustoCars
-          mvn --batch-mode clean compile
+          cd Deustocars
+          mvn clean compile
 
-      - name: Prepare database for testing
+      - name: Start the database
         run: | 
-          sudo /etc/init.d/mysql start
-          cd DeustoCars
-          mysql -uroot -proot < sql/create-deustoCars.sql
-          mysql -uroot -proot < sql/populate.sql
-          mvn --batch-mode --update-snapshots datanucleus:enhance datanucleus:schema-create
+          cd Deustocars/sql
+          mysql -u root -p < create-deustoCars.sql
+          cd ..
+          mvn datanucleus:schema-create
+          cd sql
+          mysql -u root -p < populate.sql
 
-      - name: Start the server in the background
+      - name: Start the server
         run: |
-          cd DeustoCars
-          mvn --batch-mode jetty:run &
+          mvn jetty:run &
           sleep 10
 
-      - name: Run the unit tests
+      - name: Run tests and generate reports
         run: |
-          cd DeustoCars
           mvn test
-
-      - name: Execute integration tests
-        run: |
-          cd DeustoCars
-          mvn --batch-mode --update-snapshots verify -Pintegration-tests
-
-      - name: Execute performance tests
-        run: |
-          cd DeustoCars
-          mvn --batch-mode --update-snapshots verify -Pperformance-tests
-
-
-
+          mvn jacoco:prepare-agent test jacoco:report
+          mvn compile exec:java -Pclient
+          mvn compile exec:java -Pserver
+          mvn doxygen:report
+          mvn validate
