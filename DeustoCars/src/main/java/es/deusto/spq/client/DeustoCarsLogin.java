@@ -85,8 +85,10 @@ public class DeustoCarsLogin extends JFrame {
                 	ClientManager.getInstance().setWebTarget(hostname, port);
                     MainClient mainClient = new MainClient(hostname, port, MainClient.currentLocale);
                     mainClient.setVisible(true);
-                    AdminClient adminClient = new AdminClient();
-                    adminClient.setVisible(true);
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        AdminClient ex = new AdminClient();
+                        ex.setVisible(true);
+                    });
                     dispose();
                 } else if (email.equals("user@user.com") || email.equals("admin@admin.com")) {
                     JOptionPane.showMessageDialog(null, "Wrong password");

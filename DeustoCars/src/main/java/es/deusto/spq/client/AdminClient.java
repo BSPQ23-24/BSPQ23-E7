@@ -2,12 +2,17 @@ package es.deusto.spq.client;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
+import java.util.List;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -15,6 +20,10 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
+import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.VehicleData;
+
 import org.jfree.chart.plot.PlotOrientation;
 
 public class AdminClient extends JFrame {
@@ -140,36 +149,41 @@ public class AdminClient extends JFrame {
     }
 
     private void updateDatasetFromServer(DefaultPieDataset<String> dataset) {
-        // You can either update the values of existing categories or add new ones.
-        dataset.setValue("Category A", Math.random() * 100);  // Existing category, updating value
-        dataset.setValue("Category B", Math.random() * 100);  // New category
-        dataset.setValue("Category C", Math.random() * 100);  // Another new category
+        List<VehicleData> vehicles = MainClient.getVehicles();
+        Map<String, Integer> brandCount = new HashMap<>();
+        for (VehicleData vehicle : vehicles) {
+            brandCount.merge(vehicle.getBrand(), 1, Integer::sum);
+        }
+        brandCount.forEach(dataset::setValue);
     }
 
 
     private void updateDatasetFromServer(DefaultCategoryDataset dataset) {
-        // Directly manipulate barDataset
-        dataset.setValue(Math.random() * 100, "Row 1", "Column 1");
-        dataset.setValue(Math.random() * 100, "Row 1", "Column 2");
-        dataset.setValue(Math.random() * 100, "Row 1", "Column 3");
+        List<VehicleData> vehicles =  MainClient.getVehicles();
+        int readyToBorrow = 0, onRepair = 0;
+        for (VehicleData vehicle : vehicles) {
+            if (vehicle.isReadyToBorrow()) readyToBorrow++;
+            if (vehicle.isOnRepair()) onRepair++;
+        }
+        dataset.setValue(readyToBorrow, "Status", "Ready to Borrow");
+        dataset.setValue(onRepair, "Status", "On Repair");
     }
 
     private void updateDatasetFromServer(XYSeriesCollection dataset) {
-        // Clear the dataset first to prevent old data accumulation if needed
-        dataset.removeAllSeries();
+        List<CustomerData> customers = MainClient.getCustomers();
+        Map<Integer, Integer> registrationsPerYear = new TreeMap<>();
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
-        // Simulate adding random data to 3 different series
-        for (int seriesId = 1; seriesId <= 3; seriesId++) {
-            XYSeries series = new XYSeries("Series " + seriesId);
-
-            // Adding 5 points to each series for illustration
-            for (int i = 1; i <= 5; i++) {
-                series.add(i, Math.random() * 100);
-            }
-            
-            dataset.addSeries(series);
+        for (CustomerData customer : customers) {
+            int year = Integer.parseInt(yearFormat.format(customer.getDateOfBirth()));
+            registrationsPerYear.merge(year, 1, Integer::sum);
         }
+
+        XYSeries series = new XYSeries("Registrations");
+        registrationsPerYear.forEach(series::add);
+        dataset.addSeries(series);
     }
+
 
 
     public static void main(String[] args) {
