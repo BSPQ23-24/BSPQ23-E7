@@ -9,6 +9,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.JDOHelper;
+import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.Transaction;
 
 import es.deusto.spq.server.jdo.VehicleJDO;
@@ -471,6 +472,9 @@ public class DCServer {
             } else {
                 return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
             }
+        } catch (JDOObjectNotFoundException e) {
+            logger.info("Vehicle not found: {}", email);
+            return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
         } catch (Exception e) {
             logger.info("Error occurred while deleting vehicle");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while deleting vehicle.").build();
@@ -496,6 +500,9 @@ public class DCServer {
             } else {
                 return Response.status(Response.Status.NOT_FOUND).entity("Customer not found").build();
             }
+        } catch (JDOObjectNotFoundException e) {
+            logger.info("Customer not found: {}", email);
+            return Response.status(Response.Status.NOT_FOUND).entity("Customer not found").build();
         } catch (Exception e) {
             logger.info("Error occurred while deleting customer");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while deleting customer.").build();

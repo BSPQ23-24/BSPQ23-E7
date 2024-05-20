@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
@@ -26,6 +27,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.Renting;
 import es.deusto.spq.pojo.VehicleData;
 import es.deusto.spq.server.jdo.CustomerJDO;
 import es.deusto.spq.server.jdo.VehicleJDO;
@@ -70,15 +72,14 @@ public class ResourceTest {
     }
     
     
-//    @Test
-//    public void testNoDeleteVehicle() {
-//        String numberPlate = "123ABC";
-//        when(persistenceManager.getObjectById(VehicleJDO.class, numberPlate))
-//                .thenThrow(new JDOObjectNotFoundException()); // Simula una excepción JDOObjectNotFoundException
-//
-//        Response response = dcserver.deleteVehicle(numberPlate);
-//        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
-//    }
+    @Test
+    public void testDeleteVehicleNotFound() {
+        String licensePlate = "123ABC";
+        when(persistenceManager.getObjectById(VehicleJDO.class, licensePlate)).thenThrow(new JDOObjectNotFoundException());
+        Response response = dcserver.deleteVehicle(licensePlate);
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+    }
+    
     
     @Test
     public void testDeleteCustomer() {
@@ -88,12 +89,14 @@ public class ResourceTest {
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
     
-//    @Test
-//    public void testNoDeleteCustomer() {
-//        when(persistenceManager.getObjectById(CustomerJDO.class, "x@gmail.com")).thenThrow(new JDOObjectNotFoundException());
-//        Response response = dcserver.deleteCustomer("x@gmail.com");
-//        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
-//    }
+    @Test
+    public void testDeleteCustomerNotFound() {
+        String email = "x@gmail.com";
+        when(persistenceManager.getObjectById(CustomerJDO.class, email)).thenThrow(new JDOObjectNotFoundException());
+        Response response = dcserver.deleteCustomer(email);
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+    }
+    
     
     @Test
     public void getVehicle() {
@@ -133,13 +136,13 @@ public class ResourceTest {
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
     
-//    @Test
-//    public void testNoAddVehicle() {
-//        VehicleData existingVehicle = new VehicleData("123ABC", "Toyota", "Corolla", true, false);
-//        when(persistenceManager.getObjectById(VehicleData.class, existingVehicle.getNumberPlate())).thenReturn(existingVehicle);
-//        Response response = dcserver.addVehicle(existingVehicle);
-//        assertEquals(Response.Status.CONFLICT, response.getStatusInfo());
-//    }
+    @Test
+    public void testNoAddVehicle() {
+        VehicleData existingVehicle = new VehicleData("123ABC", "Toyota", "Corolla", true, false);
+        when(persistenceManager.getObjectById(VehicleData.class, existingVehicle.getNumberPlate())).thenThrow(JDOObjectNotFoundException.class);
+        Response response = dcserver.addVehicle(existingVehicle);
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatusInfo());
+    }
     
     @Test
     public void addCustomer() {
@@ -149,13 +152,33 @@ public class ResourceTest {
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
     
-//    @Test
-//    public void testNoAddCustomer() {
-//        CustomerData existingCustomer = new CustomerData("x@gmail.com", "xx", "xxxx");
-//        when(persistenceManager.getObjectById(CustomerData.class, existingCustomer.geteMail())).thenReturn(existingCustomer);
-//        Response response = dcserver.addCustomer(existingCustomer);
-//        assertEquals(Response.Status.CONFLICT, response.getStatusInfo());
-//    }
+    
+    @Test
+    public void testAddRenting() {
+        // Set up the data
+        CustomerData customerData = new CustomerData("x@gmail.com", "xx", "xxxx");
+        VehicleData vehicleData = new VehicleData("123ABC", "Toyota", "Corolla", true, false);
+        Renting renting = new Renting(customerData, vehicleData, new Date(), new Date());
+        CustomerJDO customerJDO = new CustomerJDO("x@gmail.com", "xx", "xxxx");
+        VehicleJDO vehicleJDO = new VehicleJDO("123ABC", "Toyota", "Corolla");
+        vehicleJDO.setReadyToBorrow(true);
+        when(persistenceManager.getObjectById(VehicleJDO.class, "123ABC")).thenReturn(vehicleJDO);
+        when(persistenceManager.getObjectById(CustomerJDO.class, "x@gmail.com")).thenReturn(customerJDO);
+        Response response = dcserver.addRenting(renting);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+
+    }
+    
+    
+    @Test
+    public void testAddRentingVehicleNotFound() {
+        CustomerData customerData = new CustomerData("x@gmail.com", "xx", "xxxx");
+        VehicleData vehicleData = new VehicleData("123ABC", "Toyota", "Corolla", true, false);
+        Renting renting = new Renting(customerData, vehicleData, new Date(), new Date());
+        when(persistenceManager.getObjectById(VehicleJDO.class, "123ABC")).thenThrow(new JDOObjectNotFoundException());
+        Response response = dcserver.addRenting(renting);
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+    }
     
      
 }
