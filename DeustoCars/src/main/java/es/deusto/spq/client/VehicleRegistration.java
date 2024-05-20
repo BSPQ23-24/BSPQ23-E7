@@ -69,7 +69,7 @@ public class VehicleRegistration extends JFrame {
     public VehicleRegistration(String numberPlate) {
     	resourceBundle = MainClient.getResourceBundle();
     	
-        submitButton = new JButton(resourceBundle.getString("register_vehicle_label"));
+        submitButton = new JButton(resourceBundle.getString("edit_vehicle_label"));
         submitButton.addActionListener(e -> {
             SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
                 @Override
@@ -186,7 +186,7 @@ public class VehicleRegistration extends JFrame {
         if (response.getStatus() != Status.OK.getStatusCode()) {
             logger.info("Vehicle to modify found.");
             
-            //MainClient.deleteVehicle(numberPlateField.getText());
+            MainClient.deleteVehicle(numberPlateField.getText());
 
             response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
             if (response.getStatus() != Status.OK.getStatusCode()) {

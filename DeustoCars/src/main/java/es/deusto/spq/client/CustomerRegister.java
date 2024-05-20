@@ -6,6 +6,7 @@ import java.awt.*;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.VehicleData;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -40,8 +41,19 @@ public class CustomerRegister extends JFrame {
      */
     public CustomerRegister() {
         resourceBundle = MainClient.getResourceBundle();
+        resourceBundle = MainClient.getResourceBundle();
 
         submitButton = new JButton(resourceBundle.getString("register_user_label"));
+        submitButton.addActionListener(e -> {
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    registerUser();
+                    return null;
+                }
+            };
+            worker.execute();
+        });
         setupUI(resourceBundle.getString("register_user_label"));
 
         nameField = new JTextField();
@@ -61,9 +73,18 @@ public class CustomerRegister extends JFrame {
      */
     public CustomerRegister(String eMail) {
     	resourceBundle = MainClient.getResourceBundle();
-        submitButton = new JButton(resourceBundle.getString("register_user_label"));
-
-        setupUI("User Modification");
+    	submitButton = new JButton(resourceBundle.getString("edit_customer_label"));
+    	submitButton.addActionListener(e -> {
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    modifyUser();
+                    return null;
+                }
+            };
+            worker.execute();
+        });
+        setupUI("Customer Modification");
         CustomerData customer = MainClient.getCustomer(eMail);
         if(customer!=null) {
         	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -97,17 +118,6 @@ public class CustomerRegister extends JFrame {
         submitButton.setForeground(Color.WHITE);
         submitButton.setFocusPainted(false);
         submitButton.setFont(new Font("Arial", Font.BOLD, 16));
-
-        submitButton.addActionListener(e -> {
-            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-                @Override
-                protected Void doInBackground() throws Exception {
-                    registerUser();
-                    return null;
-                }
-            };
-            worker.execute();
-        });
 
         add(formPanel, BorderLayout.CENTER);
         add(submitButton, BorderLayout.SOUTH);
@@ -173,34 +183,51 @@ public class CustomerRegister extends JFrame {
         nameField.setText("");
         surnameField.setText("");
         birthDateField.setText("");
-        emailField.setText("");
+        emailField.setText("");			
+    }
+    
+    public void modifyUser() {
+    	String name = nameField.getText();
+        String surname = surnameField.getText();
+        String birthDate = birthDateField.getText();
+        String email = emailField.getText();
 
-        if (updateDatabase(newUser)) {
-            logger.info("Customer registered: " + newUser);
+        Date birth;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            birth = dateFormat.parse(birthDate);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, resourceBundle.getString("invalid_date_message"), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        CustomerData newCustomer = new CustomerData(email, name, surname, birth);
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addcustomer");
+        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.post(Entity.entity(newCustomer, MediaType.APPLICATION_JSON));
+        
+        if (response.getStatus() != Status.OK.getStatusCode()) {
+            logger.info("Customer to modify found.");
+            
+            MainClient.deleteCustomer(email);
+
+            response = invocationBuilder.post(Entity.entity(newCustomer, MediaType.APPLICATION_JSON));
+            if (response.getStatus() != Status.OK.getStatusCode()) {
+    			logger.error("Error connecting with the server. Code: {}",response.getStatus());
+    		} else {
+    			logger.info("Customer Correctly Registered :)");
+    		}
+
+            // Clear input fields
+            nameField.setText("");
+            surnameField.setText("");
+            birthDateField.setText("");
+            emailField.setText("");	
         } else {
-            //logger.info("Error registering user");
-        }				
+            logger.error("Customer doesnt exist. Code: {}", response.getStatus());
+        }
     }
-
-    /**
-     * Updates the database with the new customer information.
-     * 
-     * @param customer The customer data to update in the database.
-     * @return True if the database was successfully updated, false otherwise.
-     */
-    boolean updateDatabase(CustomerData customer) {
-    	return false;
-    	/*
-        return Database.getInstance().ejecutarActualizacion("INSERT INTO customers (email, name, surname, birth_date)",
-                new Parameter(customer.geteMail(), DataType.STRING),
-                new Parameter(customer.getName(), DataType.STRING),
-                new Parameter(customer.getSurname(), DataType.STRING),
-                new Parameter(new java.sql.Date(customer.getDateOfBirth().getTime()), DataType.DATE)
-
-        );
-        */
-    }
-
+    
     /**
      * Main method to launch the CustomerRegister window for user registration.
      * 

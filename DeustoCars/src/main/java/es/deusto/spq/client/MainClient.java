@@ -71,7 +71,7 @@ public class MainClient extends JFrame {
     protected static final Logger logger = LogManager.getLogger();
 	
 	private Client client;
-	private WebTarget webTarget;
+	private static WebTarget webTarget;
 
     static {resourceBundle = ResourceBundle.getBundle("SystemMessages", Locale.getDefault());}
     static Locale currentLocale = Locale.forLanguageTag("en");;
@@ -533,7 +533,7 @@ public class MainClient extends JFrame {
      *
      * @param numberPlate The number plate of the vehicle to delete.
      */
-    public void deleteVehicle(String numberPlate) {
+    public static void deleteVehicle(String numberPlate) {
         //WebTarget webTarget = ClientManager.getInstance().getWebTarget();
         logger.info("NumberPlate: " + numberPlate);
         logger.info("WebTarget: " + webTarget);
@@ -553,35 +553,13 @@ public class MainClient extends JFrame {
             logger.error("WebTarget is null. Unable to delete vehicle.");
         }
     }
-
-
-    /**
-     * Deletes a vehicle from the server based on the provided email.
-     *
-     * @param numberPlate The number plate of the vehicle to delete.
-     */
-    public boolean deleteVehicleBoolean(String numberPlate) {
-        WebTarget deleteVehicleWebTarget = webTarget.path("deletevehicle");
-
-        Response response = deleteVehicleWebTarget.queryParam("numberPlate", numberPlate)
-                .request(MediaType.APPLICATION_JSON).delete();
-
-        if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-            logger.info("Error connecting with the server. Code: {}", response.getStatus());
-            return false;
-        } else {
-            logger.info("Vehicle correctly deleted");
-            return true;
-        }
-    }
-    
     
     /**
      * Deletes a customer from the server based on the provided email.
      *
      * @param eMail The email of the customer to delete.
      */
-    public void deleteCustomer(String eMail) {
+    public static void deleteCustomer(String eMail) {
         Response response = webTarget
                 .path("server/deletecustomer")
                 .queryParam("eMail", eMail)
