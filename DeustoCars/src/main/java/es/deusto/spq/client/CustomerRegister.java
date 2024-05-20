@@ -96,6 +96,7 @@ public class CustomerRegister extends JFrame {
             surnameField = new JTextField(customer.getSurname());
             birthDateField = new JTextField(dateFormat.format(customer.getDateOfBirth()));
             emailField = new JTextField(eMail);
+            emailField.setEditable(false);
         } else {
         	JOptionPane.showMessageDialog(this, resourceBundle.getString("customer_not_found_message"), "Error", JOptionPane.ERROR_MESSAGE);
             
@@ -212,17 +213,11 @@ public class CustomerRegister extends JFrame {
         Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.post(Entity.entity(newCustomer, MediaType.APPLICATION_JSON));
         
-        if (response.getStatus() != Status.OK.getStatusCode()) {
-            logger.info("Customer to modify found.");
+        if (response.getStatus() == Status.OK.getStatusCode()) {
+            logger.info("Customer correctly modified :) ");
             
-            MainClient.deleteCustomer(email);
+            JOptionPane.showMessageDialog(this, "Customer correctly modified", "Success editing customer", JOptionPane.INFORMATION_MESSAGE);
 
-            response = invocationBuilder.post(Entity.entity(newCustomer, MediaType.APPLICATION_JSON));
-            if (response.getStatus() != Status.OK.getStatusCode()) {
-    			logger.error("Error connecting with the server. Code: {}",response.getStatus());
-    		} else {
-    			logger.info("Customer Correctly Registered :)");
-    		}
 
             // Clear input fields
             nameField.setText("");

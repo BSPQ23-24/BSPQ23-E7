@@ -91,6 +91,7 @@ public class VehicleRegistration extends JFrame {
         if (vehicle != null) {
 	        brandField = new JTextField(vehicle.getBrand());
 	        numberPlateField = new JTextField(vehicle.getNumberPlate());
+            numberPlateField.setEditable(false);
 	        modelField = new JTextField(vehicle.getModel());
 	        readyToBorrowCheckbox = new JCheckBox("Ready to lend", vehicle.isReadyToBorrow());
 	        onRepairCheckbox = new JCheckBox("In repair", vehicle.isOnRepair());
@@ -189,17 +190,11 @@ public class VehicleRegistration extends JFrame {
         Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
         
-        if (response.getStatus() != Status.OK.getStatusCode()) {
-            logger.info("Vehicle to modify found.");
-            
-            MainClient.deleteVehicle(numberPlateField.getText());
+        if (response.getStatus() == Status.OK.getStatusCode()) {
+            logger.info("Vehicle correctly modified :) ");
 
-            response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
-            if (response.getStatus() != Status.OK.getStatusCode()) {
-                logger.error("Error connecting with the server. Code: {}", response.getStatus());
-            } else {
-                logger.info("Vehicle Correctly Modified :)");
-            }
+            JOptionPane.showMessageDialog(this, "Vehicle correctly modified", "Success editing vehicle", JOptionPane.INFORMATION_MESSAGE);
+
 
             // Clear input fields
             brandField.setText("");

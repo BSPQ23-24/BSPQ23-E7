@@ -83,8 +83,13 @@ public class DCServer {
             }
             logger.info("Customer: {}", customer);
             if (customer != null) {
-                logger.info("Customer with that email already exists");
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Customer with that email already exists.").build();
+                logger.info("Customer with that email already exists, editing entry...");
+                customer.setName(customerData.getName());
+                customer.setSurname(customerData.getSurname());
+                customer.setDateOfBirth(customerData.getDateOfBirth());
+                pm.makePersistent(customer); // Persist the customer object
+                tx.commit(); // Commit the transaction
+                return Response.ok().entity("Customer with that email already exists, entry edited.").build();
             } else {
                 logger.info("Creating customer: {}", customer);
                 customer = CustomerAssembler.getInstance().CustomerDataToJDO(customerData);
@@ -125,8 +130,14 @@ public class DCServer {
             }
             logger.info("Vehicle: {}", vehicle);
             if (vehicle != null) {
-                logger.info("Vehicle with that number plate already exists");
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Vehicle with that number plate already exists.").build();
+                logger.info("Vehicle with that number plate already exists, editing entry...");
+                vehicle.setBrand(vehicleData.getBrand());
+                vehicle.setModel(vehicleData.getModel());
+                vehicle.setOnRepair(vehicleData.isOnRepair());
+                vehicle.setReadyToBorrow(vehicleData.isReadyToBorrow());
+                pm.makePersistent(vehicle); // Persist the vehicle object
+                tx.commit(); // Commit the transaction
+                return Response.ok().entity("Vehicle with that number plate already exists, entry edited.").build();
             } else {
                 logger.info("Creating vehicle: {}", vehicle);
                 vehicle = VehicleAssembler.getInstance().VehicleDataToJDO(vehicleData);
