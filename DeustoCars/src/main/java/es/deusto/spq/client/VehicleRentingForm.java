@@ -36,7 +36,6 @@ public class VehicleRentingForm extends JFrame {
     private Client client;
 	private WebTarget webTarget;
 
-
     /**
      * Constructs a new VehicleRentingForm window.
      */
@@ -45,6 +44,13 @@ public class VehicleRentingForm extends JFrame {
         setIconImage(img.getImage());
 
         submitButton = new JButton("Rent Vehicle");
+        submitButton.setBackground(new Color(0, 153, 204));
+        submitButton.setForeground(Color.WHITE);
+        submitButton.setFocusPainted(false);
+        submitButton.setFont(new Font("Arial", Font.BOLD, 16));
+
+        submitButton.addActionListener(e -> rentVehicle());
+
         setupUI("Vehicle Renting");
 
         emailField = new JTextField();
@@ -58,22 +64,14 @@ public class VehicleRentingForm extends JFrame {
     }
 
     private void setupUI(String title) {
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle(title);
         setSize(400, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
-        JPanel formPanel = new JPanel(new GridLayout(4, 1, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        submitButton.setBackground(new Color(0, 153, 204));
-        submitButton.setForeground(Color.WHITE);
-        submitButton.setFocusPainted(false);
-        submitButton.setFont(new Font("Arial", Font.BOLD, 16));
-
-        // ActionListener to handle button click
-        submitButton.addActionListener(e -> rentVehicle());
 
         add(formPanel, BorderLayout.CENTER);
         add(submitButton, BorderLayout.SOUTH);
@@ -82,20 +80,19 @@ public class VehicleRentingForm extends JFrame {
     private void addComponentsToForm() {
         JPanel formPanel = (JPanel) getContentPane().getComponent(0);
 
-        formPanel.add(createFormField("Email", emailField));
-        formPanel.add(createFormField("License Plate", plateField));
-        formPanel.add(createFormField("Start Date (YYYY-MM-DD)", startDateField));
-        formPanel.add(createFormField("End Date (YYYY-MM-DD)", endDateField));
-    }
+        formPanel.add(new JLabel("Email:"));
+        formPanel.add(emailField);
+        formPanel.add(new JLabel("License Plate:"));
+        formPanel.add(plateField);
+        formPanel.add(new JLabel("Start Date (YYYY-MM-DD):"));
+        formPanel.add(startDateField);
+        formPanel.add(new JLabel("End Date (YYYY-MM-DD):"));
+        formPanel.add(endDateField);
 
-    private JPanel createFormField(String label, JTextField textField) {
-        JPanel panel = new JPanel(new BorderLayout());
-        JLabel jLabel = new JLabel(label);
-        jLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        panel.add(jLabel, BorderLayout.WEST);
-        panel.add(textField, BorderLayout.CENTER);
-        textField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2)); // Add border
-        return panel;
+        emailField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
+        plateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
+        startDateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
+        endDateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
     }
 
     private void rentVehicle() {
@@ -133,7 +130,6 @@ public class VehicleRentingForm extends JFrame {
 		plateField.setText("");
 		startDateField.setText("");
 		endDateField.setText("");
-        
 
         // Connect and update the database
         if (updateDatabase(newRenting)) {
@@ -142,7 +138,7 @@ public class VehicleRentingForm extends JFrame {
             JOptionPane.showMessageDialog(this, "Error registering renting.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     /**
      * Updates the database with the new renting information.
      * 

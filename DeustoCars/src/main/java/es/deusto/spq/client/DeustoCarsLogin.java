@@ -78,12 +78,12 @@ public class DeustoCarsLogin extends JFrame {
                     JOptionPane.showMessageDialog(null, "To enter you need to accept our Data Treatment Policy");
                 } else if (email.equals("user@user.com") && password.equals("user")) {
                     ClientManager.getInstance().setWebTarget(hostname, port);
-                    MainClient mainClient = new MainClient(hostname, port);
+                    MainClient mainClient = new MainClient(hostname, port, MainClient.currentLocale);
                     mainClient.setVisible(true);
                     dispose();
                 } else if (email.equals("admin@admin.com") && password.equals("admin")) {
                 	ClientManager.getInstance().setWebTarget(hostname, port);
-                    MainClient mainClient = new MainClient(hostname, port);
+                    MainClient mainClient = new MainClient(hostname, port, MainClient.currentLocale);
                     mainClient.setVisible(true);
                     AdminClient adminClient = new AdminClient();
                     adminClient.setVisible(true);
@@ -100,6 +100,7 @@ public class DeustoCarsLogin extends JFrame {
         backgroundPanel.add(enterButton, gbc);
 
         add(backgroundPanel);
+        backgroundPanel.repaint();
         validate();
         setVisible(true);
 

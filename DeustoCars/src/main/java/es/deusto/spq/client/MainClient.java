@@ -21,6 +21,7 @@ import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 //import javax.swing.text.html.parser.Entity;
@@ -71,16 +73,8 @@ public class MainClient extends JFrame {
 	private Client client;
 	private WebTarget webTarget;
 
-    static {
-        // English (default):
-        //resourceBundle = ResourceBundle.getBundle("SystemMessages", Locale.getDefault());
-
-        // Spanish:
-        resourceBundle = ResourceBundle.getBundle("SystemMessages", Locale.forLanguageTag("es"));
-
-        // Basque:
-        //resourceBundle = ResourceBundle.getBundle("SystemMessages", Locale.forLanguageTag("eu"));
-    }
+    static {resourceBundle = ResourceBundle.getBundle("SystemMessages", Locale.getDefault());}
+    static Locale currentLocale = Locale.forLanguageTag("en");;
 
     // Static method to access the ResourceBundle instance
     public static ResourceBundle getResourceBundle() {
@@ -94,7 +88,9 @@ public class MainClient extends JFrame {
      */
     
     
-    public MainClient(String hostname, String port) {
+    public MainClient(String hostname, String port, Locale locale) {
+        resourceBundle = ResourceBundle.getBundle("SystemMessages", locale);
+
         logger.info(resourceBundle.getString("starting_msg"));
 
     	
@@ -246,8 +242,60 @@ public class MainClient extends JFrame {
         retrieveVehicle.addActionListener(e -> new VehicleRetrievalForm());
         makeRent.addActionListener(e -> new VehicleRentingForm());
 
+
+        // Language selection dropdown
+        String[] languages = {"English", "Español", "Euskara"};
+        JComboBox<String> languageDropdown = new JComboBox<>(languages);
+        languageDropdown.setBackground(new Color(211, 126, 242));
+
+        String localeString = currentLocale.toString();
+        if (localeString.equals(Locale.forLanguageTag("es").toString())) {
+            languageDropdown.setSelectedItem("Español");
+        } else if (localeString.equals(Locale.forLanguageTag("en").toString())) {
+            languageDropdown.setSelectedItem("English");
+        } else if (localeString.equals(Locale.forLanguageTag("eu").toString())) {
+            languageDropdown.setSelectedItem("Euskara");
+        }       
+
+        languageDropdown.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                String selectedLanguage = (String) languageDropdown.getSelectedItem();
+                switch (selectedLanguage) {
+                    case "Español":
+                        changeLanguage(hostname, port, Locale.forLanguageTag("es"));
+                    break;
+                    case "Euskara":
+                        changeLanguage(hostname, port, Locale.forLanguageTag("eu"));
+                        break;
+                    default:
+                        changeLanguage(hostname, port, Locale.forLanguageTag("en"));
+                }
+                revalidate();
+                repaint();
+            }
+        });
+
+        JPanel languagePanel = new JPanel(new BorderLayout());
+        languagePanel.add(languageDropdown, BorderLayout.EAST);
+        add(languagePanel, BorderLayout.SOUTH);
+
+
         setVisible(true);
     }
+
+    private void changeLanguage(String hostname, String port, Locale locale) {
+        setVisible(false);
+        SwingUtilities.invokeLater(() -> {
+            new MainClient(hostname, port, locale).setVisible(true);
+        });
+
+        currentLocale = locale;
+
+        dispose();
+    }
+
+
 
     /**
      * The main method to start the application.
@@ -257,7 +305,7 @@ public class MainClient extends JFrame {
     	String hostname = args[0];
         String port = args[1];
         ClientManager.getInstance().setWebTarget(hostname, port);
-        new MainClient(hostname, port);
+        new MainClient(hostname, port, Locale.forLanguageTag("en"));
     }
 
     /**

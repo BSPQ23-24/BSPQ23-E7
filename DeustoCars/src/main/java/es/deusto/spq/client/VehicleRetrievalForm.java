@@ -19,11 +19,11 @@ import java.awt.*;
  * Class for retrieving a vehicle using a graphical user interface.
  */
 public class VehicleRetrievalForm extends JFrame {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	protected static final Logger logger = LogManager.getLogger();
-	
-    private JTextField emailField;	
+    protected static final Logger logger = LogManager.getLogger();
+    
+    private JTextField emailField;    
     private JTextField plateField;
     private JButton submitButton;
 
@@ -34,6 +34,13 @@ public class VehicleRetrievalForm extends JFrame {
         ImageIcon img = new ImageIcon("src/resources/retrieveFormIcon.png");
         setIconImage(img.getImage());
         submitButton = new JButton("Retrieve Vehicle");
+        submitButton.setBackground(new Color(0, 153, 204));
+        submitButton.setForeground(Color.WHITE);
+        submitButton.setFocusPainted(false);
+        submitButton.setFont(new Font("Arial", Font.BOLD, 16));
+
+        submitButton.addActionListener(e -> retrieveVehicle());
+
         setupUI("Vehicle Retrieval");
 
         emailField = new JTextField();
@@ -45,22 +52,14 @@ public class VehicleRetrievalForm extends JFrame {
     }
 
     private void setupUI(String title) {
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle(title);
         setSize(400, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
-        JPanel formPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        submitButton.setBackground(new Color(0, 153, 204));
-        submitButton.setForeground(Color.WHITE);
-        submitButton.setFocusPainted(false);
-        submitButton.setFont(new Font("Arial", Font.BOLD, 16));
-
-        // ActionListener to handle button click
-        submitButton.addActionListener(e -> retrieveVehicle());
 
         add(formPanel, BorderLayout.CENTER);
         add(submitButton, BorderLayout.SOUTH);
@@ -69,18 +68,13 @@ public class VehicleRetrievalForm extends JFrame {
     private void addComponentsToForm() {
         JPanel formPanel = (JPanel) getContentPane().getComponent(0);
 
-        formPanel.add(createFormField("Email", emailField));
-        formPanel.add(createFormField("License Plate", plateField));
-    }
+        formPanel.add(new JLabel("Email:"));
+        formPanel.add(emailField);
+        formPanel.add(new JLabel("License Plate:"));
+        formPanel.add(plateField);
 
-    private JPanel createFormField(String label, JTextField textField) {
-        JPanel panel = new JPanel(new BorderLayout());
-        JLabel jLabel = new JLabel(label);
-        jLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        panel.add(jLabel, BorderLayout.WEST);
-        panel.add(textField, BorderLayout.CENTER);
-        textField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2)); // Add border
-        return panel;
+        emailField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
+        plateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
     }
 
     /**
@@ -94,11 +88,11 @@ public class VehicleRetrievalForm extends JFrame {
         Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.post(Entity.entity(plate, MediaType.APPLICATION_JSON));
         
-		if (response.getStatus() != Status.OK.getStatusCode()) {
-			logger.error("Error connecting with the server. Code: {}",response.getStatus());
-		} else {
-			logger.info("Vehicle Correctly Retrieved :)");
-		}
+        if (response.getStatus() != Status.OK.getStatusCode()) {
+            logger.error("Error connecting with the server. Code: {}",response.getStatus());
+        } else {
+            logger.info("Vehicle Correctly Retrieved :)");
+        }
 
         // Clear input fields
         plateField.setText("");
