@@ -547,8 +547,12 @@ public class MainClient extends JFrame {
 
             if (response.getStatus() == Response.Status.OK.getStatusCode()) {
                 logger.info("Deleting vehicle: " + response.toString());
+                JOptionPane.showMessageDialog(null, "Vehicle Correctly Deleted", "Success deleting vehicle", JOptionPane.INFORMATION_MESSAGE);
+
             } else {
                 logger.info("ERROR deleting vehicle: " + response.getStatus());
+                JOptionPane.showMessageDialog(null, "Error deleting vehicle", "Error", JOptionPane.ERROR_MESSAGE);
+
             }
         } else {
             logger.error("WebTarget is null. Unable to delete vehicle.");

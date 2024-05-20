@@ -182,6 +182,8 @@ public class CustomerRegister extends JFrame {
 			logger.error("Error connecting with the server. Code: {}",response.getStatus());
 		} else {
 			logger.info("Customer Correctly Registered :)");
+            JOptionPane.showMessageDialog(this, "Customer Correctly Registered", "Success registering customer", JOptionPane.INFORMATION_MESSAGE);
+
 		}
 
         nameField.setText("");

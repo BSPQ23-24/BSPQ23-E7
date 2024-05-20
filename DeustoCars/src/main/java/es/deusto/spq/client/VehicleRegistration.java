@@ -163,6 +163,8 @@ public class VehicleRegistration extends JFrame {
             logger.error("Error connecting with the server. Code: {}", response.getStatus());
         } else {
             logger.info("Vehicle Correctly Registered :)");
+            JOptionPane.showMessageDialog(this, "Vehicle Correctly Registered", "Success registering vehicle", JOptionPane.INFORMATION_MESSAGE);
+
         }
 
         // Clear input fields

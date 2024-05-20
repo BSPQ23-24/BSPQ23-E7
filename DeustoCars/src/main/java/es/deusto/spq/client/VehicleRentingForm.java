@@ -121,8 +121,11 @@ public class VehicleRentingForm extends JFrame {
         Response response = invocationBuilder.post(Entity.entity(newRenting, MediaType.APPLICATION_JSON));
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error creating Rent in the server. Code: {}",response.getStatus());
+            JOptionPane.showMessageDialog(this, "Error creating Rent in the server", "Error", JOptionPane.ERROR_MESSAGE);
 		} else {
 			logger.info("Renting Correctly Registered :)");
+            JOptionPane.showMessageDialog(this, "Renting Correctly Registered", "Success registering renting", JOptionPane.INFORMATION_MESSAGE);
+
 		}
 
         // Clear input fields
@@ -132,11 +135,11 @@ public class VehicleRentingForm extends JFrame {
 		endDateField.setText("");
 
         // Connect and update the database
-        if (updateDatabase(newRenting)) {
-            JOptionPane.showMessageDialog(this, "Renting registered successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Error registering renting.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        // if (updateDatabase(newRenting)) {
+        //     JOptionPane.showMessageDialog(this, "Renting registered successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        // } else {
+        //     JOptionPane.showMessageDialog(this, "Error registering renting.", "Error", JOptionPane.ERROR_MESSAGE);
+        // }
     }
 
     /**
