@@ -1,6 +1,5 @@
 package es.deusto.spq.client;
 
-import javax.swing.JFrame;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -11,6 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import es.deusto.spq.pojo.Renting;
 import es.deusto.spq.pojo.VehicleData;
 
 
@@ -102,15 +104,20 @@ public class VehicleDetailWindow extends JFrame{
         tableLabel.setFont(new Font("Arial", Font.BOLD, 14));
         bottomPanel.add(tableLabel, BorderLayout.NORTH);
 
-        String[] columnNames = {"Customer", "Start Date", "End Date"};
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        JTable table = new JTable(tableModel);
+        String[] columnNames = {"Customer", "Rent Date", "Retrieval Date"};
+        List<Renting> rentingList = MainClient.getVehicleRents(vehicle.getNumberPlate());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        Object[][] dataArray = new Object[rentingList.size()][3];
+        for (int i = 0; i < rentingList.size(); i++) {
+            Renting renting = rentingList.get(i);
+            dataArray[i][0] = renting.getCustomer().geteMail();
+            dataArray[i][1] = dateFormat.format(renting.getStartDate());
+            dataArray[i][2] = dateFormat.format(renting.getEndDate());
+        }
+        JTable table = new JTable(dataArray, columnNames);
         JScrollPane tableScrollPane = new JScrollPane(table);
         bottomPanel.add(tableScrollPane, BorderLayout.CENTER);
-
-        // To test
-        tableModel.addRow(new Object[]{"John Doe", "2023-05-01", "2023-05-10"});
-        tableModel.addRow(new Object[]{"Jane Smith", "2023-05-15", "2023-05-20"});
     }
 	
 	private ImageIcon resizeIcon(String path, Dimension size) {
@@ -124,11 +131,4 @@ public class VehicleDetailWindow extends JFrame{
         }
     }
 	
-	
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            VehicleData vehicleData = new VehicleData("ABC123", "Toyota", "Corolla", true, false);
-            new VehicleDetailWindow(vehicleData).setVisible(true);
-        });
-    }
 }

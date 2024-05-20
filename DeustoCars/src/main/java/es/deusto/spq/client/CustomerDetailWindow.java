@@ -12,7 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
+import es.deusto.spq.pojo.Renting;
 import es.deusto.spq.pojo.CustomerData;
 
 public class CustomerDetailWindow extends JFrame{
@@ -93,13 +95,18 @@ public class CustomerDetailWindow extends JFrame{
         bottomPanel.add(tableLabel, BorderLayout.NORTH);
 
         String[] columnNames = {"Plate Number", "Rent Date", "Retrieval Date"};
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        JTable table = new JTable(tableModel);
+        List<Renting> rentingList = MainClient.getCustomerRents(customer.geteMail());
+
+        Object[][] dataArray = new Object[rentingList.size()][3];
+        for (int i = 0; i < rentingList.size(); i++) {
+            Renting renting = rentingList.get(i);
+            dataArray[i][0] = renting.getVehicle().getNumberPlate();
+            dataArray[i][1] = dateFormat.format(renting.getStartDate());
+            dataArray[i][2] = dateFormat.format(renting.getEndDate());
+        }
+        JTable table = new JTable(dataArray, columnNames);
         JScrollPane tableScrollPane = new JScrollPane(table);
         bottomPanel.add(tableScrollPane, BorderLayout.CENTER);
-        // Examples to be replaced
-        tableModel.addRow(new Object[]{"ABC123", "2023-05-01", "2023-05-10"});
-        tableModel.addRow(new Object[]{"XYZ789", "2023-05-15", "2023-05-20"});
     }
 	
 	private ImageIcon resizeIcon(String path, Dimension size) {
@@ -113,10 +120,4 @@ public class CustomerDetailWindow extends JFrame{
         }
     }
 	
-	public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            CustomerData customer = new CustomerData("John", "Doe", "john.doe@example.com", new Date(90, 5, 19)); // Example date
-            new CustomerDetailWindow(customer).setVisible(true);
-        });
-    }
 }

@@ -34,6 +34,7 @@ import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleAssembler;
 import es.deusto.spq.pojo.VehicleData;
 import es.deusto.spq.pojo.Renting;
+import es.deusto.spq.pojo.RentingAssembler;
 
 /**
  * @class DCServer
@@ -278,7 +279,78 @@ public class DCServer {
             pm.close(); // Close the PersistenceManager
         }
     }
+    /**
+     * Retrieves all rentings from a customer from the database.
+     * @return Response containing the list of rentings of a customer or an error message if no rentings are found.
+     */
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/getcustomerrents")
+    public Response getCustomerRents(@QueryParam("eMail") String eMail) {
+        try {
+        	CustomerJDO customer = null;
+            try {
+                customer = pm.getObjectById(CustomerJDO.class, eMail);
+            } catch (Exception e) {
+                logger.info("Customer not found");
+                return Response.status(Response.Status.NOT_FOUND).entity("Customer with that eMail does not exist.").build();
+            }
+            logger.info("Customer: {}", customer);
+            if (customer == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Customer not found").build();
+            }
+        	Query query = pm.newQuery(RentingJDO.class, "customer == :customer");
+            List<RentingJDO> rentingList = (List<RentingJDO>) query.execute(customer);
+            if (rentingList.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).entity("No renting found for this customer").build();
+            } else {
+            	return Response.ok(RentingAssembler.getInstance().RentingJDOListToData(rentingList)).build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while extracting renting information.").build();
+        } finally {
+            pm.close();
+        }
+    }
+    
+    /**
+     * Retrieves all rentings of a vehicle from the database.
+     * @return Response containing the list of rentings and customers or an error message if no rentings are found.
+     */
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/getvehiclerents")
+    public Response getVehicleRents(@QueryParam("numberPlate") String numberPlate) {
+    	try {
+        	VehicleJDO vehicle = null;
+            try {
+                vehicle = pm.getObjectById(VehicleJDO.class, numberPlate);
+            } catch (Exception e) {
+                logger.info("Vehicle not found");
+                return Response.status(Response.Status.NOT_FOUND).entity("Vehicle with that plate number does not exist.").build();
+            }
+            logger.info("vehicle: {}", vehicle);
+            if (vehicle == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
+            }
+        	Query query = pm.newQuery(RentingJDO.class, "vehicle == :vehicle");
+            List<RentingJDO> rentingList = (List<RentingJDO>) query.execute(vehicle);
+            if (rentingList.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).entity("No renting found for this vehicle").build();
+            } else {
+            	return Response.ok(RentingAssembler.getInstance().RentingJDOListToData(rentingList)).build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while extracting renting information.").build();
+        } finally {
+            pm.close();
+        }
+    }
+    
     
     /**
      * Retrieves all customers from the database.

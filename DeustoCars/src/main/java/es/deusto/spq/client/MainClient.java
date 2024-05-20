@@ -46,6 +46,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.Renting;
 import es.deusto.spq.pojo.UserData;
 import es.deusto.spq.pojo.VehicleData;
 
@@ -359,7 +360,6 @@ public class MainClient extends JFrame {
                 String email = table.getValueAt(selectedRow, 0).toString();
                 new CustomerRegister(email); 
             }
-            this.dispose();
         });
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -428,7 +428,6 @@ public class MainClient extends JFrame {
                 String plate = (String) table.getValueAt(selectedRow, 0);
                 new VehicleRegistration(plate);
             }
-            this.dispose();
         });
         searchPanel.add(editButton, BorderLayout.SOUTH);
         
@@ -611,6 +610,47 @@ public class MainClient extends JFrame {
             }
         } else {
             logger.error("WebTarget is null. Unable to add vehicle.");
+        }
+    }
+    
+    /**
+     * Retrieves a list of Renting objects associated with a customer from the server.
+     *
+     * @return A list of Renting objects retrieved from the server, or an empty list if no customers found or an error occurred.
+     */
+    public static List<Renting> getCustomerRents(String eMail) {
+    	logger.info("WebTarget: " + webTarget);
+        Response response = webTarget
+                .path("server/getcustomerrents")
+                .queryParam("eMail", eMail)
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            return response.readEntity(new GenericType<List<Renting>>() {});
+        } else {
+        	logger.info("ERROR getting rentings Code: {}", response.getStatus());
+            return Collections.emptyList();
+        }
+    }
+    /**
+     * Retrieves a list of Renting objects associated with a vehicle from the server.
+     *
+     * @return A list of Renting objects retrieved from the server, or an empty list if no customers found or an error occurred.
+     */
+    public static List<Renting> getVehicleRents(String numberPlate) {
+    	logger.info("WebTarget: " + webTarget);
+        Response response = webTarget
+                .path("server/getvehiclerents")
+                .queryParam("numberPlate", numberPlate)
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            return response.readEntity(new GenericType<List<Renting>>() {});
+        } else {
+        	logger.info("ERROR getting rentings Code: {}", response.getStatus());
+            return Collections.emptyList();
         }
     }
 
