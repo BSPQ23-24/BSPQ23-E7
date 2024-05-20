@@ -230,6 +230,7 @@
 					<goals>
 						<goal>prepare-agent</goal>
 					</goals>
+					
 				</execution>
 				<execution>
 					<id>report</id>
@@ -237,6 +238,22 @@
 					<goals>
 						<goal>report</goal>
 					</goals>
+					<configuration>
+						<includes>
+							<include>**/TestForClient.java</include>
+							<include>**/DirectMessage.java</include>
+							<include>**/CustomerData.java</include>
+							<include>**/UserData.java</include>
+							<include>**/Renting.java</include>
+							<include>**/VehicleAssembler.java</include>
+							<include>**/CustomerAssembler.java</include>
+							<include>**/DCServer.java</include>
+							<include>**/VehicleJDO.java</include>
+							<include>**/RentingJDO.java</include>
+							<include>**/CustomerJDO.java</include>
+							<include>**/User.java</include>
+						</includes>
+					</configuration>
 				</execution>
 			</executions>
 		</plugin>
