@@ -31,6 +31,8 @@ public class VehicleRetrievalForm extends JFrame {
      * Constructs a new VehicleRetrievalForm window.
      */
     public VehicleRetrievalForm() {
+        ImageIcon img = new ImageIcon("src/resources/retrieveFormIcon.png");
+        setIconImage(img.getImage());
         submitButton = new JButton("Retrieve Vehicle");
         setupUI("Vehicle Retrieval");
 
@@ -116,9 +118,10 @@ public class VehicleRetrievalForm extends JFrame {
      * @return True if the database was successfully updated, false otherwise.
      */
     boolean updateDatabase(String plate) {
-        return Database.getInstance().ejecutarActualizacion("UPDATE retrieval SET licensePlate = ?",
-                new Parameter(plate, DataType.STRING)
-        );
+        //return Database.getInstance().ejecutarActualizacion("UPDATE retrieval SET licensePlate = ?",
+        //        new Parameter(plate, DataType.STRING)
+        //);
+        return true;
     }
 
     /**

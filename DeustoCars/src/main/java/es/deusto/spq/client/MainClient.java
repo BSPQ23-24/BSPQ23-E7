@@ -99,8 +99,9 @@ public class MainClient extends JFrame {
 
     	
 		client = ClientBuilder.newClient();
-		//ClientManager.getInstance().setWebTarget(hostname, port);
-		webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
+		ClientManager.getInstance().setWebTarget(hostname, port);
+        webTarget = ClientManager.getInstance().getWebTarget();
+		//webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
     	
         setTitle(resourceBundle.getString("main_client_title"));
         setSize(900, 400);
@@ -277,6 +278,9 @@ public class MainClient extends JFrame {
         searchPanel.setBackground(Color.white);
         tableFrame.setContentPane(searchPanel);
 
+        ImageIcon img = new ImageIcon("src/resources/customerListIcon.png");
+        tableFrame.setIconImage(img.getImage());
+
         List<CustomerData> allCustomers = getCustomers();
 
         // Ensure dataArray is properly formatted
@@ -333,6 +337,9 @@ public class MainClient extends JFrame {
         tableFrame.setTitle("Vehicles Window");
         tableFrame.setSize(600, 600);
         tableFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        ImageIcon img = new ImageIcon("src/resources/vehicleListIcon.png");
+        tableFrame.setIconImage(img.getImage());
 
         Toolkit screen = Toolkit.getDefaultToolkit();
         tableFrame.setLocation((screen.getScreenSize().width - tableFrame.getSize().width) / 2,
@@ -578,5 +585,6 @@ public class MainClient extends JFrame {
             logger.error("WebTarget is null. Unable to add vehicle.");
         }
     }
+
 }
 

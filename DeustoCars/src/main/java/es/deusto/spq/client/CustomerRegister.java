@@ -178,7 +178,7 @@ public class CustomerRegister extends JFrame {
         if (updateDatabase(newUser)) {
             logger.info("Customer registered: " + newUser);
         } else {
-            logger.info("Error registering user");
+            //logger.info("Error registering user");
         }				
     }
 

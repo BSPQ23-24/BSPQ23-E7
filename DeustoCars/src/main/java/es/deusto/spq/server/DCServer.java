@@ -146,6 +146,7 @@ public class DCServer {
         }
     }
 
+
     /**
      * Adds a new Renting to the database.
      * @param renting The data of the Renting to be added.
@@ -153,7 +154,7 @@ public class DCServer {
      */
 
     @POST
-    @Path("/rent")
+    @Path("/addrenting")
     public Response addRenting(Renting renting) {   
         try {
             logger.info("Searching for vehicle to rent...");
@@ -175,27 +176,24 @@ public class DCServer {
                     logger.info("Retrieved vehicle is not Ready to borrow: {}", vehicle);
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Vehicle with that number plate is not ready to borrow.").build();
                 }
-                vehicle = VehicleAssembler.getInstance().VehicleDataToJDO(renting.getVehicle());
             }
             CustomerJDO customer = null;
             try {
                 customer = pm.getObjectById(CustomerJDO.class, renting.getCustomer().geteMail());
             } catch (Exception e) {
                 logger.info("Customer not available to rent");
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Customer with that e-Mail does not exists.").build();
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Customer with that eMail does not exist.").build();
             }
             logger.info("Customer: {}", customer);
             if (customer == null) {
                 logger.info("Customer not available to rent");
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Customer with that e-Mail does not exists.").build();
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Customer with that eMail does not exist.").build();
             } else {
                 logger.info("Retrieved customer for Renting: {}", customer);
-                customer = CustomerAssembler.getInstance().CustomerDataToJDO(renting.getCustomer());
             }
 
             RentingJDO rentToSave = new RentingJDO(customer, vehicle, renting.getStartDate(), renting.getEndDate());
-            customer.getRents().add(rentToSave);
-            pm.makePersistent(customer);
+            pm.makePersistent(rentToSave);
 
             tx.commit(); // Commit the transaction
             return Response.ok().build();
@@ -279,6 +277,7 @@ public class DCServer {
                 return Response.status(Response.Status.NOT_FOUND).entity("Customer not found").build();
             }
         } catch (Exception e) {
+            logger.info(e);
             logger.info("Error occurred while fetching customer");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while fetching customer.").build();
         } finally {
@@ -304,6 +303,7 @@ public class DCServer {
                 return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
             }
         } catch (Exception e) {
+            logger.info(e);
             logger.info("Error occurred while fetching vehicle");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while fetching vehicle.").build();
         } finally {

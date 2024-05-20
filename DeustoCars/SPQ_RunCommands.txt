@@ -2,9 +2,11 @@
 mvn clean compile
 cd sql
 mysql -u root -p < create-deustoCars.sql
-mysql -u root -p < populate.sql
 cd ..
 mvn datanucleus:schema-create
+cd sql
+mysql -u root -p < populate.sql
+cd ..
 mvn jetty:run
 
 

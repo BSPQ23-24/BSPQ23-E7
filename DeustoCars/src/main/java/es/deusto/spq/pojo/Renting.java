@@ -12,10 +12,17 @@ public class Renting {
     private Date endDate;
 
     /**
+     * Default constructor required for serialization.
+     */
+    public Renting() {
+        // Required for serialization
+    }
+
+    /**
      * Constructs a renting object with the specified email, license plate, start date, and end date.
      *
-     * @param email        The email associated with the renting.
-     * @param licensePlate The license plate associated with the renting.
+     * @param customer     The customer associated with the renting.
+     * @param vehicle      The vehicle associated with the renting.
      * @param startDate    The start date of the renting.
      * @param endDate      The end date of the renting.
      */

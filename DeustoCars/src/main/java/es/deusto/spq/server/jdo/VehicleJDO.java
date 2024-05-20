@@ -11,7 +11,6 @@ import javax.jdo.annotations.Persistent;
 public class VehicleJDO {
     @PrimaryKey
     String numberPlate;
-    @Persistent
     String brand;
     String model;
     boolean readyToBorrow;

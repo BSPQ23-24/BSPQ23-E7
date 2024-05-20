@@ -3,6 +3,7 @@ package es.deusto.spq.client;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -27,6 +28,8 @@ public class AdminClient extends JFrame {
 
 
     public AdminClient() {
+        ImageIcon img = new ImageIcon("src/resources/analystIcon.png");
+        setIconImage(img.getImage());
         setTitle("Admin Dashboard");
         setSize(800, 600);
         setLocationRelativeTo(null);

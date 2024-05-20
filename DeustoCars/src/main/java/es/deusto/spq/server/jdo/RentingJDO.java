@@ -1,14 +1,23 @@
 package es.deusto.spq.server.jdo;
 
 import java.util.Date;
+
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 
 /**
  * Represents a renting.
  */
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class RentingJDO {
+    @PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.INCREMENT)
+    private int pk;
+    @Persistent(defaultFetchGroup = "true")
     private CustomerJDO customer;
+    @Persistent(defaultFetchGroup = "true")
     private VehicleJDO vehicle;
     private Date startDate;
     private Date endDate;
@@ -16,8 +25,8 @@ public class RentingJDO {
     /**
      * Constructs a renting object with the specified email, license plate, start date, and end date.
      *
-     * @param email        The email associated with the renting.
-     * @param licensePlate The license plate associated with the renting.
+     * @param customer     The customer associated with the renting.
+     * @param vehicle      The vehicle associated with the renting.
      * @param startDate    The start date of the renting.
      * @param endDate      The end date of the renting.
      */
@@ -26,6 +35,15 @@ public class RentingJDO {
         this.vehicle = vehicle;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    /**
+     * Retrieves the pk id of the renting.
+     *
+     * @return The pk id associated with the renting.
+     */
+    public int getPK() {
+        return pk;
     }
 
     /**

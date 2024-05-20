@@ -1,6 +1,8 @@
 package es.deusto.spq.client;
 
 import javax.swing.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
@@ -31,11 +33,17 @@ public class VehicleRentingForm extends JFrame {
     private JTextField startDateField;
     private JTextField endDateField;
     private JButton submitButton;
+    private Client client;
+	private WebTarget webTarget;
+
 
     /**
      * Constructs a new VehicleRentingForm window.
      */
     public VehicleRentingForm() {
+        ImageIcon img = new ImageIcon("src/resources/rentFormIcon.png");
+        setIconImage(img.getImage());
+
         submitButton = new JButton("Rent Vehicle");
         setupUI("Vehicle Renting");
 
@@ -111,9 +119,9 @@ public class VehicleRentingForm extends JFrame {
         VehicleData vehicle = MainClient.getVehicle(plate);
         Renting newRenting = new Renting(customer, vehicle, start, end);
 
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/rent");
-		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
-		Response response = invocationBuilder.post(Entity.entity(newRenting, MediaType.APPLICATION_JSON));
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addrenting");
+        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.post(Entity.entity(newRenting, MediaType.APPLICATION_JSON));
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error creating Rent in the server. Code: {}",response.getStatus());
 		} else {
@@ -129,9 +137,9 @@ public class VehicleRentingForm extends JFrame {
 
         // Connect and update the database
         if (updateDatabase(newRenting)) {
-            JOptionPane.showMessageDialog(this, "Vehicle registered successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Renting registered successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "Error registering vehicle.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error registering renting.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
