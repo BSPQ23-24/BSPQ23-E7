@@ -23,7 +23,7 @@ jobs:
 
       - name: Start the database
         run: | 
-          cd Deustocars/sql
+          cd DeustoCars/sql
           mysql -u root -p < create-deustoCars.sql
           cd ..
           mvn datanucleus:schema-create
