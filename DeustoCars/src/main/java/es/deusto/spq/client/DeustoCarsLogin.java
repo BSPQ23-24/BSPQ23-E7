@@ -69,6 +69,10 @@ public class DeustoCarsLogin extends JFrame {
         backgroundPanel.add(policyCheckbox, gbc);
 
         JButton enterButton = new JButton("Enter");
+        enterButton.setBackground(new Color(0, 153, 204));
+        enterButton.setForeground(Color.WHITE);
+        enterButton.setFocusPainted(false);
+        enterButton.setFont(new Font("Arial", Font.BOLD, 16));
         enterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

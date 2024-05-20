@@ -359,6 +359,7 @@ public class MainClient extends JFrame {
                 String email = table.getValueAt(selectedRow, 0).toString();
                 new CustomerRegister(email); 
             }
+            this.dispose();
         });
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -427,6 +428,7 @@ public class MainClient extends JFrame {
                 String plate = (String) table.getValueAt(selectedRow, 0);
                 new VehicleRegistration(plate);
             }
+            this.dispose();
         });
         searchPanel.add(editButton, BorderLayout.SOUTH);
         

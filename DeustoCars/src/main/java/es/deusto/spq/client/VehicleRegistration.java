@@ -77,6 +77,10 @@ public class VehicleRegistration extends JFrame {
                     modifyVehicle();
                     return null;
                 }
+                @Override
+                protected void done() {
+                    dispose();
+                }
             };
             worker.execute();
         });

@@ -81,6 +81,10 @@ public class CustomerRegister extends JFrame {
                     modifyUser();
                     return null;
                 }
+                @Override
+                protected void done() {
+                    dispose();
+                }
             };
             worker.execute();
         });
