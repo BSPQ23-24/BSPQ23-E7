@@ -192,6 +192,8 @@ public class DCServer {
                 logger.info("Retrieved customer for Renting: {}", customer);
             }
 
+            vehicle.setReadyToBorrow(false);
+            pm.makePersistent(vehicle);
             RentingJDO rentToSave = new RentingJDO(customer, vehicle, renting.getStartDate(), renting.getEndDate());
             pm.makePersistent(rentToSave);
 
@@ -208,6 +210,75 @@ public class DCServer {
             pm.close(); // Close the PersistenceManager
         }
     }
+
+
+    /**
+     * Returns a rented vehicle.
+     * @param numberPlate The number plate of the vehicle to be returned.
+     * @param email The email of the customer returning the vehicle.
+     * @return Response indicating success or failure of the operation.
+     */
+    @POST
+    @Path("/returnvehicle")
+    public Response returnVehicle(@QueryParam("numberPlate") String numberPlate, @QueryParam("eMail") String email) {
+        try {
+            logger.info("Returning vehicle...");
+            tx.begin(); // Begin transaction
+
+            VehicleJDO vehicle = null;
+            try {
+                vehicle = pm.getObjectById(VehicleJDO.class, numberPlate);
+            } catch (Exception e) {
+                logger.info("Vehicle not found");
+                return Response.status(Response.Status.NOT_FOUND).entity("Vehicle with that number plate does not exist.").build();
+            }
+            logger.info("Vehicle: {}", vehicle);
+            
+            if (vehicle == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
+            }
+            
+            CustomerJDO customer = null;
+            try {
+                customer = pm.getObjectById(CustomerJDO.class, email);
+            } catch (Exception e) {
+                logger.info("Customer not found");
+                return Response.status(Response.Status.NOT_FOUND).entity("Customer with that eMail does not exist.").build();
+            }
+            logger.info("Customer: {}", customer);
+            
+            if (customer == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Customer not found").build();
+            }
+            
+            Query query = pm.newQuery(RentingJDO.class, "vehicle == :vehicle && customer == :customer");
+            List<RentingJDO> rentingList = (List<RentingJDO>) query.execute(vehicle, customer);
+            
+            if (rentingList.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).entity("No renting found for this vehicle and customer").build();
+            }
+            
+            for (RentingJDO renting : rentingList) {
+                pm.deletePersistent(renting);
+            }
+            
+            vehicle.setReadyToBorrow(true);
+            pm.makePersistent(vehicle);
+
+            tx.commit(); // Commit the transaction
+            return Response.ok("Vehicle returned successfully").build();
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback(); // Rollback the transaction in case of an exception
+            }
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while returning the vehicle.").build();
+        } finally {
+            logger.info("Closing");
+            pm.close(); // Close the PersistenceManager
+        }
+    }
+
     
     /**
      * Retrieves all customers from the database.

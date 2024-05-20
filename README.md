@@ -20,15 +20,20 @@ mvn clean compile
 ```
 cd sql
 mysql -u root -p < create-deustoCars.sql
-mysql -u root -p < populate.sql
 ```
-(Note: You will be asked to input the mysql root password)
+(Note: You will be asked to input the mysql root user's password)
 
 3 - Then, return to the `Deustocars` folder  and create the db schema:
 ```
 cd ..
 mvn datanucleus:schema-create
 ```
+
+4- Now, populate the database:
+```
+mysql -u root -p < populate.sql
+```
+(Note: You will be asked to input the mysql root user's password again)
 
 4 -  Finally, start the server:
 ```
@@ -50,20 +55,19 @@ Launching the server profile is not necessary for the application to work. Howev
 mvn compile exec:java -Pserver
 ```
 
-<code style="color : Cyan">Thanks for visiting our project. If you have any suggestion, please contact us.😊</code>
-
-7- To generate doxygen reports
+7- To generate doxygen reports:
 ```
 mvn doxygen:report
 ```
 
-8- To copy generated html directory into docs folder
+8- To copy generated html directory into docs folder:
 ```
 mvn validate
 ```
 
-9- To remove generated target files including dir docs with html code
+9- To remove generated target files including dir docs with html code:
 ```
 mvn clean
 ```
 
+<code style="color : Cyan">Thanks for visiting our project. If you have any suggestion, please contact us.😊</code>

@@ -39,7 +39,7 @@ public class VehicleRetrievalForm extends JFrame {
         submitButton.setFocusPainted(false);
         submitButton.setFont(new Font("Arial", Font.BOLD, 16));
 
-        submitButton.addActionListener(e -> retrieveVehicle());
+        submitButton.addActionListener(e -> returnVehicle());
 
         setupUI("Vehicle Retrieval");
 
@@ -77,33 +77,38 @@ public class VehicleRetrievalForm extends JFrame {
         plateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));
     }
 
-    /**
-     * Retrieves a vehicle based on the provided license plate.
-     */
-    public void retrieveVehicle() {
+    private void returnVehicle() {
+        String email = emailField.getText();
         String plate = plateField.getText();
-  
-        // Add logic to send retrieval request to the server
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/vehicles/retrieve");
-        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
-        Response response = invocationBuilder.post(Entity.entity(plate, MediaType.APPLICATION_JSON));
-        
-        if (response.getStatus() != Status.OK.getStatusCode()) {
-            logger.error("Error connecting with the server. Code: {}",response.getStatus());
-        } else {
-            logger.info("Vehicle Correctly Retrieved :)");
+    
+        // Validate email and plate inputs
+        if (email.isEmpty() || plate.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Email and Number Plate must be filled out.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-
-        // Clear input fields
-        plateField.setText("");
-        
-        // Connect and update the database
-        if (updateDatabase(plate)) {
-            JOptionPane.showMessageDialog(this, "Vehicle retrieved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+    
+        // Build the target URL with query parameters
+        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/returnvehicle")
+                .queryParam("numberPlate", plate)
+                .queryParam("eMail", email);
+    
+        // Create a request and send it
+        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.post(null);
+        if (response.getStatus() != Status.OK.getStatusCode()) {
+            logger.error("Error returning vehicle in the server. Code: {}", response.getStatus());
+            JOptionPane.showMessageDialog(this, "Error returning vehicle.", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "Error retrieving vehicle.", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.info("Vehicle returned successfully!");
+    
+            // Clear input fields
+            emailField.setText("");
+            plateField.setText("");
+    
+            JOptionPane.showMessageDialog(this, "Vehicle returned successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         }
     }
+    
     
     /**
      * Updates the database after vehicle retrieval.
