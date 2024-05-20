@@ -13,7 +13,9 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import es.deusto.spq.client.ClientManager;
+import es.deusto.spq.client.ServiceLocator;
+import es.deusto.spq.client.controller.CustomerController;
+import es.deusto.spq.client.controller.VehicleController;
 import es.deusto.spq.pojo.Renting;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleData;
@@ -112,11 +114,11 @@ public class VehicleRentingForm extends JFrame {
             return;
         }
         
-        CustomerData customer = MainClient.getCustomer(email);
-        VehicleData vehicle = MainClient.getVehicle(plate);
+        CustomerData customer = CustomerController.getCustomer(email);
+        VehicleData vehicle = VehicleController.getVehicle(plate);
         Renting newRenting = new Renting(customer, vehicle, start, end);
 
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addrenting");
+        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path("server/addrenting");
         Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.post(Entity.entity(newRenting, MediaType.APPLICATION_JSON));
 		if (response.getStatus() != Status.OK.getStatusCode()) {

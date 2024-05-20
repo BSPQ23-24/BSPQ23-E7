@@ -6,7 +6,6 @@ package es.deusto.spq.client;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GradientPaint;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.sql.ResultSet;
@@ -45,6 +44,9 @@ import java.awt.event.MouseEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import es.deusto.spq.client.controller.CustomerController;
+import es.deusto.spq.client.controller.RentingController;
+import es.deusto.spq.client.controller.VehicleController;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.Renting;
 import es.deusto.spq.pojo.UserData;
@@ -70,9 +72,6 @@ public class MainClient extends JFrame {
     private JTextField numberPlate;
     private JTextField eMail;
     protected static final Logger logger = LogManager.getLogger();
-	
-	private Client client;
-	private static WebTarget webTarget;
 
     static {resourceBundle = ResourceBundle.getBundle("SystemMessages", Locale.getDefault());}
     static Locale currentLocale = Locale.forLanguageTag("en");;
@@ -94,12 +93,6 @@ public class MainClient extends JFrame {
 
         logger.info(resourceBundle.getString("starting_msg"));
 
-    	
-		client = ClientBuilder.newClient();
-		ClientManager.getInstance().setWebTarget(hostname, port);
-        webTarget = ClientManager.getInstance().getWebTarget();
-		//webTarget = client.target(String.format("http://%s:%s/deustocars", hostname, port));
-    	
         setTitle(resourceBundle.getString("main_client_title"));
         setSize(900, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -305,7 +298,7 @@ public class MainClient extends JFrame {
     public static void main(String[] args) {
     	String hostname = args[0];
         String port = args[1];
-        ClientManager.getInstance().setWebTarget(hostname, port);
+        ServiceLocator.getInstance().setWebTarget(hostname, port);
         new MainClient(hostname, port, Locale.forLanguageTag("en"));
     }
 
@@ -344,7 +337,12 @@ public class MainClient extends JFrame {
         }
 
         String[] column = {"eMail", "Name", "Surname", "Date of Birth"};
-        JTable table = new JTable(dataArray, column);
+        JTable table = new JTable(dataArray, column) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         JScrollPane pane = new JScrollPane(table);
         searchPanel.add(pane, BorderLayout.CENTER);
@@ -412,7 +410,12 @@ public class MainClient extends JFrame {
         }
 
         String[] columnNames = {"Plate", "Brand", "Model", "Ready To Borrow", "On Repair"};
-        JTable table = new JTable(dataArray, columnNames);
+        JTable table = new JTable(dataArray, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         JScrollPane pane = new JScrollPane(table);
         searchPanel.add(pane, BorderLayout.CENTER);
@@ -454,19 +457,7 @@ public class MainClient extends JFrame {
      * @return The Customer object retrieved from the server, or null if not found or an error occurred.
      */
     public static CustomerData getCustomer(String eMail) {
-        Response response = ClientManager.getInstance().getWebTarget()
-                .path("server/getcustomer")
-                .queryParam("eMail", eMail)
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-
-        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            logger.info("Getting customer: " + response.toString());
-            return response.readEntity(CustomerData.class);
-        } else {
-            logger.info("ERROR getting customer");
-            return null;
-        }
+        return CustomerController.getCustomer(eMail);
     }
 
     /**
@@ -476,19 +467,7 @@ public class MainClient extends JFrame {
      * @return The Vehicle object retrieved from the server, or null if not found or an error occurred.
      */
     public static VehicleData getVehicle(String numberPlate) {
-        Response response = ClientManager.getInstance().getWebTarget()
-                .path("server/getvehicle")
-                .queryParam("numberPlate", numberPlate)
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-
-        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            logger.info("Getting vehicle: " + response.toString());
-            return response.readEntity(VehicleData.class);
-        } else {
-            logger.info("ERROR getting vehicle");
-            return null;
-        }
+        return VehicleController.getVehicle(numberPlate);
     }
 
     /**
@@ -497,17 +476,7 @@ public class MainClient extends JFrame {
      * @return A list of Customer objects retrieved from the server, or an empty list if no customers found or an error occurred.
      */
     public static List<CustomerData> getCustomers() {
-        Response response = ClientManager.getInstance().getWebTarget()
-                .path("server/getcustomers")
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-
-        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            return response.readEntity(new GenericType<List<CustomerData>>() {});
-        } else {
-        	logger.info("ERROR getting customers Code: {}", response.getStatus());
-            return Collections.emptyList();
-        }
+        return CustomerController.getCustomers();
     }
 
     /**
@@ -516,17 +485,7 @@ public class MainClient extends JFrame {
      * @return A list of Vehicle objects retrieved from the server, or an empty list if no vehicles found or an error occurred.
      */
     public static List<VehicleData> getVehicles() {
-        Response response = ClientManager.getInstance().getWebTarget()
-                .path("server/getvehicles")
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-
-        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            return response.readEntity(new GenericType<List<VehicleData>>() {});
-        } else {
-            logger.info("ERROR getting vehicles");
-            return Collections.emptyList();
-        }
+        return VehicleController.getVehicles();
     }
 
     /**
@@ -535,28 +494,7 @@ public class MainClient extends JFrame {
      * @param numberPlate The number plate of the vehicle to delete.
      */
     public static void deleteVehicle(String numberPlate) {
-        //WebTarget webTarget = ClientManager.getInstance().getWebTarget();
-        logger.info("NumberPlate: " + numberPlate);
-        logger.info("WebTarget: " + webTarget);
-        if (webTarget != null) {
-            Response response = webTarget
-                    .path("server/deletevehicle")
-                    .queryParam("numberPlate", numberPlate)
-                    .request(MediaType.APPLICATION_JSON)
-                    .delete();
-
-            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-                logger.info("Deleting vehicle: " + response.toString());
-                JOptionPane.showMessageDialog(null, "Vehicle Correctly Deleted", "Success deleting vehicle", JOptionPane.INFORMATION_MESSAGE);
-
-            } else {
-                logger.info("ERROR deleting vehicle: " + response.getStatus());
-                JOptionPane.showMessageDialog(null, "Error deleting vehicle", "Error", JOptionPane.ERROR_MESSAGE);
-
-            }
-        } else {
-            logger.error("WebTarget is null. Unable to delete vehicle.");
-        }
+        VehicleController.deleteVehicle(numberPlate);
     }
     
     /**
@@ -565,56 +503,16 @@ public class MainClient extends JFrame {
      * @param eMail The email of the customer to delete.
      */
     public static void deleteCustomer(String eMail) {
-        Response response = webTarget
-                .path("server/deletecustomer")
-                .queryParam("eMail", eMail)
-                .request(MediaType.APPLICATION_JSON)
-                .delete();
-
-        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            logger.info("Deleting customer: " + response.toString());
-        } else {
-            logger.info("ERROR deleting customer");
-        }
+        CustomerController.deleteCustomer(eMail);
     }
     
     public void addCustomer(CustomerData customer) {
-        //WebTarget webTarget = ClientManager.getInstance().getWebTarget();
-        logger.info("WebTarget: " + webTarget);
-        if (webTarget != null) {
-            Response response = webTarget
-                    .path("server/addcustomer")
-                    .request(MediaType.APPLICATION_JSON)
-                    .post(Entity.entity(customer, MediaType.APPLICATION_JSON));
-
-            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-                logger.info("Adding customer: " + response.toString());
-            } else {
-                logger.info("ERROR adding customer: " + response.getStatus());
-            }
-        } else {
-            logger.error("WebTarget is null. Unable to add customer.");
-        }
+        CustomerController.addCustomer(customer);
     }
     
     
     public void addVehicle(VehicleData vehicle) {
-        //WebTarget webTarget = ClientManager.getInstance().getWebTarget();
-        logger.info("WebTarget: " + webTarget);
-        if (webTarget != null) {
-            Response response = webTarget
-                    .path("server/addvehicle")
-                    .request(MediaType.APPLICATION_JSON)
-                    .post(Entity.entity(vehicle, MediaType.APPLICATION_JSON));
-
-            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-                logger.info("Adding vehicle: " + response.toString());
-            } else {
-                logger.info("ERROR adding vehicle: " + response.getStatus());
-            }
-        } else {
-            logger.error("WebTarget is null. Unable to add vehicle.");
-        }
+        VehicleController.addVehicle(vehicle);
     }
     
     /**
@@ -623,19 +521,7 @@ public class MainClient extends JFrame {
      * @return A list of Renting objects retrieved from the server, or an empty list if no customers found or an error occurred.
      */
     public static List<Renting> getCustomerRents(String eMail) {
-    	logger.info("WebTarget: " + webTarget);
-        Response response = webTarget
-                .path("server/getcustomerrents")
-                .queryParam("eMail", eMail)
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-
-        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            return response.readEntity(new GenericType<List<Renting>>() {});
-        } else {
-        	logger.info("ERROR getting rentings Code: {}", response.getStatus());
-            return Collections.emptyList();
-        }
+        return RentingController.getCustomerRents(eMail);
     }
     /**
      * Retrieves a list of Renting objects associated with a vehicle from the server.
@@ -643,19 +529,7 @@ public class MainClient extends JFrame {
      * @return A list of Renting objects retrieved from the server, or an empty list if no customers found or an error occurred.
      */
     public static List<Renting> getVehicleRents(String numberPlate) {
-    	logger.info("WebTarget: " + webTarget);
-        Response response = webTarget
-                .path("server/getvehiclerents")
-                .queryParam("numberPlate", numberPlate)
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-
-        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            return response.readEntity(new GenericType<List<Renting>>() {});
-        } else {
-        	logger.info("ERROR getting rentings (There might be no rentings for this vehicle) Code: {}", response.getStatus());
-            return Collections.emptyList();
-        }
+        return RentingController.getVehicleRents(numberPlate);
     }
 
 }

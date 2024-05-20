@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+
+import es.deusto.spq.client.controller.CustomerController;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleData;
 
@@ -16,6 +18,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.internal.inject.Custom;
 
 import java.util.ResourceBundle;
 
@@ -89,7 +92,7 @@ public class CustomerRegister extends JFrame {
             worker.execute();
         });
         setupUI("Customer Modification");
-        CustomerData customer = MainClient.getCustomer(eMail);
+        CustomerData customer = CustomerController.getCustomer(eMail);
         if(customer!=null) {
         	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         	nameField = new JTextField(customer.getName());
@@ -176,7 +179,7 @@ public class CustomerRegister extends JFrame {
         }
 
         CustomerData newUser = new CustomerData(email, name, surname, birth);
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addcustomer");
+        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path("server/addcustomer");
 		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(newUser, MediaType.APPLICATION_JSON));
 		if (response.getStatus() != Status.OK.getStatusCode()) {
@@ -209,7 +212,7 @@ public class CustomerRegister extends JFrame {
         }
 
         CustomerData newCustomer = new CustomerData(email, name, surname, birth);
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addcustomer");
+        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path("server/addcustomer");
         Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.post(Entity.entity(newCustomer, MediaType.APPLICATION_JSON));
         

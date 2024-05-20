@@ -22,6 +22,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import es.deusto.spq.client.controller.RentingController;
+import es.deusto.spq.client.controller.VehicleController;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleData;
 import es.deusto.spq.pojo.Renting;
@@ -151,7 +153,7 @@ public class AdminClient extends JFrame {
     }
 
     private void updateDatasetFromServer(DefaultPieDataset<String> dataset) {
-        List<VehicleData> vehicles = MainClient.getVehicles();
+        List<VehicleData> vehicles = VehicleController.getVehicles();
         Map<String, Integer> brandCount = new HashMap<>();
         for (VehicleData vehicle : vehicles) {
             brandCount.merge(vehicle.getBrand(), 1, Integer::sum);
@@ -161,7 +163,7 @@ public class AdminClient extends JFrame {
 
 
     private void updateDatasetFromServer(DefaultCategoryDataset dataset) {
-        List<VehicleData> vehicles =  MainClient.getVehicles();
+        List<VehicleData> vehicles =  VehicleController.getVehicles();
         int readyToBorrow = 0, onRepair = 0;
         for (VehicleData vehicle : vehicles) {
             if (vehicle.isReadyToBorrow()) readyToBorrow++;
@@ -173,10 +175,10 @@ public class AdminClient extends JFrame {
 
     private void updateDatasetFromServer(XYSeriesCollection dataset) {
         dataset.removeAllSeries();
-        List<VehicleData> vehicles = MainClient.getVehicles();
+        List<VehicleData> vehicles = VehicleController.getVehicles();
         List<Renting> rentings = new ArrayList<>();
         for (VehicleData vehicle : vehicles) {
-            rentings.addAll(MainClient.getVehicleRents(vehicle.getNumberPlate()));
+            rentings.addAll(RentingController.getVehicleRents(vehicle.getNumberPlate()));
         }
         Map<Integer, Integer> rentsPerYear = new TreeMap<>();
         SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");

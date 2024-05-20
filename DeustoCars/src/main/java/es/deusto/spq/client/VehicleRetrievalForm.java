@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import es.deusto.spq.client.ClientManager;
+import es.deusto.spq.client.ServiceLocator;
 
 import java.awt.*;
 
@@ -88,7 +88,7 @@ public class VehicleRetrievalForm extends JFrame {
         }
     
         // Build the target URL with query parameters
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/returnvehicle")
+        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path("server/returnvehicle")
                 .queryParam("numberPlate", plate)
                 .queryParam("eMail", email);
     

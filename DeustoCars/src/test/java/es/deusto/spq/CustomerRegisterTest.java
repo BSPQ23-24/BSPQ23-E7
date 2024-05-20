@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
 
-import es.deusto.spq.client.ClientManager;
+import es.deusto.spq.client.ServiceLocator;
 import es.deusto.spq.client.CustomerRegister;
 import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleData;

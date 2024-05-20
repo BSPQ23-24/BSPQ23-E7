@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import es.deusto.spq.pojo.Renting;
+import es.deusto.spq.client.controller.RentingController;
 import es.deusto.spq.pojo.CustomerData;
 
 public class CustomerDetailWindow extends JFrame{
@@ -95,7 +96,7 @@ public class CustomerDetailWindow extends JFrame{
         bottomPanel.add(tableLabel, BorderLayout.NORTH);
 
         String[] columnNames = {"Plate Number", "Rent Date", "Retrieval Date"};
-        List<Renting> rentingList = MainClient.getCustomerRents(customer.geteMail());
+        List<Renting> rentingList = RentingController.getCustomerRents(customer.geteMail());
 
         Object[][] dataArray = new Object[rentingList.size()][3];
         for (int i = 0; i < rentingList.size(); i++) {

@@ -1,5 +1,5 @@
 /**
- * This class represents a manager for the RESTful client.
+ * This class represents a manager for the RESTful client. (Service Locator)
  */
 package es.deusto.spq.client;
 
@@ -8,29 +8,29 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 /**
- * This class represents a manager for the RESTful client.
+ * This class represents a manager for the RESTful client. (Service Locator)
  */
-public class ClientManager {
+public class ServiceLocator {
     
-    private static ClientManager instance;
+    private static ServiceLocator instance;
     private Client client;
     private WebTarget webTarget;
     
 
     /**
-     * Constructs a new ClientManager object.
+     * Constructs a new ServiceLocator object.
      */
-    private ClientManager() {
+    private ServiceLocator() {
         client = ClientBuilder.newClient();
     }
 
     /**
-     * Retrieves the singleton instance of ClientManager.
-     * @return The ClientManager instance.
+     * Retrieves the singleton instance of ServiceLocator.
+     * @return The ServiceLocator instance.
      */
-    public static ClientManager getInstance() {
+    public static ServiceLocator getInstance() {
         if (instance == null) {
-            instance = new ClientManager();
+            instance = new ServiceLocator();
         }
         return instance;
     }

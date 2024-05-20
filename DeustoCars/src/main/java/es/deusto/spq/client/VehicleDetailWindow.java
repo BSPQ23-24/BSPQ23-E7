@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import es.deusto.spq.client.controller.RentingController;
 import es.deusto.spq.pojo.Renting;
 import es.deusto.spq.pojo.VehicleData;
 
@@ -105,7 +106,7 @@ public class VehicleDetailWindow extends JFrame{
         bottomPanel.add(tableLabel, BorderLayout.NORTH);
 
         String[] columnNames = {"Customer", "Rent Date", "Retrieval Date"};
-        List<Renting> rentingList = MainClient.getVehicleRents(vehicle.getNumberPlate());
+        List<Renting> rentingList = RentingController.getVehicleRents(vehicle.getNumberPlate());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         Object[][] dataArray = new Object[rentingList.size()][3];

@@ -62,38 +62,19 @@ public class ResourceTest {
             dcserver = new DCServer();
         }
     }
-
-   
-
-    @Test
-    public void testDeleteVehicle() {
-    	VehicleJDO vehicle= new VehicleJDO("123ABC", "Toyota", "Corolla");
-    	when(persistenceManager.getObjectById(VehicleJDO.class, vehicle.getNumberPlate())).thenReturn(vehicle);
-        Response response = dcserver.deleteVehicle("123ABC");
-        assertEquals(Response.Status.OK, response.getStatusInfo());
-    }
     
     
     @Test
     public void testDeleteVehicleNotFound() {
-        String licensePlate = "123ABC";
+        String licensePlate = "1234ABC";
         when(persistenceManager.getObjectById(VehicleJDO.class, licensePlate)).thenThrow(new JDOObjectNotFoundException());
         Response response = dcserver.deleteVehicle(licensePlate);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
     
-    
-    @Test
-    public void testDeleteCustomer() {
-    	CustomerJDO customer= new CustomerJDO("x@gmail.com", "xx", "xxxx");
-    	when(persistenceManager.getObjectById(CustomerJDO.class, customer.geteMail())).thenReturn(customer);
-        Response response = dcserver.deleteCustomer("x@gmail.com");
-        assertEquals(Response.Status.OK, response.getStatusInfo());
-    }
-    
     @Test
     public void testDeleteCustomerNotFound() {
-        String email = "x@gmail.com";
+        String email = "z@gmail.com";
         when(persistenceManager.getObjectById(CustomerJDO.class, email)).thenThrow(new JDOObjectNotFoundException());
         Response response = dcserver.deleteCustomer(email);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
@@ -110,8 +91,8 @@ public class ResourceTest {
     
     @Test
     public void testNoGetVehicle() {
-        when(persistenceManager.getObjectById(VehicleJDO.class, "123ABC")).thenReturn(null);
-        Response response = dcserver.getVehicle("123ABC");
+        when(persistenceManager.getObjectById(VehicleJDO.class, "123ABCD")).thenReturn(null);
+        Response response = dcserver.getVehicle("123ABCD");
         assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
     
@@ -205,8 +186,8 @@ public class ResourceTest {
     
     @Test
     public void testNoGetCustomer() {
-        when(persistenceManager.getObjectById(CustomerJDO.class, "x@gmail.com")).thenReturn(null);
-        Response response = dcserver.getCustomer("x@gmail.com");
+        when(persistenceManager.getObjectById(CustomerJDO.class, "y@gmail.com")).thenReturn(null);
+        Response response = dcserver.getCustomer("y@gmail.com");
         assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
     }
     
@@ -260,6 +241,22 @@ public class ResourceTest {
         when(persistenceManager.getObjectById(VehicleJDO.class, "123ABC")).thenThrow(new JDOObjectNotFoundException());
         Response response = dcserver.addRenting(renting);
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void testDeleteCustomer() {
+    	CustomerJDO customer= new CustomerJDO("x@gmail.com", "xx", "xxxx");
+    	when(persistenceManager.getObjectById(CustomerJDO.class, customer.geteMail())).thenReturn(customer);
+        Response response = dcserver.deleteCustomer("x@gmail.com");
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    public void testDeleteVehicle() {
+    	VehicleJDO vehicle= new VehicleJDO("123ABC", "Toyota", "Corolla");
+    	when(persistenceManager.getObjectById(VehicleJDO.class, vehicle.getNumberPlate())).thenReturn(vehicle);
+        Response response = dcserver.deleteVehicle("123ABC");
+        assertEquals(Response.Status.OK, response.getStatusInfo());
     }
     
      

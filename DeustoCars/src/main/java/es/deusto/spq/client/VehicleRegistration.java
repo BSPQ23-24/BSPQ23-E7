@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ResourceBundle;
 
+import es.deusto.spq.client.controller.VehicleController;
 import es.deusto.spq.pojo.VehicleData;
 
 import javax.ws.rs.client.Entity;
@@ -86,7 +87,7 @@ public class VehicleRegistration extends JFrame {
         });
         setupUI("Vehicle Modification");
 
-        VehicleData vehicle = MainClient.getVehicle(numberPlate);
+        VehicleData vehicle = VehicleController.getVehicle(numberPlate);
         
         if (vehicle != null) {
 	        brandField = new JTextField(vehicle.getBrand());
@@ -157,7 +158,7 @@ public class VehicleRegistration extends JFrame {
         VehicleData newVehicle = new VehicleData(numberPlateField.getText(), brandField.getText(), modelField.getText(), 
         		readyToBorrowCheckbox.isSelected(), onRepairCheckbox.isSelected());
 
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addvehicle");
+        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path("server/addvehicle");
         Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
         if (response.getStatus() != Status.OK.getStatusCode()) {
@@ -186,7 +187,7 @@ public class VehicleRegistration extends JFrame {
     	VehicleData newVehicle = new VehicleData(numberPlateField.getText(), brandField.getText(), modelField.getText(), 
     			readyToBorrowCheckbox.isSelected(), onRepairCheckbox.isSelected());
     	
-        WebTarget DeustoCarsWebTarget = ClientManager.getInstance().getWebTarget().path("server/addvehicle");
+        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path("server/addvehicle");
         Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));
         
