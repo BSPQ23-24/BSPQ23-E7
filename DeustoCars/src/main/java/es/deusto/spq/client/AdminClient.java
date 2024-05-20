@@ -96,7 +96,7 @@ public class AdminClient extends JFrame {
     private ChartPanel createPieChartPanel() {
         DefaultPieDataset<String> dataset = new DefaultPieDataset<String>();
         updateDatasetFromServer(dataset);
-        JFreeChart chart = ChartFactory.createPieChart("Sample Pie Chart", dataset, true, true, false);
+        JFreeChart chart = ChartFactory.createPieChart("Vehicles by Brand Distribution", dataset, true, true, false);
         return new ChartPanel(chart);
     }
 
@@ -104,7 +104,7 @@ public class AdminClient extends JFrame {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         updateDatasetFromServer(dataset);
         JFreeChart chart = ChartFactory.createBarChart(
-                "Sample Bar Chart", 
+                "Vehicle Allocation Status", 
                 "Category", 
                 "Value", 
                 dataset, 
@@ -117,7 +117,7 @@ public class AdminClient extends JFrame {
         XYSeriesCollection dataset = new XYSeriesCollection();
         updateDatasetFromServer(dataset);
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "Sample Line Chart",
+                "Customer Birth Year Distribution",
                 "X",
                 "Y",
                 dataset,

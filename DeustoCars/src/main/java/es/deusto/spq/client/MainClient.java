@@ -348,11 +348,11 @@ public class MainClient extends JFrame {
         JScrollPane pane = new JScrollPane(table);
         searchPanel.add(pane, BorderLayout.CENTER);
 
-        JPanel editPane = new JPanel(new GridLayout(2, 1, 0, 0));
-        editPane.setBackground(Color.white);
-        searchPanel.add(editPane, BorderLayout.SOUTH);
-
         JButton editButton = new JButton("Edit Customer");
+        editButton.setBackground(new Color(0, 153, 204));
+        editButton.setForeground(Color.WHITE);
+        editButton.setFocusPainted(false);
+        editButton.setFont(new Font("Arial", Font.BOLD, 16));
         editButton.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow >= 0) {
@@ -372,7 +372,7 @@ public class MainClient extends JFrame {
                 }
             }
         });
-        editPane.add(editButton);
+        searchPanel.add(editButton, BorderLayout.SOUTH);
 
         tableFrame.setVisible(true);
     }
@@ -416,11 +416,11 @@ public class MainClient extends JFrame {
         JScrollPane pane = new JScrollPane(table);
         searchPanel.add(pane, BorderLayout.CENTER);
 
-        JPanel editPane = new JPanel(new GridLayout(2, 1, 0, 0));
-        editPane.setBackground(Color.white);
-        searchPanel.add(editPane, BorderLayout.SOUTH);
-
         JButton editButton = new JButton("Edit Vehicle");
+        editButton.setBackground(new Color(0, 153, 204));
+        editButton.setForeground(Color.WHITE);
+        editButton.setFocusPainted(false);
+        editButton.setFont(new Font("Arial", Font.BOLD, 16));
         editButton.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow >= 0) {
@@ -428,7 +428,7 @@ public class MainClient extends JFrame {
                 new VehicleRegistration(plate);
             }
         });
-        editPane.add(editButton);
+        searchPanel.add(editButton, BorderLayout.SOUTH);
         
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
