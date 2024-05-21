@@ -36,10 +36,58 @@ jobs:
       run: |
         cd DeustoCars
         mvn --batch-mode jetty:run &
-        sleep 25
+        sleep 10
     
     - name: Run tests
       run: |
         cd DeustoCars
         mvn test
+
+
+  document:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # Ensure this line is correctly added
+      - name: Install doxygen
+        run: sudo apt-get install -y doxygen
+
+      - name: Install graphviz
+        run: sudo apt-get install -y graphviz
+
+      - name: Generate documentation
+        run: |
+          cd DeustoCars
+          mvn doxygen:report
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: DeustoCars/target/doxygen/html
+          publish_branch: gh-pages
+          destination_dir: doxygen
+      
+
+  package:
+    needs: document
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Package the application
+        run: |
+          cd DeustoCars
+          mvn package -DskipTests -DskipITs
+
 
