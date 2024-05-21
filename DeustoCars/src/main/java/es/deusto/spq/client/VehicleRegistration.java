@@ -32,6 +32,7 @@ public class VehicleRegistration extends JFrame {
     private JCheckBox onRepairCheckbox;
     private JButton submitButton;
 
+
     /**
      * Constructs a new vehicle registration window.
      */

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import es.deusto.spq.client.controller.RentingController;
 import es.deusto.spq.pojo.Renting;
@@ -18,9 +19,10 @@ import es.deusto.spq.pojo.VehicleData;
 
 
 public class VehicleDetailWindow extends JFrame{
+    private ResourceBundle resourceBundle = MainClient.getResourceBundle();
 	
 	public VehicleDetailWindow(VehicleData vehicle) {
-        setTitle("Vehicle Detail");
+        setTitle(resourceBundle.getString("vehicle_detail_title"));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -57,28 +59,28 @@ public class VehicleDetailWindow extends JFrame{
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        detailsPanel.add(new JLabel("Plate Number:"), gbc);
+        detailsPanel.add(new JLabel(resourceBundle.getString("number_plate_label")), gbc);
 
         gbc.gridx = 1;
         detailsPanel.add(new JLabel(vehicle.getNumberPlate()), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        detailsPanel.add(new JLabel("Brand:"), gbc);
+        detailsPanel.add(new JLabel(resourceBundle.getString("brand_label")), gbc);
 
         gbc.gridx = 1;
         detailsPanel.add(new JLabel(vehicle.getBrand()), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        detailsPanel.add(new JLabel("Model:"), gbc);
+        detailsPanel.add(new JLabel(resourceBundle.getString("model_label")), gbc);
 
         gbc.gridx = 1;
         detailsPanel.add(new JLabel(vehicle.getModel()), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        detailsPanel.add(new JLabel("Ready to Borrow:"), gbc);
+        detailsPanel.add(new JLabel(resourceBundle.getString("ready_to_borrow_checkbox_label")), gbc);
 
         gbc.gridx = 1;
         JCheckBox readyToBorrowCheckBox = new JCheckBox();
@@ -88,7 +90,7 @@ public class VehicleDetailWindow extends JFrame{
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        detailsPanel.add(new JLabel("On Repair:"), gbc);
+        detailsPanel.add(new JLabel(resourceBundle.getString("on_repair_table_col")+":"), gbc);
 
         gbc.gridx = 1;
         JCheckBox onRepairCheckBox = new JCheckBox();
@@ -101,11 +103,11 @@ public class VehicleDetailWindow extends JFrame{
         bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         mainPanel.add(bottomPanel, BorderLayout.CENTER);
 
-        JLabel tableLabel = new JLabel("Renting History");
+        JLabel tableLabel = new JLabel(resourceBundle.getString("renting_history_label"));
         tableLabel.setFont(new Font("Arial", Font.BOLD, 14));
         bottomPanel.add(tableLabel, BorderLayout.NORTH);
 
-        String[] columnNames = {"Customer", "Rent Date", "Retrieval Date"};
+        String[] columnNames = {resourceBundle.getString("customer_table_col"), resourceBundle.getString("rent_date_table_col"), resourceBundle.getString("retrieval_date_table_col")};
         List<Renting> rentingList = RentingController.getVehicleRents(vehicle.getNumberPlate());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 

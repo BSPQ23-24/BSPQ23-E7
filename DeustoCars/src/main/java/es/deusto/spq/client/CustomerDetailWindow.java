@@ -13,15 +13,17 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import es.deusto.spq.pojo.Renting;
 import es.deusto.spq.client.controller.RentingController;
 import es.deusto.spq.pojo.CustomerData;
 
 public class CustomerDetailWindow extends JFrame{
+    private ResourceBundle resourceBundle = MainClient.getResourceBundle();
 
 	public CustomerDetailWindow(CustomerData customer) {
-        setTitle("Customer Detail");
+        setTitle(resourceBundle.getString("customer_detail_title"));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -59,28 +61,28 @@ public class CustomerDetailWindow extends JFrame{
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        detailsPanel.add(new JLabel("Name:"), gbc);
+        detailsPanel.add(new JLabel(resourceBundle.getString("name_label")), gbc);
 
         gbc.gridx = 1;
         detailsPanel.add(new JLabel(customer.getName()), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        detailsPanel.add(new JLabel("Surname:"), gbc);
+        detailsPanel.add(new JLabel(resourceBundle.getString("surname_label")), gbc);
 
         gbc.gridx = 1;
         detailsPanel.add(new JLabel(customer.getSurname()), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        detailsPanel.add(new JLabel("Email:"), gbc);
+        detailsPanel.add(new JLabel(resourceBundle.getString("email_label")), gbc);
 
         gbc.gridx = 1;
         detailsPanel.add(new JLabel(customer.geteMail()), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        detailsPanel.add(new JLabel("Date of Birth:"), gbc);
+        detailsPanel.add(new JLabel(resourceBundle.getString("birthdate_label")), gbc);
 
         gbc.gridx = 1;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -91,11 +93,11 @@ public class CustomerDetailWindow extends JFrame{
         bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         mainPanel.add(bottomPanel, BorderLayout.CENTER);
 
-        JLabel tableLabel = new JLabel("Vehicles Rented");
+        JLabel tableLabel = new JLabel(resourceBundle.getString("renting_history_label"));
         tableLabel.setFont(new Font("Arial", Font.BOLD, 14));
         bottomPanel.add(tableLabel, BorderLayout.NORTH);
 
-        String[] columnNames = {"Plate Number", "Rent Date", "Retrieval Date"};
+        String[] columnNames = {resourceBundle.getString("number_plate_label"), resourceBundle.getString("rent_table_col"), resourceBundle.getString("retrieve_table_col")};
         List<Renting> rentingList = RentingController.getCustomerRents(customer.geteMail());
 
         Object[][] dataArray = new Object[rentingList.size()][3];

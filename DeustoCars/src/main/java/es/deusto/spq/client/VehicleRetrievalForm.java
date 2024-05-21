@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import es.deusto.spq.client.ServiceLocator;
 
 import java.awt.*;
+import java.util.ResourceBundle;
 
 /**
  * Class for retrieving a vehicle using a graphical user interface.
@@ -22,6 +23,7 @@ public class VehicleRetrievalForm extends JFrame {
     private static final long serialVersionUID = 1L;
 
     protected static final Logger logger = LogManager.getLogger();
+    private ResourceBundle resourceBundle;
     
     private JTextField emailField;    
     private JTextField plateField;
@@ -31,9 +33,10 @@ public class VehicleRetrievalForm extends JFrame {
      * Constructs a new VehicleRetrievalForm window.
      */
     public VehicleRetrievalForm() {
+        resourceBundle = MainClient.getResourceBundle();
         ImageIcon img = new ImageIcon("src/resources/retrieveFormIcon.png");
         setIconImage(img.getImage());
-        submitButton = new JButton("Retrieve Vehicle");
+        submitButton = new JButton(resourceBundle.getString("retrieve_vehicle_button"));
         submitButton.setBackground(new Color(0, 153, 204));
         submitButton.setForeground(Color.WHITE);
         submitButton.setFocusPainted(false);
@@ -41,7 +44,8 @@ public class VehicleRetrievalForm extends JFrame {
 
         submitButton.addActionListener(e -> returnVehicle());
 
-        setupUI("Vehicle Retrieval");
+        setupUI(resourceBundle.getString("retrieve_window_title"));
+
 
         emailField = new JTextField();
         plateField = new JTextField();
@@ -68,9 +72,9 @@ public class VehicleRetrievalForm extends JFrame {
     private void addComponentsToForm() {
         JPanel formPanel = (JPanel) getContentPane().getComponent(0);
 
-        formPanel.add(new JLabel("Email:"));
+        formPanel.add(new JLabel(resourceBundle.getString("email_label")));
         formPanel.add(emailField);
-        formPanel.add(new JLabel("License Plate:"));
+        formPanel.add(new JLabel(resourceBundle.getString("number_plate_label")));
         formPanel.add(plateField);
 
         emailField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));

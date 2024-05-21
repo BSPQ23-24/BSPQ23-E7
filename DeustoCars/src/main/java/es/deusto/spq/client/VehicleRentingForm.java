@@ -23,12 +23,14 @@ import es.deusto.spq.pojo.VehicleData;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 /**
  * Class for renting a vehicle using a graphical user interface.
  */
 public class VehicleRentingForm extends JFrame {
     protected static final Logger logger = LogManager.getLogger();
+    private ResourceBundle resourceBundle;
 	
     private JTextField emailField;
     private JTextField plateField;
@@ -42,10 +44,11 @@ public class VehicleRentingForm extends JFrame {
      * Constructs a new VehicleRentingForm window.
      */
     public VehicleRentingForm() {
+        resourceBundle = MainClient.getResourceBundle();
         ImageIcon img = new ImageIcon("src/resources/rentFormIcon.png");
         setIconImage(img.getImage());
 
-        submitButton = new JButton("Rent Vehicle");
+        submitButton = new JButton(resourceBundle.getString("rent_vehicle_button"));
         submitButton.setBackground(new Color(0, 153, 204));
         submitButton.setForeground(Color.WHITE);
         submitButton.setFocusPainted(false);
@@ -53,7 +56,7 @@ public class VehicleRentingForm extends JFrame {
 
         submitButton.addActionListener(e -> rentVehicle());
 
-        setupUI("Vehicle Renting");
+        setupUI(resourceBundle.getString("rent_window_title"));
 
         emailField = new JTextField();
         plateField = new JTextField();
@@ -82,13 +85,13 @@ public class VehicleRentingForm extends JFrame {
     private void addComponentsToForm() {
         JPanel formPanel = (JPanel) getContentPane().getComponent(0);
 
-        formPanel.add(new JLabel("Email:"));
+        formPanel.add(new JLabel(resourceBundle.getString("email_label")));
         formPanel.add(emailField);
-        formPanel.add(new JLabel("License Plate:"));
+        formPanel.add(new JLabel(resourceBundle.getString("number_plate_label")));
         formPanel.add(plateField);
-        formPanel.add(new JLabel("Start Date (YYYY-MM-DD):"));
+        formPanel.add(new JLabel(resourceBundle.getString("startdate_label")));
         formPanel.add(startDateField);
-        formPanel.add(new JLabel("End Date (YYYY-MM-DD):"));
+        formPanel.add(new JLabel(resourceBundle.getString("enddate_label")));
         formPanel.add(endDateField);
 
         emailField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));

@@ -307,7 +307,7 @@ public class MainClient extends JFrame {
      */
     public void TableCustomersWindow() {
         JFrame tableFrame = new JFrame();
-        tableFrame.setTitle("Customers Window");
+        tableFrame.setTitle(resourceBundle.getString("customers_window_title"));
         tableFrame.setSize(600, 600);
         tableFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -336,7 +336,7 @@ public class MainClient extends JFrame {
             dataArray[i][3] = dateFormat.format(customer.getDateOfBirth());  // Ensure Date is converted to a suitable format if necessary
         }
 
-        String[] column = {"eMail", "Name", "Surname", "Date of Birth"};
+        String[] column = {"eMail", resourceBundle.getString("name_table_col"), resourceBundle.getString("surname_table_col"), resourceBundle.getString("date_of_birth_table_col")};
         JTable table = new JTable(dataArray, column) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -347,7 +347,7 @@ public class MainClient extends JFrame {
         JScrollPane pane = new JScrollPane(table);
         searchPanel.add(pane, BorderLayout.CENTER);
 
-        JButton editButton = new JButton("Edit Customer");
+        JButton editButton = new JButton(resourceBundle.getString("edit_customer_button"));
         editButton.setBackground(new Color(0, 153, 204));
         editButton.setForeground(Color.WHITE);
         editButton.setFocusPainted(false);
@@ -381,7 +381,7 @@ public class MainClient extends JFrame {
      */
     public void TableVehicleWindow() {
         JFrame tableFrame = new JFrame();
-        tableFrame.setTitle("Vehicles Window");
+        tableFrame.setTitle(resourceBundle.getString("vehicles_window_title"));
         tableFrame.setSize(600, 600);
         tableFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -409,7 +409,7 @@ public class MainClient extends JFrame {
             dataArray[i][4] = vehicle.isOnRepair(); 
         }
 
-        String[] columnNames = {"Plate", "Brand", "Model", "Ready To Borrow", "On Repair"};
+        String[] columnNames = {resourceBundle.getString("plate_table_col"), resourceBundle.getString("brand_table_col"), resourceBundle.getString("model_table_col"), resourceBundle.getString("ready_to_borrow_table_col"), resourceBundle.getString("on_repair_table_col")};
         JTable table = new JTable(dataArray, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -420,7 +420,7 @@ public class MainClient extends JFrame {
         JScrollPane pane = new JScrollPane(table);
         searchPanel.add(pane, BorderLayout.CENTER);
 
-        JButton editButton = new JButton("Edit Vehicle");
+        JButton editButton = new JButton(resourceBundle.getString("edit_vehicle_button"));
         editButton.setBackground(new Color(0, 153, 204));
         editButton.setForeground(Color.WHITE);
         editButton.setFocusPainted(false);
