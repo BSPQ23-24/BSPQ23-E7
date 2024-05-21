@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 
 import es.deusto.spq.client.controller.CustomerController;
 import es.deusto.spq.pojo.CustomerData;
-import es.deusto.spq.pojo.VehicleData;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;

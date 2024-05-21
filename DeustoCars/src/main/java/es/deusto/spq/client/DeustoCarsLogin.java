@@ -4,6 +4,10 @@
 package es.deusto.spq.client;
 
 import javax.swing.*;
+
+import es.deusto.spq.client.controller.UserController;
+import es.deusto.spq.pojo.UserData;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -76,16 +80,17 @@ public class DeustoCarsLogin extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String email = emailField.getText();
                 String password = new String(passwordField.getPassword());
+                UserData user = UserController.getUser(email, password);
                 boolean policyAccepted = policyCheckbox.isSelected();
 
                 if (!policyAccepted) {
                     JOptionPane.showMessageDialog(null, "To enter you need to accept our Data Treatment Policy");
-                } else if (email.equals("user@user.com") && password.equals("user")) {
+                } else if (user!=null && password.equals(user.getPassword()) && user.getIsAdmin()==false) {
                     ServiceLocator.getInstance().setWebTarget(hostname, port);
                     MainClient mainClient = new MainClient(hostname, port, MainClient.currentLocale);
                     mainClient.setVisible(true);
                     dispose();
-                } else if (email.equals("admin@admin.com") && password.equals("admin")) {
+                } else if (user!=null && password.equals(user.getPassword()) && user.getIsAdmin()==true) {
                 	ServiceLocator.getInstance().setWebTarget(hostname, port);
                     MainClient mainClient = new MainClient(hostname, port, MainClient.currentLocale);
                     mainClient.setVisible(true);
@@ -94,7 +99,7 @@ public class DeustoCarsLogin extends JFrame {
                         ex.setVisible(true);
                     });
                     dispose();
-                } else if (email.equals("user@user.com") || email.equals("admin@admin.com")) {
+                } else if (user!=null && !password.equals(user.getPassword())) {
                     JOptionPane.showMessageDialog(null, "Wrong password");
                 } else {
                     JOptionPane.showMessageDialog(null, "This email is not registered");
@@ -115,6 +120,7 @@ public class DeustoCarsLogin extends JFrame {
     public static void main(String[] args) {
         String hostname = args[0];
         String port = args[1];
+        ServiceLocator.getInstance().setWebTarget(hostname, port);
         new DeustoCarsLogin(hostname, port);
         
     }

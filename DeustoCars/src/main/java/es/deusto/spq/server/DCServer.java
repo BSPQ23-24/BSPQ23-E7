@@ -7,6 +7,7 @@ package es.deusto.spq.server;
 
 import es.deusto.spq.server.services.CustomerService;
 import es.deusto.spq.server.services.RentingService;
+import es.deusto.spq.server.services.UserService;
 import es.deusto.spq.server.services.VehicleService;
 
 import javax.ws.rs.GET;
@@ -141,6 +142,19 @@ public class DCServer {
     @Path("/getvehicle")
     public Response getVehicle(@QueryParam("numberPlate") String numberPlate) {
         return VehicleService.getInstance().getVehicle(numberPlate);
+
+    }
+
+    /**
+     * Retrieves a vehicle by number plate from the database.
+     * @param eMail The eMail of the user to retrieve.
+     * @param password The password of the user to retrieve.
+     * @return Response containing the user data or an error message if the user is not found.
+     */
+    @GET
+    @Path("/getuser")
+    public Response getUser(@QueryParam("eMail") String email, @QueryParam("password") String password) {
+        return UserService.getInstance().getUser(email, password);
 
     }
     

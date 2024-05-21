@@ -67,3 +67,9 @@ VALUES
     (19, (SELECT email FROM customerjdo WHERE email = 'x@gmail.com'), '2024-07-28', '2024-07-19', (SELECT numberPlate FROM vehiclejdo WHERE numberPlate = '321YZA')),
     (20, (SELECT email FROM customerjdo WHERE email = 'juan@gmail.com'), '2024-08-30', '2024-08-22', (SELECT numberPlate FROM vehiclejdo WHERE numberPlate = '123BCD')),
     (21, (SELECT email FROM customerjdo WHERE email = 'maria@gmail.com'), '2024-09-28', '2024-09-17', (SELECT numberPlate FROM vehiclejdo WHERE numberPlate = '9872SLY'));
+
+    -- Insert user data
+    INSERT INTO user (login, password, isAdmin) 
+    VALUES 
+        ('user@user.com', 'user', false),
+        ('admin@admin.com', 'admin', true);

@@ -34,8 +34,8 @@ public class Main
 			User dipina = new User("dipina", "dipina");
 			Message message1 = new Message("This is a test message!");
 			Message message2 = new Message("This is a SECOND test message!");
-			dipina.getMessages().add(message1);
-			dipina.getMessages().add(message2);
+			//dipina.getMessages().add(message1);
+			//dipina.getMessages().add(message2);
 			pm.makePersistent(dipina);					 
             tx.commit();
             System.out.println("User and his messages have been persisted");

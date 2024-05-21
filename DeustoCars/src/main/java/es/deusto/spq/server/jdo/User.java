@@ -1,11 +1,7 @@
 package es.deusto.spq.server.jdo;
 
-import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.PrimaryKey;
-import javax.jdo.annotations.Join;
-import javax.jdo.annotations.Persistent;
-import java.util.LinkedHashSet;
 
 /**
  * Represents a user entity.
@@ -15,44 +11,24 @@ public class User {
     @PrimaryKey
     String login;
     String password;
-
-    @Persistent(mappedBy="user", dependentElement="true")
-    @Join
-    Set<Message> messages = new LinkedHashSet<>();
+    Boolean isAdmin;
 
     /**
      * Default constructor for User.
      */
-    User() {
+    public User() {
     }
 
     /**
      * Constructs a User object with the specified login and password.
      * 
-     * @param login    The login of the user.
-     * @param password The password of the user.
+     * @param login     The login of the user.
+     * @param password  The password of the user.
+     * @param isAdmin   Boolean indicating if the user is admin or not
      */
     public User(String login, String password) {
         this.login = login;
         this.password = password;
-    }
-
-    /**
-     * Adds a message to the user's set of messages.
-     * 
-     * @param message The message to add.
-     */
-    public void addMessage(Message message) {
-        messages.add(message);
-    }
-
-    /**
-     * Removes a message from the user's set of messages.
-     * 
-     * @param message The message to remove.
-     */
-    public void removeMessage(Message message) {
-        messages.remove(message);
     }
 
     /**
@@ -62,6 +38,10 @@ public class User {
      */
     public String getLogin() {
         return this.login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     /**
@@ -81,14 +61,22 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+    /**
+     * Retrieves if the user is admin or not.
+     * 
+     * @return If the user is admin or not.
+     */
+    public Boolean getIsAdmin() {
+        return this.isAdmin;
+    }
 
     /**
-     * Retrieves the set of messages associated with the user.
+     * Sets if the user is admin.
      * 
-     * @return The set of messages associated with the user.
+     * @param isAdmin The boolean isAdmin to set.
      */
-    public Set<Message> getMessages() {
-        return this.messages;
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     /**
@@ -98,10 +86,6 @@ public class User {
      */
     @Override
     public String toString() {
-        StringBuilder messagesStr = new StringBuilder();
-        for (Message message: this.messages) {
-            messagesStr.append(message.toString() + " - ");
-        }
-        return "User: login --> " + this.login + ", password --> " + this.password + ", messages --> [" + messagesStr + "]";
+        return "User: login --> " + this.login + ", password --> " + this.password;
     }
 }

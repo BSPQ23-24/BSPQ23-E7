@@ -5,8 +5,9 @@ package es.deusto.spq.pojo;
  */
 public class UserData {
 
-    private String login;
+    private String email;
     private String password;
+    private Boolean isAdmin;
 
     /**
      * Default constructor required for serialization.
@@ -21,7 +22,7 @@ public class UserData {
      * @return The login of the user.
      */
     public String getLogin() {
-        return this.login;
+        return this.email;
     }
 
     /**
@@ -30,7 +31,7 @@ public class UserData {
      * @param login The login to set.
      */
     public void setLogin(String login) {
-        this.login = login;
+        this.email = login;
     }
 
     /**
@@ -58,6 +59,25 @@ public class UserData {
      */
     @Override
     public String toString() {
-        return String.format("[login=%s, password=%s]", login, password);
+        return String.format("[login=%s, password=%s]", email, password);
     }
+
+    /**
+     * Retrieves if the user is admin or not.
+     * 
+     * @return If the user is admin or not.
+     */
+    public Boolean getIsAdmin() {
+        return this.isAdmin;
+    }
+
+    /**
+     * Sets if the user is admin.
+     * 
+     * @param isAdmin The boolean isAdmin to set.
+     */
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
 }
