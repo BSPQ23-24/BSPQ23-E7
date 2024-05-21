@@ -1,48 +1,40 @@
-name: Deustocars CI
+name: Java CI
 
 on: [push]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+    - name: Set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'temurin'
 
-      - name: Clean and compile the project
-        run: |
-          cd Deustocars
-          mvn --batch-mode clean compile
-          
-
-      - name: Start the database
-        run: | 
-          sudo /etc/init.d/mysql start
-          cd Deustocars
-          mysql -uroot -proot < sql/create-deustoCars.sql
-          mysql -uroot -proot < sql/populate.sql
-          mvn --batch-mode --update-snapshots datanucleus:enhance datanucleus:schema-create        
-
-      - name: Start the server
-        run: | 
-          cd Deustocars
-          mvn --batch-mode jetty:run &
-          sleep 10
-
-      - name: Run tests and generate reports
-        run: |
-          cd Deustocars
-          mvn test
-          # mvn jacoco:prepare-agent test jacoco:report
-          # mvn compile exec:java -Pclient
-          # mvn compile exec:java -Pserver
-          # mvn doxygen:report
-          # mvn validate
+    - name: Clean and compile
+      run: |
+        cd Deustocars
+        mvn --batch-mode clean compile
+    
+    - name: Set up database
+      run: |
+        sudo /etc/init.d/mysql start
+        cd Deustocars
+        mysql -uroot -proot < sql/create-db.sql
+        mvn --batch-mode --update-snapshots datanucleus:enhance datanucleus:schema-create
+        
+   
+    - name: Run server
+      run: |
+        cd Deustocars
+        mvn --batch-mode jetty:run &
+        sleep 25
+    
+    - name: Run tests
+      run: |
+        cd Deustocars
+        mvn test
 
