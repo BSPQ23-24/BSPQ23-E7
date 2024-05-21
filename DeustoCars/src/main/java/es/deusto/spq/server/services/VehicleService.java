@@ -8,14 +8,16 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import es.deusto.spq.pojo.RentingAssembler;
+import es.deusto.spq.pojo.Renting;
 import es.deusto.spq.pojo.VehicleAssembler;
 import es.deusto.spq.pojo.VehicleData;
+import es.deusto.spq.server.jdo.RentingJDO;
 import es.deusto.spq.server.jdo.VehicleJDO;
 
 public class VehicleService {
@@ -140,12 +142,16 @@ public class VehicleService {
      * @param email The email of the vehicle to delete.
      * @return Response indicating success or failure of the operation.
      */
+    @SuppressWarnings("unchecked")
     public Response deleteVehicle(String numberPlate) {
         pm = pmf.getPersistenceManager();
         tx = pm.currentTransaction();
         try {
             VehicleJDO vehicle = pm.getObjectById(VehicleJDO.class, numberPlate);
             if (vehicle != null) {
+                for(RentingJDO rent : (List<RentingJDO>) RentingAssembler.getInstance().RentingListToJDO((List<Renting>) RentingService.getInstance().getVehicleRents(vehicle.getNumberPlate()).getEntity())){
+                    RentingService.getInstance().deleteRenting(rent.getVehicle().getNumberPlate(), rent.getCustomer().geteMail());
+                }
                 pm.deletePersistent(vehicle);
                 return Response.ok("Vehicle deleted successfully").build();
             } else {

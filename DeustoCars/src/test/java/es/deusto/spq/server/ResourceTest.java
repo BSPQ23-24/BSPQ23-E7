@@ -18,6 +18,7 @@ import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Transaction;
+import javax.swing.JOptionPane;
 import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
@@ -107,10 +108,10 @@ public class ResourceTest {
     @Test
     public void testGetCustomerRents() {
         // Mock the customer and renting objects
-        String email = "x@gmail.com";
+        String email = "test@gmail.com";
         CustomerJDO customer = new CustomerJDO(email, "First", "Last", new Date());
-        VehicleJDO vehicle1 = new VehicleJDO("123AB", "Toyota", "Corolla");
-        VehicleJDO vehicle2 = new VehicleJDO("321YZA", "Kia", "Sportage");
+        VehicleJDO vehicle1 = new VehicleJDO("9872SLY", "Toyota", "Corolla");
+        VehicleJDO vehicle2 = new VehicleJDO("789GHI", "Kia", "Sportage");
         RentingJDO renting1 = new RentingJDO(customer, vehicle1, new Date(), new Date());
         RentingJDO renting2 = new RentingJDO(customer, vehicle2, new Date(), new Date());
 
@@ -145,10 +146,10 @@ public class ResourceTest {
     @Test
     public void testGetVehicleRents() {
         // Mock the vehicle and renting objects
-        String numberPlate = "123ABC";
+        String numberPlate = "123AB";
         VehicleJDO vehicle = new VehicleJDO(numberPlate, "Toyota", "Camry");
-        CustomerJDO customer1 = new CustomerJDO("juan@gmail.com", "First", "Last", new Date());
-        CustomerJDO customer2 = new CustomerJDO("x@gmail.com", "Second", "Last", new Date());
+        CustomerJDO customer1 = new CustomerJDO("x@gmail.com", "First", "Last", new Date());
+        CustomerJDO customer2 = new CustomerJDO("test@gmail.com", "Second", "Last", new Date());
         RentingJDO renting1 = new RentingJDO(customer1, vehicle, new Date(), new Date());
         RentingJDO renting2 = new RentingJDO(customer2, vehicle, new Date(), new Date());
 
@@ -219,14 +220,9 @@ public class ResourceTest {
     @Test
     public void testAddRenting() {
         // Set up the data
-        CustomerData customerData = new CustomerData("x@gmail.com", "xx", "xxxx");
-        VehicleData vehicleData = new VehicleData("123ABC", "Toyota", "Corolla", true, false);
+        CustomerData customerData = new CustomerData("test@gmail.com", "xx", "xxxx");
+        VehicleData vehicleData = new VehicleData("123AB", "Toyota", "Corolla", true, false);
         Renting renting = new Renting(customerData, vehicleData, new Date(), new Date());
-        CustomerJDO customerJDO = new CustomerJDO("x@gmail.com", "xx", "xxxx");
-        VehicleJDO vehicleJDO = new VehicleJDO("123ABC", "Toyota", "Corolla");
-        vehicleJDO.setReadyToBorrow(true);
-        when(persistenceManager.getObjectById(VehicleJDO.class, "123ABC")).thenReturn(vehicleJDO);
-        when(persistenceManager.getObjectById(CustomerJDO.class, "x@gmail.com")).thenReturn(customerJDO);
         Response response = dcserver.addRenting(renting);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
@@ -236,7 +232,7 @@ public class ResourceTest {
     @Test
     public void testAddRentingVehicleNotFound() {
         CustomerData customerData = new CustomerData("x@gmail.com", "xx", "xxxx");
-        VehicleData vehicleData = new VehicleData("123ABC", "Toyota", "Corolla", true, false);
+        VehicleData vehicleData = new VehicleData("PIPOMAN13", "Toyota", "Corolla", true, false);
         Renting renting = new Renting(customerData, vehicleData, new Date(), new Date());
         when(persistenceManager.getObjectById(VehicleJDO.class, "123ABC")).thenThrow(new JDOObjectNotFoundException());
         Response response = dcserver.addRenting(renting);

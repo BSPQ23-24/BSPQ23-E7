@@ -34,6 +34,22 @@ public class RentingAssembler {
 			
 			return data;
 		}
+
+		/**
+	     * Changes the RentingJDO to RentingData.
+	     * 
+	     * @param Renting The Renting JDO to change.
+	     * @return RentingData with all the necessary information.
+	     */
+		public RentingJDO RentingDatatoJDO(Renting Renting) {
+			RentingJDO jdo = new RentingJDO();		
+			jdo.setCustomer(CustomerAssembler.getInstance().CustomerDataToJDO(Renting.getCustomer()));
+			jdo.setVehicle(VehicleAssembler.getInstance().VehicleDataToJDO(Renting.getVehicle()));
+			jdo.setStartDate(Renting.getStartDate());
+			jdo.setEndDate(Renting.getEndDate());
+			
+			return jdo;
+		}
 		
 		/**
 	     * Changes a RentingJDO list to a RentingData list.
@@ -49,5 +65,21 @@ public class RentingAssembler {
 	    	
 	    	return data;
 		}
+
+		/**
+	     * Changes a RentingJDO list to a RentingData list.
+	     * 
+	     * @param Rentings The Renting JDO list to change.
+	     * @return RentingData list with all the necessary information.
+	     */
+		public List<RentingJDO> RentingListToJDO(List<Renting> Rentings){
+			List<RentingJDO> jdo = new ArrayList<RentingJDO>();
+	    	for (Renting data : Rentings) {
+				jdo.add(RentingAssembler.getInstance().RentingDatatoJDO(data));
+			}
+	    	
+	    	return jdo;
+		}
+		
 		
 }

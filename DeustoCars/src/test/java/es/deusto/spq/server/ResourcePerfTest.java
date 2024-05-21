@@ -95,36 +95,50 @@ public class ResourcePerfTest {
 //    }
     
     
+   @Test
+   @JUnitPerfTest(threads = 100, durationMs=1000)
+   @JUnitPerfTestRequirement(maxLatency=1000)
+   public void testGetVehicle() {
+
+       Response response = target.path("server/getvehicle")
+               .queryParam("numberPlate", "123AB")
+               .request(MediaType.APPLICATION_JSON)
+               .get();
+
+
+       assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+   }
+
 //    @Test
 //    @JUnitPerfTest(threads = 10, durationMs=1000)
 //    @JUnitPerfTestRequirement(maxLatency=1000)
-//    public void testDeleteVehicle() {
-//
-//        Response response = target.path("server/deletevehicle")
-//                .queryParam("numberPlate", "123AB")
+//    public void testGetCustomer() {
+
+//        Response response = target.path("server/getcustomer")
+//                .queryParam("eMail", "test@gmail.com")
 //                .request(MediaType.APPLICATION_JSON)
-//                .delete();
-//
-//
+//                .get();
+
+
 //        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
 //    }
-//
-    @Test
-    @JUnitPerfTest(threads = 2, durationMs=1000)
-    @JUnitPerfTestRequirement(maxLatency=1000)
-    public void testInsertVehicle() {
-        VehicleData vehicle = new VehicleData("PruebasSQL", "Toyota", "Corolla", true, true);
-        logger.info("Error");
 
-        Response response = target.path("server/addvehicle")
-            .request(MediaType.APPLICATION_JSON)
-            .post(Entity.entity(vehicle, MediaType.APPLICATION_JSON));
-        logger.info(response.toString());
+    // @Test
+    // @JUnitPerfTest(threads = 1, durationMs=1000)
+    // @JUnitPerfTestRequirement(maxLatency=1000)
+    // public void testInsertVehicle() {
+    //     VehicleData vehicle = new VehicleData("PruebasSQL", "Toyota", "Corolla", true, true);
+    //     logger.info("Error");
+
+    //     Response response = target.path("server/addvehicle")
+    //         .request(MediaType.APPLICATION_JSON)
+    //         .post(Entity.entity(vehicle, MediaType.APPLICATION_JSON));
+    //     logger.info(response.toString());
         
-        logger.info("Error22");
+    //     logger.info("Error22");
 
-        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
-    }
+    //     assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+    // }
     
 //    @Test
 //    @JUnitPerfTest(threads = 10, durationMs=1000)

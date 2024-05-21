@@ -8,7 +8,6 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +15,10 @@ import org.apache.logging.log4j.Logger;
 
 import es.deusto.spq.pojo.CustomerAssembler;
 import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.RentingAssembler;
+import es.deusto.spq.pojo.Renting;
 import es.deusto.spq.server.jdo.CustomerJDO;
+import es.deusto.spq.server.jdo.RentingJDO;
 
 public class CustomerService {
     private static CustomerService instance;
@@ -138,12 +140,17 @@ public class CustomerService {
      * @param email The email of the customer to delete.
      * @return Response indicating success or failure of the operation.
      */
+    @SuppressWarnings("unchecked")
     public Response deleteCustomer(String email) {
         pm = pmf.getPersistenceManager();
         tx = pm.currentTransaction();
         try {
             CustomerJDO customer = pm.getObjectById(CustomerJDO.class, email);
+            
             if (customer != null) {
+                for(RentingJDO rent : (List<RentingJDO>) RentingAssembler.getInstance().RentingListToJDO((List<Renting>) RentingService.getInstance().getCustomerRents(customer.geteMail()).getEntity())){
+                    RentingService.getInstance().deleteRenting(rent.getVehicle().getNumberPlate(), rent.getCustomer().geteMail());
+                }
                 pm.deletePersistent(customer);
                 return Response.ok("Customer deleted successfully").build();
             } else {

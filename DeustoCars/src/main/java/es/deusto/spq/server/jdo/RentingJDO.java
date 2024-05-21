@@ -38,6 +38,13 @@ public class RentingJDO {
     }
 
     /**
+     * Default constructor required for serialization.
+     */
+    public RentingJDO() {
+        // Required for serialization
+    }
+
+    /**
      * Retrieves the pk id of the renting.
      *
      * @return The pk id associated with the renting.

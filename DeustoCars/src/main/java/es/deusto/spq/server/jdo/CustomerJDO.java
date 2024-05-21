@@ -1,13 +1,8 @@
 package es.deusto.spq.server.jdo;
 
 import java.util.Date;
-import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.PrimaryKey;
-import javax.jdo.annotations.Join;
-import javax.jdo.annotations.Persistent;
-import java.util.HashSet;
-
 /**
  * Represents customer data.
  */
@@ -18,6 +13,7 @@ public class CustomerJDO {
     private String name;
     private String surname;
     private Date dateOfBirth;
+
 
     /**
      * Default constructor required for serialization.
