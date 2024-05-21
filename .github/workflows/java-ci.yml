@@ -3,8 +3,6 @@ name: Java CI
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
       
 jobs:
   test:
@@ -28,7 +26,6 @@ jobs:
         sudo /etc/init.d/mysql start
         cd DeustoCars
         mysql -uroot -proot < sql/create-deustoCars.sql
-        mysql -uroot -proot < sql/populate.sql
         mvn --batch-mode --update-snapshots datanucleus:enhance datanucleus:schema-create
         mysql -uroot -proot < sql/populate.sql
         
@@ -37,7 +34,7 @@ jobs:
       run: |
         cd DeustoCars
         mvn --batch-mode jetty:run &
-        sleep 10
+        sleep 20
     
     - name: Run tests
       run: |
@@ -52,7 +49,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # Ensure this line is correctly added
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install doxygen
         run: sudo apt-get install -y doxygen
 
