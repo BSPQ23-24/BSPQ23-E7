@@ -7,7 +7,7 @@ import javax.jdo.annotations.Persistent;
 /**
  * Represents a vehicle.
  */
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class VehicleJDO {
     @PrimaryKey
     String numberPlate;

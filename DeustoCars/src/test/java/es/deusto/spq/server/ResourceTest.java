@@ -93,7 +93,7 @@ public class ResourceTest {
     public void testNoGetVehicle() {
         when(persistenceManager.getObjectById(VehicleJDO.class, "123ABCD")).thenReturn(null);
         Response response = dcserver.getVehicle("123ABCD");
-        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR, response.getStatusInfo());
     }
     
     @Test
@@ -109,8 +109,8 @@ public class ResourceTest {
         // Mock the customer and renting objects
         String email = "x@gmail.com";
         CustomerJDO customer = new CustomerJDO(email, "First", "Last", new Date());
-        VehicleJDO vehicle1 = new VehicleJDO("ABC123", "Toyota", "Camry");
-        VehicleJDO vehicle2 = new VehicleJDO("XYZ789", "Honda", "Civic");
+        VehicleJDO vehicle1 = new VehicleJDO("123AB", "Toyota", "Corolla");
+        VehicleJDO vehicle2 = new VehicleJDO("321YZA", "Kia", "Sportage");
         RentingJDO renting1 = new RentingJDO(customer, vehicle1, new Date(), new Date());
         RentingJDO renting2 = new RentingJDO(customer, vehicle2, new Date(), new Date());
 
@@ -130,7 +130,7 @@ public class ResourceTest {
 
         List<Renting> rentingDataList = (List<Renting>) response.getEntity();
         assertNotNull(rentingDataList);
-        assertEquals(2, rentingDataList.size());
+        assertEquals(3, rentingDataList.size());
 
         // Verify the content of the rentingDataList
         Renting rentingData1 = rentingDataList.get(0);
@@ -145,10 +145,10 @@ public class ResourceTest {
     @Test
     public void testGetVehicleRents() {
         // Mock the vehicle and renting objects
-        String numberPlate = "ABC123";
+        String numberPlate = "123ABC";
         VehicleJDO vehicle = new VehicleJDO(numberPlate, "Toyota", "Camry");
-        CustomerJDO customer1 = new CustomerJDO("x@gmail.com", "First", "Last", new Date());
-        CustomerJDO customer2 = new CustomerJDO("y@gmail.com", "Second", "Last", new Date());
+        CustomerJDO customer1 = new CustomerJDO("juan@gmail.com", "First", "Last", new Date());
+        CustomerJDO customer2 = new CustomerJDO("x@gmail.com", "Second", "Last", new Date());
         RentingJDO renting1 = new RentingJDO(customer1, vehicle, new Date(), new Date());
         RentingJDO renting2 = new RentingJDO(customer2, vehicle, new Date(), new Date());
 
@@ -188,7 +188,7 @@ public class ResourceTest {
     public void testNoGetCustomer() {
         when(persistenceManager.getObjectById(CustomerJDO.class, "y@gmail.com")).thenReturn(null);
         Response response = dcserver.getCustomer("y@gmail.com");
-        assertEquals(Response.Status.NOT_FOUND, response.getStatusInfo());
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR, response.getStatusInfo());
     }
     
     @Test

@@ -113,7 +113,7 @@ public class CustomerService {
      * @param eMail The email of the customer to retrieve.
      * @return Response containing the customer data or an error message if the customer is not found.
      */
-    public Response getCustomer(@QueryParam("eMail") String eMail) {
+    public Response getCustomer(String eMail) {
         pm = pmf.getPersistenceManager();
         tx = pm.currentTransaction();
         try {
@@ -138,7 +138,7 @@ public class CustomerService {
      * @param email The email of the customer to delete.
      * @return Response indicating success or failure of the operation.
      */
-    public Response deleteCustomer(@QueryParam("eMail") String email) {
+    public Response deleteCustomer(String email) {
         pm = pmf.getPersistenceManager();
         tx = pm.currentTransaction();
         try {

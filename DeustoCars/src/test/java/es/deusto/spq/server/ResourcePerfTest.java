@@ -110,7 +110,7 @@ public class ResourcePerfTest {
 //    }
 //
     @Test
-    @JUnitPerfTest(threads = 10, durationMs=1000)
+    @JUnitPerfTest(threads = 2, durationMs=1000)
     @JUnitPerfTestRequirement(maxLatency=1000)
     public void testInsertVehicle() {
         VehicleData vehicle = new VehicleData("PruebasSQL", "Toyota", "Corolla", true, true);

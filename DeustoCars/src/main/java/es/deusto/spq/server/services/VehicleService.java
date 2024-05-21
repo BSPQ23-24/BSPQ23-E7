@@ -115,7 +115,7 @@ public class VehicleService {
      * @param numberPlate The number plate of the vehicle to retrieve.
      * @return Response containing the vehicle data or an error message if the vehicle is not found.
      */
-    public Response getVehicle(@QueryParam("numberPlate") String numberPlate) {
+    public Response getVehicle(String numberPlate) {
         pm = pmf.getPersistenceManager();
         tx = pm.currentTransaction();
         try {
@@ -140,7 +140,7 @@ public class VehicleService {
      * @param email The email of the vehicle to delete.
      * @return Response indicating success or failure of the operation.
      */
-    public Response deleteVehicle(@QueryParam("numberPlate") String numberPlate) {
+    public Response deleteVehicle(String numberPlate) {
         pm = pmf.getPersistenceManager();
         tx = pm.currentTransaction();
         try {
@@ -155,6 +155,7 @@ public class VehicleService {
             logger.info("Vehicle not found: {}", numberPlate);
             return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
         } catch (Exception e) {
+            logger.info(e);
             logger.info("Error occurred while deleting vehicle");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while deleting vehicle.").build();
         } finally {

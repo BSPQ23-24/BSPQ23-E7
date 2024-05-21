@@ -11,7 +11,7 @@ import java.util.HashSet;
 /**
  * Represents customer data.
  */
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class CustomerJDO {
     @PrimaryKey
     private String eMail;

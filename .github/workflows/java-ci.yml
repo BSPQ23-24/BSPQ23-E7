@@ -16,26 +16,26 @@ jobs:
 
     - name: Clean and compile
       run: |
-        cd Deustocars
+        cd DeustoCars
         mvn --batch-mode clean compile
     
     - name: Set up database
       run: |
         sudo /etc/init.d/mysql start
-        cd Deustocars
+        cd DeustoCars
         mysql -uroot -proot < sql/create-deustoCars.sql
-        mysql -uroot -proot < sql/populate.sql
         mvn --batch-mode --update-snapshots datanucleus:enhance datanucleus:schema-create
+        mysql -uroot -proot < sql/populate.sql
         
    
     - name: Run server
       run: |
-        cd Deustocars
+        cd DeustoCars
         mvn --batch-mode jetty:run &
         sleep 25
     
     - name: Run tests
       run: |
-        cd Deustocars
+        cd DeustoCars
         mvn test
 
