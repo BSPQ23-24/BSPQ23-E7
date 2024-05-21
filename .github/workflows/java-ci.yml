@@ -27,7 +27,7 @@ jobs:
           sudo /etc/init.d/mysql start
           cd Deustocars
           mysql -uroot -proot < sql/create-deustoCars.sql
-          mysql -uroot -proot < sql/.sql
+          mysql -uroot -proot < sql/populate.sql
           mvn --batch-mode --update-snapshots datanucleus:enhance datanucleus:schema-create        
 
       - name: Start the server
