@@ -23,7 +23,7 @@ jobs:
       run: |
         sudo /etc/init.d/mysql start
         cd Deustocars
-        mysql -uroot -proot < sql/create-db.sql
+        mysql -uroot -proot < sql/create-deustoCars.sql
         mvn --batch-mode --update-snapshots datanucleus:enhance datanucleus:schema-create
         
    
