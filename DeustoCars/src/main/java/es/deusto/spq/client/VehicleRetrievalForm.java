@@ -1,7 +1,6 @@
 package es.deusto.spq.client;
 
 import javax.swing.*;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -10,8 +9,6 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import es.deusto.spq.client.ServiceLocator;
 
 import java.awt.*;
 import java.util.ResourceBundle;

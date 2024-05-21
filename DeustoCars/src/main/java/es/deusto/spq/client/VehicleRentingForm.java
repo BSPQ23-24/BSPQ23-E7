@@ -1,8 +1,6 @@
 package es.deusto.spq.client;
 
 import javax.swing.*;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
@@ -13,7 +11,6 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import es.deusto.spq.client.ServiceLocator;
 import es.deusto.spq.client.controller.CustomerController;
 import es.deusto.spq.client.controller.VehicleController;
 import es.deusto.spq.pojo.Renting;
@@ -37,8 +34,6 @@ public class VehicleRentingForm extends JFrame {
     private JTextField startDateField;
     private JTextField endDateField;
     private JButton submitButton;
-    private Client client;
-	private WebTarget webTarget;
 
     /**
      * Constructs a new VehicleRentingForm window.

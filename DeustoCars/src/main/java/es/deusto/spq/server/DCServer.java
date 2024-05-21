@@ -5,20 +5,9 @@
 
 package es.deusto.spq.server;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
-import javax.jdo.JDOHelper;
-import javax.jdo.JDOObjectNotFoundException;
-import javax.jdo.Transaction;
-
-import es.deusto.spq.server.jdo.VehicleJDO;
 import es.deusto.spq.server.services.CustomerService;
 import es.deusto.spq.server.services.RentingService;
 import es.deusto.spq.server.services.VehicleService;
-import es.deusto.spq.server.jdo.CustomerJDO;
-import es.deusto.spq.server.jdo.RentingJDO;
-import es.deusto.spq.server.jdo.User;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -29,16 +18,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import es.deusto.spq.pojo.CustomerAssembler;
 import es.deusto.spq.pojo.CustomerData;
-import es.deusto.spq.pojo.VehicleAssembler;
 import es.deusto.spq.pojo.VehicleData;
 import es.deusto.spq.pojo.Renting;
-import es.deusto.spq.pojo.RentingAssembler;
 
 /**
  * @class DCServer

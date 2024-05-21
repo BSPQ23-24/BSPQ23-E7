@@ -8,10 +8,6 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
@@ -94,6 +90,7 @@ public class VehicleService {
      * Retrieves all vehicles from the database.
      * @return Response containing the list of vehicles or an error message if no vehicles are found.
      */
+    @SuppressWarnings("unchecked")
     public Response getVehicles() {
         pm = pmf.getPersistenceManager();
         tx = pm.currentTransaction();

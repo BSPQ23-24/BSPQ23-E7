@@ -3,8 +3,6 @@
  */
 package es.deusto.spq.client;
 
-import es.deusto.spq.client.MainClient;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

@@ -24,7 +24,6 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import es.deusto.spq.client.controller.RentingController;
 import es.deusto.spq.client.controller.VehicleController;
-import es.deusto.spq.pojo.CustomerData;
 import es.deusto.spq.pojo.VehicleData;
 import es.deusto.spq.pojo.Renting;
 
