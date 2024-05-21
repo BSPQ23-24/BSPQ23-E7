@@ -1,4 +1,4 @@
-USE deustoCarsDB;
+USE deustocarsdb;
 
 -- Insert customer data
 INSERT INTO customerjdo (email, name, surname, dateOfBirth) 
