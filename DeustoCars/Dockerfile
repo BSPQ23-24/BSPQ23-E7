@@ -1,20 +1,14 @@
-FROM maven:3.8.1-openjdk-11
+# Use the official Maven image as the base image
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs
+# Set the working directory
+WORKDIR /DeustoCars
 
-WORKDIR /app
+# Copy the project files to the working directory
+COPY . /DeustoCars
 
-COPY pom.xml .
-COPY src ./src
+# Execute the Maven build to compile and enhance the project
+RUN mvn compile datanucleus:enhance
 
-RUN mvn clean compile
-
-RUN service mysql start && \
-    mysql -u root -p"$MYSQL_ROOT_PASSWORD" < sql/create-deustoCars.sql && \
-    mvn datanucleus:schema-create && \
-    mysql -u root -p"$MYSQL_ROOT_PASSWORD" < sql/populate.sql
-
+# Specify the command to run Jetty using Maven
 CMD ["mvn", "jetty:run"]
