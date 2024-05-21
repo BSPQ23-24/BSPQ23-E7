@@ -5,11 +5,11 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -18,12 +18,12 @@ jobs:
 
       - name: Clean and compile the project
         run: |
-          cd DeustoCars
+          cd Deustocars
           mvn clean compile
 
       - name: Start the database
         run: | 
-          cd sql
+          cd Deustocars/sql
           mysql -u root -p < create-deustoCars.sql
           cd ..
           mvn datanucleus:schema-create
@@ -32,7 +32,6 @@ jobs:
 
       - name: Start the server
         run: |
-          cd ..
           mvn jetty:run &
           sleep 10
 
@@ -44,3 +43,8 @@ jobs:
           mvn compile exec:java -Pserver
           mvn doxygen:report
           mvn validate
+
+      - name: Build Jekyll site
+        uses: actions/jekyll-build-pages@v1.0.12
+        with:
+          source: ./your-correct-source-directory
