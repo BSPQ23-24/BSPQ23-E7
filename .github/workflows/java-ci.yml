@@ -23,7 +23,7 @@ jobs:
 
       - name: Start the database
         run: | 
-          cd DeustoCars/sql
+          cd sql
           mysql -u root -p < create-deustoCars.sql
           cd ..
           mvn datanucleus:schema-create
@@ -32,6 +32,7 @@ jobs:
 
       - name: Start the server
         run: |
+          cd ..
           mvn jetty:run &
           sleep 10
 
