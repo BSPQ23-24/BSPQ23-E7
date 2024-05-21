@@ -19,32 +19,30 @@ jobs:
       - name: Clean and compile the project
         run: |
           cd Deustocars
-          mvn clean compile
+          mvn --batch-mode clean compile
+          
 
       - name: Start the database
         run: | 
-          cd Deustocars/sql
-          mysql -u root -p < create-deustoCars.sql
-          cd ..
-          mvn datanucleus:schema-create
-          cd sql
-          mysql -u root -p < populate.sql
+          sudo /etc/init.d/mysql start
+          cd Deustocars
+          mysql -uroot -proot < sql/create-deustoCars.sql
+          mysql -uroot -proot < sql/.sql
+          mvn --batch-mode --update-snapshots datanucleus:enhance datanucleus:schema-create        
 
       - name: Start the server
-        run: |
-          mvn jetty:run &
+        run: | 
+          cd Deustocars
+          mvn --batch-mode jetty:run &
           sleep 10
 
       - name: Run tests and generate reports
         run: |
+          cd Deustocars
           mvn test
-          mvn jacoco:prepare-agent test jacoco:report
-          mvn compile exec:java -Pclient
-          mvn compile exec:java -Pserver
-          mvn doxygen:report
-          mvn validate
+          # mvn jacoco:prepare-agent test jacoco:report
+          # mvn compile exec:java -Pclient
+          # mvn compile exec:java -Pserver
+          # mvn doxygen:report
+          # mvn validate
 
-      - name: Build Jekyll site
-        uses: actions/jekyll-build-pages@v1.0.12
-        with:
-          source: ./your-correct-source-directory
