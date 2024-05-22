@@ -64,7 +64,7 @@ public class RentingService {
                 logger.info("Retrieved vehicle for Renting: {}", vehicle);
                 if (!vehicle.isReadyToBorrow()) {
                     logger.info("Retrieved vehicle is not Ready to borrow: {}", vehicle);
-                    return Response.status(Response.Status.BAD_REQUEST).entity("Vehicle with that number plate is not ready to borrow.").build();
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Vehicle with that number plate is not ready to borrow.").build();
                 }
             }
             CustomerJDO customer = null;
@@ -94,7 +94,7 @@ public class RentingService {
                 tx.rollback(); // Rollback the transaction in case of an exception
             }
             e.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occurred while adding a renting.").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error occurred while adding a renting.").build();
         } finally {
             logger.info("Closing");
             pm.close(); // Close the PersistenceManager
@@ -241,7 +241,7 @@ public class RentingService {
                 customer = pm.getObjectById(CustomerJDO.class, eMail);
             } catch (Exception e) {
                 logger.info("Customer not found");
-                return Response.status(Response.Status.BAD_REQUEST).entity("Customer with that eMail does not exist.").build();
+                return Response.status(Response.Status.NOT_FOUND).entity("Customer with that eMail does not exist.").build();
             }
             logger.info("Customer: {}", customer);
             if (customer == null) {
@@ -250,7 +250,7 @@ public class RentingService {
         	Query query = pm.newQuery(RentingJDO.class, "customer == :customer");
             List<RentingJDO> rentingList = (List<RentingJDO>) query.execute(customer);
             if (rentingList.isEmpty()) {
-                return Response.status(Response.Status.NOT_FOUND).entity("No renting found for this customer").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("No renting found for this customer").build();
             } else {
             	return Response.ok(RentingAssembler.getInstance().RentingJDOListToData(rentingList)).build();
             }
