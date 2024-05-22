@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DCServerManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.server</a> &gt; <span class="el_source">DCServerManager.java</span></div><h1>DCServerManager.java</h1><pre class="source lang-java linenums">package es.deusto.spq.server;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
+/**
+ * Represents a manager for interacting with the DeustoCars server.
+ */
+public class DCServerManager implements ActionListener, Runnable {
+
+<span class="nc" id="L32">    protected static final Logger logger = LogManager.getLogger();</span>
+    
+    private JFrame frame;
+    private JButton buttonEnd;
+    private JLabel customerLabel;
+    private JTextField customerText;
+    private JLabel vehicleLabel;
+    private JTextField vehicleText;
+    private JLabel message;
+
+    private Client client;
+    private WebTarget webTarget;
+
+    private Thread thread;
+<span class="nc" id="L46">    private final AtomicBoolean running = new AtomicBoolean(false);</span>
+
+    /**
+     * Constructs a new DCServerManager with the given hostname and port.
+     * 
+     * @param hostname The hostname of the server.
+     * @param port     The port of the server.
+     */
+<span class="nc" id="L54">    public DCServerManager(String hostname, String port) {</span>
+<span class="nc" id="L55">        client = ClientBuilder.newClient();</span>
+<span class="nc" id="L56">        webTarget = client.target(String.format(&quot;http://%s:%s/deustocars&quot;, hostname, port));</span>
+
+<span class="nc" id="L58">        this.buttonEnd = new JButton(&quot;End DCServer Process&quot;);</span>
+<span class="nc" id="L59">        this.buttonEnd.addActionListener(this);</span>
+<span class="nc" id="L60">        this.message = new JLabel(&quot;REST DeustoCars Manager running...&quot;);</span>
+<span class="nc" id="L61">        this.message.setOpaque(true);</span>
+<span class="nc" id="L62">        this.message.setForeground(Color.yellow);</span>
+<span class="nc" id="L63">        this.message.setBackground(Color.gray);</span>
+
+<span class="nc" id="L65">        JPanel panelSuperior = new JPanel();</span>
+<span class="nc" id="L66">        this.customerLabel = new JLabel(&quot;Customers:&quot;);</span>
+<span class="nc" id="L67">        this.vehicleLabel = new JLabel(&quot;Vehicles:&quot;);</span>
+<span class="nc" id="L68">        panelSuperior.add(this.customerLabel);</span>
+<span class="nc" id="L69">        panelSuperior.add(this.vehicleLabel);</span>
+<span class="nc" id="L70">        this.customerText = new JTextField(&quot;...&quot;);</span>
+<span class="nc" id="L71">        this.vehicleText = new JTextField(&quot;...&quot;);</span>
+<span class="nc" id="L72">        this.customerText.setPreferredSize(new Dimension(200, 24));</span>
+<span class="nc" id="L73">        this.vehicleText.setPreferredSize(new Dimension(200, 24));</span>
+<span class="nc" id="L74">        panelSuperior.add(this.customerText);</span>
+<span class="nc" id="L75">        panelSuperior.add(this.vehicleText);</span>
+
+<span class="nc" id="L77">        JPanel panelBoton = new JPanel();</span>
+<span class="nc" id="L78">        panelBoton.add(this.buttonEnd);</span>
+
+<span class="nc" id="L80">        this.frame = new JFrame(&quot;DeustoCars: Server Manager&quot;);</span>
+<span class="nc" id="L81">        this.frame.setSize(1000, 500);</span>
+<span class="nc" id="L82">        this.frame.setResizable(false);</span>
+<span class="nc" id="L83">        this.frame.getContentPane().add(panelSuperior, &quot;North&quot;);</span>
+<span class="nc" id="L84">        this.frame.getContentPane().add(panelBoton);</span>
+<span class="nc" id="L85">        this.frame.getContentPane().add(this.message, &quot;South&quot;);</span>
+<span class="nc" id="L86">        this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L87">        this.frame.setVisible(true);</span>
+
+<span class="nc" id="L89">        thread = new Thread(this);</span>
+<span class="nc" id="L90">        thread.start();</span>
+<span class="nc" id="L91">    }</span>
+
+    /**
+     * Main method to start the DCServerManager.
+     * 
+     * @param args Command line arguments.
+     */
+    public static void main(String[] args) {
+<span class="nc" id="L99">        String hostname = args[0];</span>
+<span class="nc" id="L100">        String port = args[1];</span>
+
+<span class="nc" id="L102">        new DCServerManager(hostname, port);</span>
+<span class="nc" id="L103">    }</span>
+
+    
+    /**
+     * Retrieves a string representation of the customers from the server.
+     * 
+     * @return A string representation of the customers.
+     */
+    public String getCustomersString() {
+<span class="nc" id="L112">        WebTarget DeustoCarsWebTarget = webTarget.path(&quot;server/getcustomers&quot;);</span>
+<span class="nc" id="L113">        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L114">        Response response = invocationBuilder.get();</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (response.getStatus() != Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L116">            logger.error(&quot;Error connecting with the server. Code: {}&quot;, response.getStatus());</span>
+<span class="nc" id="L117">            return &quot;Error&quot;;</span>
+        } else {
+<span class="nc" id="L119">            String responseMessage = response.readEntity(String.class);</span>
+<span class="nc" id="L120">            logger.info(&quot;* Customers coming from the server: '{}'&quot;, responseMessage);</span>
+<span class="nc" id="L121">            return responseMessage;</span>
+        }
+    }
+
+    /**
+     * Deletes a vehicle from the server.
+     * 
+     * @param numberPlate The number plate of the vehicle to delete.
+     * @return True if the vehicle was deleted successfully, false otherwise.
+     */
+
+
+    /**
+     * Retrieves a string representation of the vehicles from the server.
+     * 
+     * @return A string representation of the vehicles.
+     */
+    public String getVehiclesString() {
+<span class="nc" id="L139">        WebTarget DeustoCarsWebTarget = webTarget.path(&quot;server/getvehicles&quot;);</span>
+<span class="nc" id="L140">        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L141">        Response response = invocationBuilder.get();</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (response.getStatus() != Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L143">            logger.error(&quot;Error connecting with the server. Code: {}&quot;, response.getStatus());</span>
+<span class="nc" id="L144">            return &quot;Error&quot;;</span>
+        } else {
+<span class="nc" id="L146">            String responseMessage = response.readEntity(String.class);</span>
+<span class="nc" id="L147">            logger.info(&quot;* Vehicles coming from the server: '{}'&quot;, responseMessage);</span>
+<span class="nc" id="L148">            return responseMessage;</span>
+        }
+    }
+
+    @Override
+    public void run() {
+<span class="nc" id="L154">        running.set(true);</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        while (running.get()) {</span>
+            try {
+<span class="nc" id="L157">                Thread.sleep(2000);</span>
+<span class="nc" id="L158">                logger.info(&quot;Obtaining data from server...&quot;);</span>
+<span class="nc" id="L159">                this.customerText.setText(getCustomersString());</span>
+<span class="nc" id="L160">                this.vehicleText.setText(getVehiclesString());</span>
+<span class="nc" id="L161">            } catch (InterruptedException e) {</span>
+<span class="nc" id="L162">                Thread.currentThread().interrupt();</span>
+<span class="nc" id="L163">                logger.info(&quot;Thread was interrupted, Failed to complete operation&quot;);</span>
+<span class="nc" id="L164">            }</span>
+        }
+<span class="nc" id="L166">    }</span>
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L170">        JButton target = (JButton) e.getSource();</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if (target == this.buttonEnd) {</span>
+<span class="nc" id="L172">            this.stop();</span>
+<span class="nc" id="L173">            System.exit(0);</span>
+        }
+<span class="nc" id="L175">    }</span>
+
+    /**
+     * Stops the DCServerManager.
+     */
+    public void stop() {
+<span class="nc" id="L181">        this.running.set(false);</span>
+<span class="nc" id="L182">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

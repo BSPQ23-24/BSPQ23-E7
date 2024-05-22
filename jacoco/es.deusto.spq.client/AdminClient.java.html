@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.client</a> &gt; <span class="el_source">AdminClient.java</span></div><h1>AdminClient.java</h1><pre class="source lang-java linenums">package es.deusto.spq.client;
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+
+import java.util.List;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
+import es.deusto.spq.client.controller.RentingController;
+import es.deusto.spq.client.controller.VehicleController;
+import es.deusto.spq.pojo.VehicleData;
+import es.deusto.spq.pojo.Renting;
+
+import org.jfree.chart.plot.PlotOrientation;
+
+public class AdminClient extends JFrame {
+	private static final long serialVersionUID = 1L;
+	
+	private JTabbedPane tabbedPane;
+    private ChartPanel pieChartPanel, barChartPanel, lineChartPanel;
+    private DefaultPieDataset&lt;String&gt; pieDataset;
+    private DefaultCategoryDataset barDataset;
+    private XYSeriesCollection lineDataset;
+
+
+<span class="nc" id="L42">    public AdminClient() {</span>
+<span class="nc" id="L43">        ImageIcon img = new ImageIcon(&quot;src/resources/analystIcon.png&quot;);</span>
+<span class="nc" id="L44">        setIconImage(img.getImage());</span>
+<span class="nc" id="L45">        setTitle(&quot;Admin Dashboard&quot;);</span>
+<span class="nc" id="L46">        setSize(800, 600);</span>
+<span class="nc" id="L47">        setLocationRelativeTo(null);</span>
+<span class="nc" id="L48">        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L49">        initUI();</span>
+<span class="nc" id="L50">    }</span>
+
+    private void initUI() {
+<span class="nc" id="L53">        tabbedPane = new JTabbedPane();</span>
+        
+<span class="nc" id="L55">        initializeDatasets();</span>
+        
+        // Panels for different charts
+<span class="nc" id="L58">        pieChartPanel = createPieChartPanel();</span>
+<span class="nc" id="L59">        barChartPanel = createBarChartPanel();</span>
+<span class="nc" id="L60">        lineChartPanel = createLineChartPanel();</span>
+
+        // Adding to tabbed pane
+<span class="nc" id="L63">        tabbedPane.add(&quot;Pie Chart&quot;, pieChartPanel);</span>
+<span class="nc" id="L64">        tabbedPane.add(&quot;Bar Chart&quot;, barChartPanel);</span>
+<span class="nc" id="L65">        tabbedPane.add(&quot;Line Chart&quot;, lineChartPanel);</span>
+
+<span class="nc" id="L67">        getContentPane().add(tabbedPane, BorderLayout.CENTER);</span>
+
+        // Refresh button
+<span class="nc" id="L70">        JButton refreshButton = new JButton(&quot;Refresh&quot;);</span>
+<span class="nc" id="L71">        refreshButton.addActionListener(this::refreshAction);</span>
+<span class="nc" id="L72">        getContentPane().add(refreshButton, BorderLayout.SOUTH);</span>
+<span class="nc" id="L73">    }</span>
+
+    private void refreshAction(ActionEvent event) {
+<span class="nc" id="L76">        updateCharts();</span>
+<span class="nc" id="L77">    }</span>
+    
+    private void initializeDatasets() {
+<span class="nc" id="L80">        pieDataset = new DefaultPieDataset&lt;String&gt;();</span>
+<span class="nc" id="L81">        pieDataset.setValue(&quot;Initial Category&quot;, 0);</span>
+
+<span class="nc" id="L83">        barDataset = new DefaultCategoryDataset();</span>
+<span class="nc" id="L84">        barDataset.setValue(0, &quot;Initial Row&quot;, &quot;Initial Column&quot;);</span>
+
+<span class="nc" id="L86">        lineDataset = new XYSeriesCollection();</span>
+<span class="nc" id="L87">        XYSeries series = new XYSeries(&quot;Series 1&quot;);</span>
+<span class="nc" id="L88">        series.add(0, 0);  // Start with an initial point</span>
+<span class="nc" id="L89">        lineDataset.addSeries(series);</span>
+<span class="nc" id="L90">    }</span>
+
+
+    private void updateCharts() {
+<span class="nc" id="L94">        updatePieChart();</span>
+<span class="nc" id="L95">        updateBarChart();</span>
+<span class="nc" id="L96">        updateLineChart();</span>
+<span class="nc" id="L97">    }</span>
+
+    private ChartPanel createPieChartPanel() {
+<span class="nc" id="L100">        DefaultPieDataset&lt;String&gt; dataset = new DefaultPieDataset&lt;String&gt;();</span>
+<span class="nc" id="L101">        updateDatasetFromServer(dataset);</span>
+<span class="nc" id="L102">        JFreeChart chart = ChartFactory.createPieChart(&quot;Vehicles by Brand Distribution&quot;, dataset, true, true, false);</span>
+<span class="nc" id="L103">        return new ChartPanel(chart);</span>
+    }
+
+    private ChartPanel createBarChartPanel() {
+<span class="nc" id="L107">        DefaultCategoryDataset dataset = new DefaultCategoryDataset();</span>
+<span class="nc" id="L108">        updateDatasetFromServer(dataset);</span>
+<span class="nc" id="L109">        JFreeChart chart = ChartFactory.createBarChart(</span>
+                &quot;Vehicle Allocation Status&quot;, 
+                &quot;Category&quot;, 
+                &quot;Value&quot;, 
+                dataset, 
+                PlotOrientation.VERTICAL, 
+                true, true, false);
+<span class="nc" id="L116">        return new ChartPanel(chart);</span>
+    }
+
+    private ChartPanel createLineChartPanel() {
+<span class="nc" id="L120">        XYSeriesCollection dataset = new XYSeriesCollection();</span>
+<span class="nc" id="L121">        updateDatasetFromServer(dataset);</span>
+<span class="nc" id="L122">        JFreeChart chart = ChartFactory.createXYLineChart(</span>
+                &quot;Vehicles Rented per Year Distribution&quot;,
+                &quot;Year&quot;,
+                &quot;Number of Rents&quot;,
+                dataset,
+                PlotOrientation.VERTICAL, 
+                true, true, false);
+<span class="nc" id="L129">        return new ChartPanel(chart);</span>
+    }
+
+    private void updatePieChart() {
+<span class="nc" id="L133">        updateDatasetFromServer(pieDataset);</span>
+<span class="nc" id="L134">        tabbedPane.remove(pieChartPanel);</span>
+<span class="nc" id="L135">        pieChartPanel = createPieChartPanel();</span>
+<span class="nc" id="L136">        tabbedPane.add(&quot;Pie Chart&quot;, pieChartPanel);</span>
+        
+<span class="nc" id="L138">    }</span>
+
+    private void updateBarChart() {
+<span class="nc" id="L141">        updateDatasetFromServer(barDataset);</span>
+<span class="nc" id="L142">        tabbedPane.remove(barChartPanel);</span>
+<span class="nc" id="L143">        barChartPanel = createBarChartPanel();</span>
+<span class="nc" id="L144">        tabbedPane.add(&quot;Bar Chart&quot;, barChartPanel);</span>
+<span class="nc" id="L145">    }</span>
+
+    private void updateLineChart() {
+<span class="nc" id="L148">        updateDatasetFromServer(lineDataset);</span>
+<span class="nc" id="L149">        tabbedPane.remove(lineChartPanel);</span>
+<span class="nc" id="L150">        lineChartPanel = createLineChartPanel();</span>
+<span class="nc" id="L151">        tabbedPane.add(&quot;Line Chart&quot;, lineChartPanel);</span>
+<span class="nc" id="L152">    }</span>
+
+    private void updateDatasetFromServer(DefaultPieDataset&lt;String&gt; dataset) {
+<span class="nc" id="L155">        List&lt;VehicleData&gt; vehicles = VehicleController.getVehicles();</span>
+<span class="nc" id="L156">        Map&lt;String, Integer&gt; brandCount = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        for (VehicleData vehicle : vehicles) {</span>
+<span class="nc" id="L158">            brandCount.merge(vehicle.getBrand(), 1, Integer::sum);</span>
+<span class="nc" id="L159">        }</span>
+<span class="nc" id="L160">        brandCount.forEach(dataset::setValue);</span>
+<span class="nc" id="L161">    }</span>
+
+
+    private void updateDatasetFromServer(DefaultCategoryDataset dataset) {
+<span class="nc" id="L165">        List&lt;VehicleData&gt; vehicles =  VehicleController.getVehicles();</span>
+<span class="nc" id="L166">        int readyToBorrow = 0, onRepair = 0;</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        for (VehicleData vehicle : vehicles) {</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">            if (vehicle.isReadyToBorrow()) readyToBorrow++;</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">            if (vehicle.isOnRepair()) onRepair++;</span>
+<span class="nc" id="L170">        }</span>
+<span class="nc" id="L171">        dataset.setValue(readyToBorrow, &quot;Status&quot;, &quot;Ready to Borrow&quot;);</span>
+<span class="nc" id="L172">        dataset.setValue(onRepair, &quot;Status&quot;, &quot;On Repair&quot;);</span>
+<span class="nc" id="L173">    }</span>
+
+    private void updateDatasetFromServer(XYSeriesCollection dataset) {
+<span class="nc" id="L176">        dataset.removeAllSeries();</span>
+<span class="nc" id="L177">        List&lt;VehicleData&gt; vehicles = VehicleController.getVehicles();</span>
+<span class="nc" id="L178">        List&lt;Renting&gt; rentings = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">        for (VehicleData vehicle : vehicles) {</span>
+<span class="nc" id="L180">            rentings.addAll(RentingController.getVehicleRents(vehicle.getNumberPlate()));</span>
+<span class="nc" id="L181">        }</span>
+<span class="nc" id="L182">        Map&lt;Integer, Integer&gt; rentsPerYear = new TreeMap&lt;&gt;();</span>
+<span class="nc" id="L183">        SimpleDateFormat yearFormat = new SimpleDateFormat(&quot;yyyy&quot;);</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        for (Renting rent : rentings) {</span>
+<span class="nc" id="L185">            int year = Integer.parseInt(yearFormat.format(rent.getStartDate()));</span>
+<span class="nc" id="L186">            rentsPerYear.merge(year, 1, Integer::sum);</span>
+<span class="nc" id="L187">        }</span>
+
+<span class="nc" id="L189">        XYSeries series = new XYSeries(&quot;Vehicles rented&quot;);</span>
+<span class="nc" id="L190">        rentsPerYear.forEach(series::add);</span>
+<span class="nc" id="L191">        dataset.addSeries(series);</span>
+<span class="nc" id="L192">    }</span>
+
+
+
+    public static void main(String[] args) {
+<span class="nc" id="L197">        javax.swing.SwingUtilities.invokeLater(() -&gt; {</span>
+<span class="nc" id="L198">            AdminClient ex = new AdminClient();</span>
+<span class="nc" id="L199">            ex.setVisible(true);</span>
+<span class="nc" id="L200">        });</span>
+<span class="nc" id="L201">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerRegister.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.client</a> &gt; <span class="el_source">CustomerRegister.java</span></div><h1>CustomerRegister.java</h1><pre class="source lang-java linenums">package es.deusto.spq.client;
+
+import javax.swing.*;
+
+import java.awt.*;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+import es.deusto.spq.client.controller.CustomerController;
+import es.deusto.spq.pojo.CustomerData;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import java.util.ResourceBundle;
+
+/**
+ * Class for customer registration and modification using a graphical user interface.
+ */
+public class CustomerRegister extends JFrame {
+<span class="nc" id="L26">    protected static final Logger logger = LogManager.getLogger();</span>
+
+    private static final long serialVersionUID = 1L;
+    private JTextField nameField;
+    private JTextField surnameField;
+    private JTextField birthDateField;
+    private JTextField emailField;
+    private JButton submitButton;
+
+    private static final String SYSTEM_MESSAGES = &quot;SystemMessages&quot;;
+    private ResourceBundle resourceBundle;
+    
+
+    /**
+     * Constructs a new CustomerRegister window for user registration.
+     */
+<span class="nc" id="L42">    public CustomerRegister() {</span>
+<span class="nc" id="L43">        resourceBundle = MainClient.getResourceBundle();</span>
+<span class="nc" id="L44">        resourceBundle = MainClient.getResourceBundle();</span>
+
+<span class="nc" id="L46">        submitButton = new JButton(resourceBundle.getString(&quot;register_user_label&quot;));</span>
+<span class="nc" id="L47">        submitButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L48">            SwingWorker&lt;Void, Void&gt; worker = new SwingWorker&lt;Void, Void&gt;() {</span>
+                @Override
+                protected Void doInBackground() throws Exception {
+<span class="nc" id="L51">                    registerUser();</span>
+<span class="nc" id="L52">                    return null;</span>
+                }
+            };
+<span class="nc" id="L55">            worker.execute();</span>
+<span class="nc" id="L56">        });</span>
+<span class="nc" id="L57">        setupUI(resourceBundle.getString(&quot;register_user_label&quot;));</span>
+
+<span class="nc" id="L59">        nameField = new JTextField();</span>
+<span class="nc" id="L60">        surnameField = new JTextField();</span>
+<span class="nc" id="L61">        birthDateField = new JTextField();</span>
+<span class="nc" id="L62">        emailField = new JTextField();</span>
+
+<span class="nc" id="L64">        addComponentsToForm();</span>
+
+<span class="nc" id="L66">        setVisible(true);</span>
+<span class="nc" id="L67">    }</span>
+
+    /**
+     * Constructs a new CustomerRegister window for user modification.
+     * 
+     * @param eMail The email of the customer to modify.
+     */
+<span class="nc" id="L74">    public CustomerRegister(String eMail) {</span>
+<span class="nc" id="L75">    	resourceBundle = MainClient.getResourceBundle();</span>
+<span class="nc" id="L76">    	submitButton = new JButton(resourceBundle.getString(&quot;edit_customer_label&quot;));</span>
+<span class="nc" id="L77">    	submitButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L78">            SwingWorker&lt;Void, Void&gt; worker = new SwingWorker&lt;Void, Void&gt;() {</span>
+                @Override
+                protected Void doInBackground() throws Exception {
+<span class="nc" id="L81">                    modifyUser();</span>
+<span class="nc" id="L82">                    return null;</span>
+                }
+                @Override
+                protected void done() {
+<span class="nc" id="L86">                    dispose();</span>
+<span class="nc" id="L87">                }</span>
+            };
+<span class="nc" id="L89">            worker.execute();</span>
+<span class="nc" id="L90">        });</span>
+<span class="nc" id="L91">        setupUI(&quot;Customer Modification&quot;);</span>
+<span class="nc" id="L92">        CustomerData customer = CustomerController.getCustomer(eMail);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if(customer!=null) {</span>
+<span class="nc" id="L94">        	SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</span>
+<span class="nc" id="L95">        	nameField = new JTextField(customer.getName());</span>
+<span class="nc" id="L96">            surnameField = new JTextField(customer.getSurname());</span>
+<span class="nc" id="L97">            birthDateField = new JTextField(dateFormat.format(customer.getDateOfBirth()));</span>
+<span class="nc" id="L98">            emailField = new JTextField(eMail);</span>
+<span class="nc" id="L99">            emailField.setEditable(false);</span>
+<span class="nc" id="L100">        } else {</span>
+<span class="nc" id="L101">        	JOptionPane.showMessageDialog(this, resourceBundle.getString(&quot;customer_not_found_message&quot;), &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+            
+        }
+
+<span class="nc" id="L105">        addComponentsToForm();</span>
+
+<span class="nc" id="L107">        setVisible(true);</span>
+<span class="nc" id="L108">    }</span>
+
+    private void setupUI(String title) {
+<span class="nc" id="L111">        setTitle(title);</span>
+<span class="nc" id="L112">        setSize(400, 300);</span>
+<span class="nc" id="L113">        setLocationRelativeTo(null); // Center the window</span>
+<span class="nc" id="L114">        setLayout(new BorderLayout());</span>
+
+<span class="nc" id="L116">        ImageIcon img = new ImageIcon(&quot;src/resources/registerUserIcon.png&quot;);</span>
+<span class="nc" id="L117">        setIconImage(img.getImage());</span>
+
+<span class="nc" id="L119">        JPanel formPanel = new JPanel(new GridLayout(5, 1, 10, 10));</span>
+<span class="nc" id="L120">        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));</span>
+
+<span class="nc" id="L122">        submitButton.setBackground(new Color(0, 153, 204));</span>
+<span class="nc" id="L123">        submitButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L124">        submitButton.setFocusPainted(false);</span>
+<span class="nc" id="L125">        submitButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+
+<span class="nc" id="L127">        add(formPanel, BorderLayout.CENTER);</span>
+<span class="nc" id="L128">        add(submitButton, BorderLayout.SOUTH);</span>
+<span class="nc" id="L129">    }</span>
+
+    private void addComponentsToForm() {
+<span class="nc" id="L132">        JPanel formPanel = (JPanel) getContentPane().getComponent(0);</span>
+<span class="nc" id="L133">        formPanel.setLayout(new GridLayout(0, 2, 10, 10)); // Two columns layout</span>
+<span class="nc" id="L134">        formPanel.add(new JLabel(resourceBundle.getString(&quot;name_label&quot;)));</span>
+<span class="nc" id="L135">        formPanel.add(nameField);</span>
+<span class="nc" id="L136">        formPanel.add(new JLabel(resourceBundle.getString(&quot;surname_label&quot;)));</span>
+<span class="nc" id="L137">        formPanel.add(surnameField);</span>
+<span class="nc" id="L138">        formPanel.add(new JLabel(resourceBundle.getString(&quot;birthdate_label&quot;)));</span>
+<span class="nc" id="L139">        formPanel.add(birthDateField);</span>
+<span class="nc" id="L140">        formPanel.add(new JLabel(resourceBundle.getString(&quot;email_label&quot;)));</span>
+<span class="nc" id="L141">        formPanel.add(emailField);</span>
+    
+<span class="nc" id="L143">        nameField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L144">        surnameField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L145">        birthDateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L146">        emailField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L147">    }</span>
+    
+
+    private JPanel createFormField(String label, JTextField textField) {
+<span class="nc" id="L151">        JPanel panel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L152">        JLabel jLabel = new JLabel(label);</span>
+<span class="nc" id="L153">        jLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 14));</span>
+<span class="nc" id="L154">        panel.add(jLabel, BorderLayout.WEST);</span>
+<span class="nc" id="L155">        panel.add(textField, BorderLayout.CENTER);</span>
+<span class="nc" id="L156">        textField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2)); // Add border</span>
+<span class="nc" id="L157">        return panel;</span>
+    }
+
+    /**
+     * Registers a new customer.
+     */
+    public void registerUser() {
+<span class="nc" id="L164">        String name = nameField.getText();</span>
+<span class="nc" id="L165">        String surname = surnameField.getText();</span>
+<span class="nc" id="L166">        String birthDate = birthDateField.getText();</span>
+<span class="nc" id="L167">        String email = emailField.getText();</span>
+
+        Date birth;
+        try {
+<span class="nc" id="L171">            SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</span>
+<span class="nc" id="L172">            birth = dateFormat.parse(birthDate);</span>
+<span class="nc" id="L173">        } catch (Exception ex) {</span>
+<span class="nc" id="L174">            JOptionPane.showMessageDialog(this, resourceBundle.getString(&quot;invalid_date_message&quot;), &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L175">            return;</span>
+<span class="nc" id="L176">        }</span>
+
+<span class="nc" id="L178">        CustomerData newUser = new CustomerData(email, name, surname, birth);</span>
+<span class="nc" id="L179">        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path(&quot;server/addcustomer&quot;);</span>
+<span class="nc" id="L180">		Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L181">		Response response = invocationBuilder.post(Entity.entity(newUser, MediaType.APPLICATION_JSON));</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">		if (response.getStatus() != Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L183">			logger.error(&quot;Error connecting with the server. Code: {}&quot;,response.getStatus());</span>
+		} else {
+<span class="nc" id="L185">			logger.info(&quot;Customer Correctly Registered :)&quot;);</span>
+<span class="nc" id="L186">            JOptionPane.showMessageDialog(this, &quot;Customer Correctly Registered&quot;, &quot;Success registering customer&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+
+		}
+
+<span class="nc" id="L190">        nameField.setText(&quot;&quot;);</span>
+<span class="nc" id="L191">        surnameField.setText(&quot;&quot;);</span>
+<span class="nc" id="L192">        birthDateField.setText(&quot;&quot;);</span>
+<span class="nc" id="L193">        emailField.setText(&quot;&quot;);			</span>
+<span class="nc" id="L194">    }</span>
+    
+    public void modifyUser() {
+<span class="nc" id="L197">    	String name = nameField.getText();</span>
+<span class="nc" id="L198">        String surname = surnameField.getText();</span>
+<span class="nc" id="L199">        String birthDate = birthDateField.getText();</span>
+<span class="nc" id="L200">        String email = emailField.getText();</span>
+
+        Date birth;
+        try {
+<span class="nc" id="L204">            SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</span>
+<span class="nc" id="L205">            birth = dateFormat.parse(birthDate);</span>
+<span class="nc" id="L206">        } catch (Exception ex) {</span>
+<span class="nc" id="L207">            JOptionPane.showMessageDialog(this, resourceBundle.getString(&quot;invalid_date_message&quot;), &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L208">            return;</span>
+<span class="nc" id="L209">        }</span>
+
+<span class="nc" id="L211">        CustomerData newCustomer = new CustomerData(email, name, surname, birth);</span>
+<span class="nc" id="L212">        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path(&quot;server/addcustomer&quot;);</span>
+<span class="nc" id="L213">        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L214">        Response response = invocationBuilder.post(Entity.entity(newCustomer, MediaType.APPLICATION_JSON));</span>
+        
+<span class="nc bnc" id="L216" title="All 2 branches missed.">        if (response.getStatus() == Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L217">            logger.info(&quot;Customer correctly modified :) &quot;);</span>
+            
+<span class="nc" id="L219">            JOptionPane.showMessageDialog(this, &quot;Customer correctly modified&quot;, &quot;Success editing customer&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+
+
+            // Clear input fields
+<span class="nc" id="L223">            nameField.setText(&quot;&quot;);</span>
+<span class="nc" id="L224">            surnameField.setText(&quot;&quot;);</span>
+<span class="nc" id="L225">            birthDateField.setText(&quot;&quot;);</span>
+<span class="nc" id="L226">            emailField.setText(&quot;&quot;);	</span>
+        } else {
+<span class="nc" id="L228">            logger.error(&quot;Customer doesnt exist. Code: {}&quot;, response.getStatus());</span>
+        }
+<span class="nc" id="L230">    }</span>
+    
+    /**
+     * Main method to launch the CustomerRegister window for user registration.
+     * 
+     * @param args Command line arguments.
+     */
+    public static void main(String[] args) {
+<span class="nc" id="L238">        CustomerRegister customerRegistrationWindow = new CustomerRegister();</span>
+<span class="nc" id="L239">        customerRegistrationWindow.setVisible(true);</span>
+<span class="nc" id="L240">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

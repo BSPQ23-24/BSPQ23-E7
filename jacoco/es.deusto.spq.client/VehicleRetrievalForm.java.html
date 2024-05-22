@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleRetrievalForm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.client</a> &gt; <span class="el_source">VehicleRetrievalForm.java</span></div><h1>VehicleRetrievalForm.java</h1><pre class="source lang-java linenums">package es.deusto.spq.client;
+
+import javax.swing.*;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.awt.*;
+import java.util.ResourceBundle;
+
+/**
+ * Class for retrieving a vehicle using a graphical user interface.
+ */
+public class VehicleRetrievalForm extends JFrame {
+    private static final long serialVersionUID = 1L;
+
+<span class="nc" id="L22">    protected static final Logger logger = LogManager.getLogger();</span>
+    private ResourceBundle resourceBundle;
+    
+    private JTextField emailField;    
+    private JTextField plateField;
+    private JButton submitButton;
+
+    /**
+     * Constructs a new VehicleRetrievalForm window.
+     */
+<span class="nc" id="L32">    public VehicleRetrievalForm() {</span>
+<span class="nc" id="L33">        resourceBundle = MainClient.getResourceBundle();</span>
+<span class="nc" id="L34">        ImageIcon img = new ImageIcon(&quot;src/resources/retrieveFormIcon.png&quot;);</span>
+<span class="nc" id="L35">        setIconImage(img.getImage());</span>
+<span class="nc" id="L36">        submitButton = new JButton(resourceBundle.getString(&quot;retrieve_vehicle_button&quot;));</span>
+<span class="nc" id="L37">        submitButton.setBackground(new Color(0, 153, 204));</span>
+<span class="nc" id="L38">        submitButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L39">        submitButton.setFocusPainted(false);</span>
+<span class="nc" id="L40">        submitButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+
+<span class="nc" id="L42">        submitButton.addActionListener(e -&gt; returnVehicle());</span>
+
+<span class="nc" id="L44">        setupUI(resourceBundle.getString(&quot;retrieve_window_title&quot;));</span>
+
+
+<span class="nc" id="L47">        emailField = new JTextField();</span>
+<span class="nc" id="L48">        plateField = new JTextField();</span>
+
+<span class="nc" id="L50">        addComponentsToForm();</span>
+
+<span class="nc" id="L52">        setVisible(true);</span>
+<span class="nc" id="L53">    }</span>
+
+    private void setupUI(String title) {
+<span class="nc" id="L56">        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);</span>
+<span class="nc" id="L57">        setTitle(title);</span>
+<span class="nc" id="L58">        setSize(400, 200);</span>
+<span class="nc" id="L59">        setLocationRelativeTo(null); // Center the window</span>
+<span class="nc" id="L60">        setLayout(new BorderLayout());</span>
+
+<span class="nc" id="L62">        JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));</span>
+<span class="nc" id="L63">        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));</span>
+
+<span class="nc" id="L65">        add(formPanel, BorderLayout.CENTER);</span>
+<span class="nc" id="L66">        add(submitButton, BorderLayout.SOUTH);</span>
+<span class="nc" id="L67">    }</span>
+
+    private void addComponentsToForm() {
+<span class="nc" id="L70">        JPanel formPanel = (JPanel) getContentPane().getComponent(0);</span>
+
+<span class="nc" id="L72">        formPanel.add(new JLabel(resourceBundle.getString(&quot;email_label&quot;)));</span>
+<span class="nc" id="L73">        formPanel.add(emailField);</span>
+<span class="nc" id="L74">        formPanel.add(new JLabel(resourceBundle.getString(&quot;number_plate_label&quot;)));</span>
+<span class="nc" id="L75">        formPanel.add(plateField);</span>
+
+<span class="nc" id="L77">        emailField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L78">        plateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L79">    }</span>
+
+    private void returnVehicle() {
+<span class="nc" id="L82">        String email = emailField.getText();</span>
+<span class="nc" id="L83">        String plate = plateField.getText();</span>
+    
+        // Validate email and plate inputs
+<span class="nc bnc" id="L86" title="All 4 branches missed.">        if (email.isEmpty() || plate.isEmpty()) {</span>
+<span class="nc" id="L87">            JOptionPane.showMessageDialog(this, &quot;Email and Number Plate must be filled out.&quot;, &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L88">            return;</span>
+        }
+    
+        // Build the target URL with query parameters
+<span class="nc" id="L92">        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path(&quot;server/returnvehicle&quot;)</span>
+<span class="nc" id="L93">                .queryParam(&quot;numberPlate&quot;, plate)</span>
+<span class="nc" id="L94">                .queryParam(&quot;eMail&quot;, email);</span>
+    
+        // Create a request and send it
+<span class="nc" id="L97">        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L98">        Response response = invocationBuilder.post(null);</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (response.getStatus() != Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L100">            logger.error(&quot;Error returning vehicle in the server. Code: {}&quot;, response.getStatus());</span>
+<span class="nc" id="L101">            JOptionPane.showMessageDialog(this, &quot;Error returning vehicle.&quot;, &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+        } else {
+<span class="nc" id="L103">            logger.info(&quot;Vehicle returned successfully!&quot;);</span>
+    
+            // Clear input fields
+<span class="nc" id="L106">            emailField.setText(&quot;&quot;);</span>
+<span class="nc" id="L107">            plateField.setText(&quot;&quot;);</span>
+    
+<span class="nc" id="L109">            JOptionPane.showMessageDialog(this, &quot;Vehicle returned successfully!&quot;, &quot;Success&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+        }
+<span class="nc" id="L111">    }</span>
+    
+    
+    /**
+     * Updates the database after vehicle retrieval.
+     * 
+     * @param plate The license plate of the retrieved vehicle.
+     * @return True if the database was successfully updated, false otherwise.
+     */
+    boolean updateDatabase(String plate) {
+        //return Database.getInstance().ejecutarActualizacion(&quot;UPDATE retrieval SET licensePlate = ?&quot;,
+        //        new Parameter(plate, DataType.STRING)
+        //);
+<span class="nc" id="L124">        return true;</span>
+    }
+
+    /**
+     * Main method to launch the VehicleRetrievalForm window for vehicle retrieval.
+     * 
+     * @param args Command line arguments.
+     */
+    public static void main(String[] args) {
+<span class="nc" id="L133">        VehicleRetrievalForm form = new VehicleRetrievalForm();</span>
+<span class="nc" id="L134">        form.setVisible(true);</span>
+<span class="nc" id="L135">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleRegistration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.client</a> &gt; <span class="el_source">VehicleRegistration.java</span></div><h1>VehicleRegistration.java</h1><pre class="source lang-java linenums">package es.deusto.spq.client;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ResourceBundle;
+
+import es.deusto.spq.client.controller.VehicleController;
+import es.deusto.spq.pojo.VehicleData;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * Class for vehicle registration using a graphical user interface.
+ */
+public class VehicleRegistration extends JFrame {
+<span class="nc" id="L23">    protected static final Logger logger = LogManager.getLogger();</span>
+
+    private ResourceBundle resourceBundle;
+
+    private static final long serialVersionUID = 1L;
+    private JTextField brandField;
+    private JTextField numberPlateField;
+    private JTextField modelField;
+    private JCheckBox readyToBorrowCheckbox;
+    private JCheckBox onRepairCheckbox;
+    private JButton submitButton;
+
+
+    /**
+     * Constructs a new vehicle registration window.
+     */
+<span class="nc" id="L39">    public VehicleRegistration() {</span>
+<span class="nc" id="L40">        resourceBundle = MainClient.getResourceBundle();</span>
+
+<span class="nc" id="L42">        submitButton = new JButton(resourceBundle.getString(&quot;register_vehicle_label&quot;));</span>
+<span class="nc" id="L43">        submitButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L44">            SwingWorker&lt;Void, Void&gt; worker = new SwingWorker&lt;Void, Void&gt;() {</span>
+                @Override
+                protected Void doInBackground() throws Exception {
+<span class="nc" id="L47">                    registerVehicle();</span>
+<span class="nc" id="L48">                    return null;</span>
+                }
+            };
+<span class="nc" id="L51">            worker.execute();</span>
+<span class="nc" id="L52">        });</span>
+<span class="nc" id="L53">        setupUI(resourceBundle.getString(&quot;register_vehicle_label&quot;));</span>
+
+<span class="nc" id="L55">        brandField = new JTextField();</span>
+<span class="nc" id="L56">        numberPlateField = new JTextField();</span>
+<span class="nc" id="L57">        modelField = new JTextField();</span>
+<span class="nc" id="L58">        readyToBorrowCheckbox = new JCheckBox(&quot;Ready to lend&quot;, true);</span>
+<span class="nc" id="L59">        onRepairCheckbox = new JCheckBox(&quot;In repair&quot;, false);</span>
+
+<span class="nc" id="L61">        addComponentsToForm(false);</span>
+
+<span class="nc" id="L63">        setVisible(true);</span>
+<span class="nc" id="L64">    }</span>
+
+    /**
+     * Constructs a new vehicle modification window.
+     * 
+     * @param numberPlate The number plate of the vehicle to modify.
+     */
+<span class="nc" id="L71">    public VehicleRegistration(String numberPlate) {</span>
+<span class="nc" id="L72">    	resourceBundle = MainClient.getResourceBundle();</span>
+    	
+<span class="nc" id="L74">        submitButton = new JButton(resourceBundle.getString(&quot;edit_vehicle_label&quot;));</span>
+<span class="nc" id="L75">        submitButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L76">            SwingWorker&lt;Void, Void&gt; worker = new SwingWorker&lt;Void, Void&gt;() {</span>
+                @Override
+                protected Void doInBackground() throws Exception {
+<span class="nc" id="L79">                    modifyVehicle();</span>
+<span class="nc" id="L80">                    return null;</span>
+                }
+                @Override
+                protected void done() {
+<span class="nc" id="L84">                    dispose();</span>
+<span class="nc" id="L85">                }</span>
+            };
+<span class="nc" id="L87">            worker.execute();</span>
+<span class="nc" id="L88">        });</span>
+<span class="nc" id="L89">        setupUI(&quot;Vehicle Modification&quot;);</span>
+
+<span class="nc" id="L91">        VehicleData vehicle = VehicleController.getVehicle(numberPlate);</span>
+        
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (vehicle != null) {</span>
+<span class="nc" id="L94">	        brandField = new JTextField(vehicle.getBrand());</span>
+<span class="nc" id="L95">	        numberPlateField = new JTextField(vehicle.getNumberPlate());</span>
+<span class="nc" id="L96">            numberPlateField.setEditable(false);</span>
+<span class="nc" id="L97">	        modelField = new JTextField(vehicle.getModel());</span>
+<span class="nc" id="L98">	        readyToBorrowCheckbox = new JCheckBox(&quot;Ready to lend&quot;, vehicle.isReadyToBorrow());</span>
+<span class="nc" id="L99">	        onRepairCheckbox = new JCheckBox(&quot;In repair&quot;, vehicle.isOnRepair());</span>
+        } else {
+<span class="nc" id="L101">        	JOptionPane.showMessageDialog(this, resourceBundle.getString(&quot;vehicle_not_found_message&quot;), &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+        }
+
+<span class="nc" id="L104">        addComponentsToForm(true);</span>
+
+<span class="nc" id="L106">        setVisible(true);</span>
+<span class="nc" id="L107">    }</span>
+
+    private void setupUI(String title) {
+<span class="nc" id="L110">        setTitle(title);</span>
+<span class="nc" id="L111">        setSize(400, 300);</span>
+<span class="nc" id="L112">        setLocationRelativeTo(null); // Center the window</span>
+<span class="nc" id="L113">        setLayout(new BorderLayout());</span>
+
+<span class="nc" id="L115">        ImageIcon img = new ImageIcon(&quot;src/resources/registerVehicleIcon.png&quot;);</span>
+<span class="nc" id="L116">        setIconImage(img.getImage());</span>
+
+<span class="nc" id="L118">        JPanel formPanel = new JPanel(new GridLayout(6, 1, 10, 10));</span>
+<span class="nc" id="L119">        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));</span>
+
+<span class="nc" id="L121">        submitButton.setBackground(new Color(0, 153, 204));</span>
+<span class="nc" id="L122">        submitButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L123">        submitButton.setFocusPainted(false);</span>
+<span class="nc" id="L124">        submitButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+
+<span class="nc" id="L126">        add(formPanel, BorderLayout.CENTER);</span>
+<span class="nc" id="L127">        add(submitButton, BorderLayout.SOUTH);</span>
+<span class="nc" id="L128">    }</span>
+
+    private void addComponentsToForm(boolean isModification) {
+<span class="nc" id="L131">        JPanel formPanel = (JPanel) getContentPane().getComponent(0);</span>
+<span class="nc" id="L132">        formPanel.setLayout(new GridLayout(0, 2, 10, 10)); // Two columns layout</span>
+
+<span class="nc" id="L134">        formPanel.add(new JLabel(resourceBundle.getString(&quot;number_plate_label&quot;)));</span>
+<span class="nc" id="L135">        formPanel.add(numberPlateField);</span>
+<span class="nc" id="L136">        formPanel.add(new JLabel(resourceBundle.getString(&quot;brand_label&quot;)));</span>
+<span class="nc" id="L137">        formPanel.add(brandField);</span>
+<span class="nc" id="L138">        formPanel.add(new JLabel(resourceBundle.getString(&quot;model_label&quot;)));</span>
+<span class="nc" id="L139">        formPanel.add(modelField);</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        if (isModification) {</span>
+<span class="nc" id="L141">            formPanel.add(readyToBorrowCheckbox);</span>
+<span class="nc" id="L142">            formPanel.add(onRepairCheckbox);</span>
+        } else {
+<span class="nc" id="L144">            formPanel.add(new JPanel()); // Empty panel for alignment</span>
+<span class="nc" id="L145">            formPanel.add(new JPanel()); // Empty panel for alignment</span>
+        }
+<span class="nc" id="L147">        formPanel.add(new JPanel()); // Empty panel for alignment</span>
+
+<span class="nc" id="L149">        brandField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L150">        numberPlateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L151">        modelField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L152">    }</span>
+
+    /**
+     * Registers a new vehicle.
+     */
+    private void registerVehicle() {
+        // Create the new vehicle
+<span class="nc" id="L159">        VehicleData newVehicle = new VehicleData(numberPlateField.getText(), brandField.getText(), modelField.getText(), </span>
+<span class="nc" id="L160">        		readyToBorrowCheckbox.isSelected(), onRepairCheckbox.isSelected());</span>
+
+<span class="nc" id="L162">        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path(&quot;server/addvehicle&quot;);</span>
+<span class="nc" id="L163">        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L164">        Response response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (response.getStatus() != Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L166">            logger.error(&quot;Error connecting with the server. Code: {}&quot;, response.getStatus());</span>
+        } else {
+<span class="nc" id="L168">            logger.info(&quot;Vehicle Correctly Registered :)&quot;);</span>
+<span class="nc" id="L169">            JOptionPane.showMessageDialog(this, &quot;Vehicle Correctly Registered&quot;, &quot;Success registering vehicle&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+
+        }
+
+        // Clear input fields
+<span class="nc" id="L174">        brandField.setText(&quot;&quot;);</span>
+<span class="nc" id="L175">        numberPlateField.setText(&quot;&quot;);</span>
+<span class="nc" id="L176">        modelField.setText(&quot;&quot;);</span>
+<span class="nc" id="L177">        readyToBorrowCheckbox.setSelected(false);</span>
+<span class="nc" id="L178">        onRepairCheckbox.setSelected(false);</span>
+<span class="nc" id="L179">    }</span>
+
+    /**
+     * Updates the database with the new vehicle information.
+     * 
+     * @param vehicle The vehicle data to update in the database.
+     * @return True if the database was successfully updated, false otherwise.
+     */
+    public void modifyVehicle() {
+<span class="nc" id="L188">    	VehicleData newVehicle = new VehicleData(numberPlateField.getText(), brandField.getText(), modelField.getText(), </span>
+<span class="nc" id="L189">    			readyToBorrowCheckbox.isSelected(), onRepairCheckbox.isSelected());</span>
+    	
+<span class="nc" id="L191">        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path(&quot;server/addvehicle&quot;);</span>
+<span class="nc" id="L192">        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L193">        Response response = invocationBuilder.post(Entity.entity(newVehicle, MediaType.APPLICATION_JSON));</span>
+        
+<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (response.getStatus() == Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L196">            logger.info(&quot;Vehicle correctly modified :) &quot;);</span>
+
+<span class="nc" id="L198">            JOptionPane.showMessageDialog(this, &quot;Vehicle correctly modified&quot;, &quot;Success editing vehicle&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+
+
+            // Clear input fields
+<span class="nc" id="L202">            brandField.setText(&quot;&quot;);</span>
+<span class="nc" id="L203">            numberPlateField.setText(&quot;&quot;);</span>
+<span class="nc" id="L204">            modelField.setText(&quot;&quot;);</span>
+<span class="nc" id="L205">            readyToBorrowCheckbox.setSelected(false);</span>
+<span class="nc" id="L206">            onRepairCheckbox.setSelected(false);</span>
+        } else {
+<span class="nc" id="L208">            logger.error(&quot;Vehicle doesnt exist. Code: {}&quot;, response.getStatus());</span>
+        }
+<span class="nc" id="L210">    }</span>
+    
+    
+
+    /**
+     * Main method to launch the VehicleRegistration window for vehicle registration.
+     * 
+     * @param args Command line arguments.
+     */
+    public static void main(String[] args) {
+<span class="nc" id="L220">        VehicleRegistration vehicleRegistrationWindow = new VehicleRegistration();</span>
+<span class="nc" id="L221">        vehicleRegistrationWindow.setVisible(true);</span>
+<span class="nc" id="L222">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.client.controller</a> &gt; <span class="el_source">CustomerController.java</span></div><h1>CustomerController.java</h1><pre class="source lang-java linenums">package es.deusto.spq.client.controller;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.client.ServiceLocator;
+
+<span class="nc" id="L18">public class CustomerController {</span>
+<span class="nc" id="L19">    protected static final Logger logger = LogManager.getLogger();</span>
+
+    /**
+     * Retrieves a Customer object from the server based on the provided email.
+     *
+     * @param eMail The email of the customer to retrieve.
+     * @return The Customer object retrieved from the server, or null if not found or an error occurred.
+     */
+    public static CustomerData getCustomer(String eMail) {
+<span class="nc" id="L28">        Response response = ServiceLocator.getInstance().getWebTarget()</span>
+<span class="nc" id="L29">                .path(&quot;server/getcustomer&quot;)</span>
+<span class="nc" id="L30">                .queryParam(&quot;eMail&quot;, eMail)</span>
+<span class="nc" id="L31">                .request(MediaType.APPLICATION_JSON)</span>
+<span class="nc" id="L32">                .get();</span>
+
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        if (response.getStatus() == Response.Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L35">            logger.info(&quot;Getting customer: &quot; + response.toString());</span>
+<span class="nc" id="L36">            return response.readEntity(CustomerData.class);</span>
+        } else {
+<span class="nc" id="L38">            logger.info(&quot;ERROR getting customer&quot;);</span>
+<span class="nc" id="L39">            return null;</span>
+        }
+    }
+    /**
+     * Retrieves a list of Customer objects from the server.
+     *
+     * @return A list of Customer objects retrieved from the server, or an empty list if no customers found or an error occurred.
+     */
+    public static List&lt;CustomerData&gt; getCustomers() {
+<span class="nc" id="L48">        Response response = ServiceLocator.getInstance().getWebTarget()</span>
+<span class="nc" id="L49">                .path(&quot;server/getcustomers&quot;)</span>
+<span class="nc" id="L50">                .request(MediaType.APPLICATION_JSON)</span>
+<span class="nc" id="L51">                .get();</span>
+
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (response.getStatus() == Response.Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L54">            return response.readEntity(new GenericType&lt;List&lt;CustomerData&gt;&gt;() {});</span>
+        } else {
+<span class="nc" id="L56">        	logger.info(&quot;ERROR getting customers Code: {}&quot;, response.getStatus());</span>
+<span class="nc" id="L57">            return Collections.emptyList();</span>
+        }
+    }
+
+    /**
+     * Deletes a customer from the server based on the provided email.
+     *
+     * @param eMail The email of the customer to delete.
+     */
+    public static void deleteCustomer(String eMail) {
+<span class="nc" id="L67">        Response response = ServiceLocator.getInstance().getWebTarget()</span>
+<span class="nc" id="L68">                .path(&quot;server/deletecustomer&quot;)</span>
+<span class="nc" id="L69">                .queryParam(&quot;eMail&quot;, eMail)</span>
+<span class="nc" id="L70">                .request(MediaType.APPLICATION_JSON)</span>
+<span class="nc" id="L71">                .delete();</span>
+
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (response.getStatus() == Response.Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L74">            logger.info(&quot;Deleting customer: &quot; + response.toString());</span>
+<span class="nc" id="L75">            JOptionPane.showMessageDialog(null, &quot;Customer Correctly Deleted&quot;, &quot;Success deleting customer&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+
+        } else {
+<span class="nc" id="L78">            logger.info(&quot;ERROR deleting customer&quot;);</span>
+<span class="nc" id="L79">            JOptionPane.showMessageDialog(null, &quot;Error deleting customer&quot;, &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+        }
+<span class="nc" id="L81">    }</span>
+
+    public static void addCustomer(CustomerData customer) {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (ServiceLocator.getInstance().getWebTarget() != null) {</span>
+<span class="nc" id="L85">            Response response = ServiceLocator.getInstance().getWebTarget()</span>
+<span class="nc" id="L86">                    .path(&quot;server/addcustomer&quot;)</span>
+<span class="nc" id="L87">                    .request(MediaType.APPLICATION_JSON)</span>
+<span class="nc" id="L88">                    .post(Entity.entity(customer, MediaType.APPLICATION_JSON));</span>
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            if (response.getStatus() == Response.Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L91">                logger.info(&quot;Adding customer: &quot; + response.toString());</span>
+            } else {
+<span class="nc" id="L93">                logger.info(&quot;ERROR adding customer: &quot; + response.getStatus());</span>
+            }
+<span class="nc" id="L95">        } else {</span>
+<span class="nc" id="L96">            logger.error(&quot;WebTarget is null. Unable to add customer.&quot;);</span>
+        }
+<span class="nc" id="L98">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

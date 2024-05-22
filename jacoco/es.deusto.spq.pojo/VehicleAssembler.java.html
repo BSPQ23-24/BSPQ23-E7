@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleAssembler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.pojo</a> &gt; <span class="el_source">VehicleAssembler.java</span></div><h1>VehicleAssembler.java</h1><pre class="source lang-java linenums">package es.deusto.spq.pojo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import es.deusto.spq.server.jdo.VehicleJDO;
+
+public class VehicleAssembler {
+	
+	// Singleton
+	private static VehicleAssembler instance;
+	
+	private VehicleAssembler() { }
+	
+	public static VehicleAssembler getInstance() {
+<span class="fc bfc" id="L16" title="All 2 branches covered.">		if (instance == null) {</span>
+<span class="fc" id="L17">			instance = new VehicleAssembler();</span>
+		}
+		
+<span class="fc" id="L20">		return instance;</span>
+	}
+	
+    /**
+     * Changes the VehicleJDO to VehicleData.
+     * 
+     * @param vehicle The vehicle JDO to change.
+     * @return VehicleData with all the necessary information.
+     */
+	public VehicleData VehicleJDOToData(VehicleJDO vehicle) {
+<span class="fc" id="L30">		VehicleData data = new VehicleData();		</span>
+		
+<span class="fc" id="L32">		data.setBrand(vehicle.getBrand());</span>
+<span class="fc" id="L33">		data.setModel(vehicle.getModel());</span>
+<span class="fc" id="L34">		data.setNumberPlate(vehicle.getNumberPlate());</span>
+<span class="fc" id="L35">		data.setOnRepair(vehicle.isOnRepair());</span>
+<span class="fc" id="L36">		data.setReadyToBorrow(vehicle.isReadyToBorrow());</span>
+		
+<span class="fc" id="L38">		return data;</span>
+	}
+	
+	/**
+     * Changes a VehicleJDO list to a VehicleData list.
+     * 
+     * @param vehicles The vehicle JDO list to change.
+     * @return VehicleData list with all the necessary information.
+     */
+	public List&lt;VehicleData&gt; VehicleJDOListToData(List&lt;VehicleJDO&gt; vehicles){
+<span class="nc" id="L48">		List&lt;VehicleData&gt; data = new ArrayList&lt;VehicleData&gt;();</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">    	for (VehicleJDO jdo : vehicles) {</span>
+<span class="nc" id="L50">			data.add(VehicleAssembler.getInstance().VehicleJDOToData(jdo));</span>
+<span class="nc" id="L51">		}</span>
+    	
+<span class="nc" id="L53">    	return data;</span>
+	}
+	
+	/**
+     * Changes the VehicleData to VehicleJDO.
+     * 
+     * @param vehicle The vehicle data to change.
+     * @return VehicleJDO with all the necessary information.
+     */
+	public VehicleJDO VehicleDataToJDO(VehicleData vehicle) {
+<span class="fc" id="L63">		VehicleJDO jdo = new VehicleJDO();		</span>
+		
+<span class="fc" id="L65">		jdo.setBrand(vehicle.getBrand());</span>
+<span class="fc" id="L66">		jdo.setModel(vehicle.getModel());</span>
+<span class="fc" id="L67">		jdo.setNumberPlate(vehicle.getNumberPlate());</span>
+<span class="fc" id="L68">		jdo.setOnRepair(vehicle.isOnRepair());</span>
+<span class="fc" id="L69">		jdo.setReadyToBorrow(vehicle.isReadyToBorrow());</span>
+		
+<span class="fc" id="L71">		return jdo;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RentingController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.client.controller</a> &gt; <span class="el_source">RentingController.java</span></div><h1>RentingController.java</h1><pre class="source lang-java linenums">package es.deusto.spq.client.controller;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import es.deusto.spq.client.ServiceLocator;
+import es.deusto.spq.pojo.Renting;
+
+<span class="nc" id="L16">public class RentingController {</span>
+
+<span class="nc" id="L18">    protected static final Logger logger = LogManager.getLogger();</span>
+
+     /**
+     * Retrieves a list of Renting objects associated with a customer from the server.
+     *
+     * @return A list of Renting objects retrieved from the server, or an empty list if no customers found or an error occurred.
+     */
+    public static List&lt;Renting&gt; getCustomerRents(String eMail) {
+<span class="nc" id="L26">        Response response = ServiceLocator.getInstance().getWebTarget()</span>
+<span class="nc" id="L27">                .path(&quot;server/getcustomerrents&quot;)</span>
+<span class="nc" id="L28">                .queryParam(&quot;eMail&quot;, eMail)</span>
+<span class="nc" id="L29">                .request(MediaType.APPLICATION_JSON)</span>
+<span class="nc" id="L30">                .get();</span>
+
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (response.getStatus() == Response.Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L33">            return response.readEntity(new GenericType&lt;List&lt;Renting&gt;&gt;() {});</span>
+        } else {
+<span class="nc" id="L35">        	logger.info(&quot;ERROR getting rentings Code: {}&quot;, response.getStatus());</span>
+<span class="nc" id="L36">            return Collections.emptyList();</span>
+        }
+    }
+    /**
+     * Retrieves a list of Renting objects associated with a vehicle from the server.
+     *
+     * @return A list of Renting objects retrieved from the server, or an empty list if no customers found or an error occurred.
+     */
+    public static List&lt;Renting&gt; getVehicleRents(String numberPlate) {
+<span class="nc" id="L45">        Response response = ServiceLocator.getInstance().getWebTarget()</span>
+<span class="nc" id="L46">                .path(&quot;server/getvehiclerents&quot;)</span>
+<span class="nc" id="L47">                .queryParam(&quot;numberPlate&quot;, numberPlate)</span>
+<span class="nc" id="L48">                .request(MediaType.APPLICATION_JSON)</span>
+<span class="nc" id="L49">                .get();</span>
+
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (response.getStatus() == Response.Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L52">            return response.readEntity(new GenericType&lt;List&lt;Renting&gt;&gt;() {});</span>
+        } else {
+<span class="nc" id="L54">            return Collections.emptyList();</span>
+        }
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

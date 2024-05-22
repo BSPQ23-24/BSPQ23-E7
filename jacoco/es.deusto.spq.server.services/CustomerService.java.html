@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.server.services</a> &gt; <span class="el_source">CustomerService.java</span></div><h1>CustomerService.java</h1><pre class="source lang-java linenums">package es.deusto.spq.server.services;
+
+import java.util.List;
+
+import javax.jdo.JDOHelper;
+import javax.jdo.JDOObjectNotFoundException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import javax.ws.rs.core.Response;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import es.deusto.spq.pojo.CustomerAssembler;
+import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.RentingAssembler;
+import es.deusto.spq.pojo.Renting;
+import es.deusto.spq.server.jdo.CustomerJDO;
+import es.deusto.spq.server.jdo.RentingJDO;
+
+public class CustomerService {
+    private static CustomerService instance;
+
+<span class="fc" id="L26">    protected static final Logger logger = LogManager.getLogger();</span>
+
+	private PersistenceManager pm;
+	private Transaction tx;
+    private PersistenceManagerFactory pmf;
+
+<span class="fc" id="L32">    public CustomerService() {</span>
+<span class="fc" id="L33">        pmf = JDOHelper.getPersistenceManagerFactory(&quot;datanucleus.properties&quot;);</span>
+<span class="fc" id="L34">    }</span>
+
+    public static  CustomerService getInstance() {
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (instance == null) {</span>
+<span class="fc" id="L38">            instance = new CustomerService();</span>
+        }
+<span class="fc" id="L40">        return instance;</span>
+    }
+
+    /**
+     * Adds a new customer to the database.
+     * @param customerData The data of the customer to be added.
+     * @return Response indicating success or failure of the operation.
+     */
+    public Response addCustomer(CustomerData customerData) {
+<span class="fc" id="L49">        pm = pmf.getPersistenceManager();</span>
+<span class="fc" id="L50">        tx = pm.currentTransaction();</span>
+        try {
+<span class="fc" id="L52">            logger.info(&quot;Adding customer...&quot;);</span>
+<span class="fc" id="L53">            tx.begin(); // Begin transaction</span>
+<span class="fc" id="L54">            CustomerJDO customer = null;</span>
+            try {
+<span class="fc" id="L56">                customer = pm.getObjectById(CustomerJDO.class, customerData.geteMail());</span>
+<span class="fc" id="L57">            } catch (Exception e) {</span>
+<span class="fc" id="L58">                logger.info(&quot;New customer will be added to database&quot;);</span>
+<span class="fc" id="L59">            }</span>
+<span class="fc" id="L60">            logger.info(&quot;Customer: {}&quot;, customer);</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">            if (customer != null) {</span>
+<span class="fc" id="L62">                logger.info(&quot;Customer with that email already exists, editing entry...&quot;);</span>
+<span class="fc" id="L63">                customer.setName(customerData.getName());</span>
+<span class="fc" id="L64">                customer.setSurname(customerData.getSurname());</span>
+<span class="fc" id="L65">                customer.setDateOfBirth(customerData.getDateOfBirth());</span>
+<span class="fc" id="L66">                pm.makePersistent(customer); // Persist the customer object</span>
+<span class="fc" id="L67">                tx.commit(); // Commit the transaction</span>
+<span class="fc" id="L68">                return Response.ok().entity(&quot;Customer with that email already exists, entry edited.&quot;).build();</span>
+            } else {
+<span class="fc" id="L70">                logger.info(&quot;Creating customer: {}&quot;, customer);</span>
+<span class="fc" id="L71">                customer = CustomerAssembler.getInstance().CustomerDataToJDO(customerData);</span>
+<span class="fc" id="L72">                pm.makePersistent(customer); // Persist the customer object</span>
+<span class="fc" id="L73">                logger.info(&quot;Customer added: {}&quot;, customer);</span>
+            }
+<span class="fc" id="L75">            tx.commit(); // Commit the transaction</span>
+<span class="fc" id="L76">            return Response.ok().build();</span>
+<span class="nc" id="L77">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            if (tx.isActive()) {</span>
+<span class="nc" id="L79">                tx.rollback(); // Rollback the transaction in case of an exception</span>
+            }
+<span class="nc" id="L81">            e.printStackTrace();</span>
+<span class="nc" id="L82">            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Error occurred while adding customer.&quot;).build();</span>
+        } finally {
+<span class="fc" id="L84">            logger.info(&quot;Closing&quot;);</span>
+<span class="fc" id="L85">            pm.close(); // Close the PersistenceManager</span>
+        }
+    }
+
+    /**
+     * Retrieves all customers from the database.
+     * @return Response containing the list of customers or an error message if no customers are found.
+     */
+    public Response getCustomers() {
+<span class="nc" id="L94">        pm = pmf.getPersistenceManager();</span>
+<span class="nc" id="L95">        tx = pm.currentTransaction();</span>
+        try {
+<span class="nc" id="L97">            Query query = pm.newQuery(CustomerJDO.class);</span>
+<span class="nc" id="L98">            List&lt;CustomerJDO&gt; customers = (List&lt;CustomerJDO&gt;) query.execute();</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">            if (!customers.isEmpty()) {</span>
+<span class="nc" id="L100">                return Response.ok(CustomerAssembler.getInstance().CustomerJDOListToData(customers)).build();</span>
+            } else {
+<span class="nc" id="L102">            	logger.info(&quot;No customers found&quot;);</span>
+<span class="nc" id="L103">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;No customers found&quot;).build();</span>
+            }
+<span class="nc" id="L105">        } catch (Exception e) {</span>
+<span class="nc" id="L106">            e.printStackTrace();</span>
+<span class="nc" id="L107">            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Error occurred while fetching customers.&quot;).build();</span>
+        } finally {
+<span class="nc" id="L109">            pm.close();</span>
+        }
+    }
+
+    /**
+     * Retrieves a customer by email from the database.
+     * @param eMail The email of the customer to retrieve.
+     * @return Response containing the customer data or an error message if the customer is not found.
+     */
+    public Response getCustomer(String eMail) {
+<span class="fc" id="L119">        pm = pmf.getPersistenceManager();</span>
+<span class="fc" id="L120">        tx = pm.currentTransaction();</span>
+        try {
+<span class="fc" id="L122">            CustomerJDO customer = pm.getObjectById(CustomerJDO.class, eMail);</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">            if (customer != null) {</span>
+<span class="fc" id="L124">                return Response.ok(CustomerAssembler.getInstance().CustomerJDOToData(customer)).build();</span>
+            } else {
+<span class="nc" id="L126">                logger.info(&quot;Customer not found&quot;);</span>
+<span class="nc" id="L127">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Customer not found&quot;).build();</span>
+            }
+<span class="fc" id="L129">        } catch (Exception e) {</span>
+<span class="fc" id="L130">            logger.info(e);</span>
+<span class="fc" id="L131">            logger.info(&quot;Error occurred while fetching customer&quot;);</span>
+<span class="fc" id="L132">            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Error occurred while fetching customer.&quot;).build();</span>
+        } finally {
+<span class="fc" id="L134">            pm.close();</span>
+        }
+    }
+
+    /**
+     * Deletes a customer from the database.
+     * @param email The email of the customer to delete.
+     * @return Response indicating success or failure of the operation.
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public Response deleteCustomer(String email) {
+<span class="fc" id="L145">        pm = pmf.getPersistenceManager();</span>
+<span class="fc" id="L146">        tx = pm.currentTransaction();</span>
+        try {
+<span class="fc" id="L148">            CustomerJDO customer = pm.getObjectById(CustomerJDO.class, email);</span>
+            
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">            if (customer != null) {</span>
+                try {
+<span class="nc bnc" id="L152" title="All 2 branches missed.">                    for(RentingJDO rent : (List&lt;RentingJDO&gt;) RentingAssembler.getInstance().RentingListToJDO((List&lt;Renting&gt;) RentingService.getInstance().getCustomerRents(customer.geteMail()).getEntity())){</span>
+<span class="nc" id="L153">                        RentingService.getInstance().deleteRenting(rent.getVehicle().getNumberPlate(), rent.getCustomer().geteMail());</span>
+<span class="nc" id="L154">                    }</span>
+<span class="fc" id="L155">                } catch (Exception e) {</span>
+<span class="fc" id="L156">                    logger.info(&quot;Customer has no rents asociated&quot;);</span>
+<span class="nc" id="L157">                }</span>
+<span class="fc" id="L158">                pm.deletePersistent(customer);</span>
+<span class="fc" id="L159">                return Response.ok(&quot;Customer deleted successfully&quot;).build();</span>
+            } else {
+<span class="nc" id="L161">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Customer not found&quot;).build();</span>
+            }
+<span class="fc" id="L163">        } catch (JDOObjectNotFoundException e) {</span>
+<span class="fc" id="L164">            logger.info(&quot;Customer not found: {}&quot;, email);</span>
+<span class="fc" id="L165">            return Response.status(Response.Status.NOT_FOUND).entity(&quot;Customer not found&quot;).build();</span>
+<span class="nc" id="L166">        } catch (Exception e) {</span>
+<span class="nc" id="L167">            logger.info(&quot;Error occurred while deleting customer&quot;);</span>
+<span class="nc" id="L168">            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Error occurred while deleting customer.&quot;).build();</span>
+        } finally {
+<span class="fc" id="L170">            pm.close();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

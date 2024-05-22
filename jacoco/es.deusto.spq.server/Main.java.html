@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.server</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package es.deusto.spq.server;
+
+import java.io.IOException;
+import java.net.URI;
+
+import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
+
+<span class="nc" id="L10">public class Main {</span>
+ 
+    // Base URI the Grizzly HTTP server will listen on
+    public static final String BASE_URI = &quot;http://localhost:8080/deustoCarsDB/&quot;;
+
+    /**
+     * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
+     * @return Grizzly HTTP server.
+     */
+    public static HttpServer startServer() {
+        // create a resource config that scans for JAX-RS resources and providers
+        // in com.example package
+<span class="nc" id="L22">        final ResourceConfig rc = new ResourceConfig().packages(&quot;es.deusto.spq&quot;);</span>
+
+        // create and start a new instance of grizzly http server
+        // exposing the Jersey application at BASE_URI
+<span class="nc" id="L26">        return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);</span>
+    }
+
+    public static void main(String[] args) throws IOException {
+<span class="nc" id="L30">        final HttpServer server = startServer();</span>
+<span class="nc" id="L31">        System.out.println(String.format(&quot;Jersey app started with WADL available at &quot;</span>
+                + &quot;%sapplication.wadl\nHit enter to stop it...&quot;, BASE_URI));
+<span class="nc" id="L33">        System.in.read();</span>
+<span class="nc" id="L34">        server.shutdown();</span>
+<span class="nc" id="L35">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

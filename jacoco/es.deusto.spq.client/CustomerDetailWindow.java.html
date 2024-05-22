@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerDetailWindow.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.client</a> &gt; <span class="el_source">CustomerDetailWindow.java</span></div><h1>CustomerDetailWindow.java</h1><pre class="source lang-java linenums">package es.deusto.spq.client;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import es.deusto.spq.pojo.Renting;
+import es.deusto.spq.client.controller.RentingController;
+import es.deusto.spq.pojo.CustomerData;
+
+public class CustomerDetailWindow extends JFrame{
+<span class="nc" id="L19">    private ResourceBundle resourceBundle = MainClient.getResourceBundle();</span>
+
+<span class="nc" id="L21">	public CustomerDetailWindow(CustomerData customer) {</span>
+<span class="nc" id="L22">        setTitle(resourceBundle.getString(&quot;customer_detail_title&quot;));</span>
+<span class="nc" id="L23">        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);</span>
+<span class="nc" id="L24">        setSize(600, 400);</span>
+<span class="nc" id="L25">        setLocationRelativeTo(null);</span>
+        
+
+<span class="nc" id="L28">        JPanel mainPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L29">        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));</span>
+<span class="nc" id="L30">        add(mainPanel);</span>
+
+        // Top panel
+<span class="nc" id="L33">        JPanel topPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L34">        mainPanel.add(topPanel, BorderLayout.NORTH);</span>
+
+        // Icon
+<span class="nc" id="L37">        JPanel iconPanel = new JPanel();</span>
+<span class="nc" id="L38">        iconPanel.setPreferredSize(new Dimension(150, 150));</span>
+<span class="nc" id="L39">        ImageIcon img = new ImageIcon(&quot;src/resources/user.png&quot;);</span>
+<span class="nc" id="L40">        setIconImage(img.getImage());</span>
+<span class="nc" id="L41">        JLabel iconLabel = new JLabel(resizeIcon(&quot;src/resources/user.png&quot;, new Dimension(100, 100)));</span>
+<span class="nc" id="L42">        GridBagConstraints iconGbc = new GridBagConstraints();</span>
+<span class="nc" id="L43">        iconGbc.gridx = 1; </span>
+<span class="nc" id="L44">        iconGbc.gridy = 0;</span>
+<span class="nc" id="L45">        iconGbc.insets = new Insets(0, 30, 0, 0); </span>
+<span class="nc" id="L46">        iconPanel.add(iconLabel, iconGbc);</span>
+<span class="nc" id="L47">        topPanel.add(iconPanel, BorderLayout.WEST);</span>
+
+        // Details
+<span class="nc" id="L50">        JPanel detailsPanel = new JPanel(new GridBagLayout());</span>
+<span class="nc" id="L51">        detailsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));</span>
+<span class="nc" id="L52">        topPanel.add(detailsPanel, BorderLayout.CENTER);</span>
+
+<span class="nc" id="L54">        GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L55">        gbc.insets = new Insets(5, 5, 5, 20); </span>
+<span class="nc" id="L56">        gbc.anchor = GridBagConstraints.WEST;</span>
+
+<span class="nc" id="L58">        gbc.gridx = 0;</span>
+<span class="nc" id="L59">        gbc.gridy = 0;</span>
+<span class="nc" id="L60">        detailsPanel.add(new JLabel(resourceBundle.getString(&quot;name_label&quot;)), gbc);</span>
+
+<span class="nc" id="L62">        gbc.gridx = 1;</span>
+<span class="nc" id="L63">        detailsPanel.add(new JLabel(customer.getName()), gbc);</span>
+
+<span class="nc" id="L65">        gbc.gridx = 0;</span>
+<span class="nc" id="L66">        gbc.gridy = 1;</span>
+<span class="nc" id="L67">        detailsPanel.add(new JLabel(resourceBundle.getString(&quot;surname_label&quot;)), gbc);</span>
+
+<span class="nc" id="L69">        gbc.gridx = 1;</span>
+<span class="nc" id="L70">        detailsPanel.add(new JLabel(customer.getSurname()), gbc);</span>
+
+<span class="nc" id="L72">        gbc.gridx = 0;</span>
+<span class="nc" id="L73">        gbc.gridy = 2;</span>
+<span class="nc" id="L74">        detailsPanel.add(new JLabel(resourceBundle.getString(&quot;email_label&quot;)), gbc);</span>
+
+<span class="nc" id="L76">        gbc.gridx = 1;</span>
+<span class="nc" id="L77">        detailsPanel.add(new JLabel(customer.geteMail()), gbc);</span>
+
+<span class="nc" id="L79">        gbc.gridx = 0;</span>
+<span class="nc" id="L80">        gbc.gridy = 3;</span>
+<span class="nc" id="L81">        detailsPanel.add(new JLabel(resourceBundle.getString(&quot;birthdate_label&quot;)), gbc);</span>
+
+<span class="nc" id="L83">        gbc.gridx = 1;</span>
+<span class="nc" id="L84">        SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</span>
+<span class="nc" id="L85">        detailsPanel.add(new JLabel(dateFormat.format(customer.getDateOfBirth())), gbc);</span>
+
+        // Table
+<span class="nc" id="L88">        JPanel bottomPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L89">        bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));</span>
+<span class="nc" id="L90">        mainPanel.add(bottomPanel, BorderLayout.CENTER);</span>
+
+<span class="nc" id="L92">        JLabel tableLabel = new JLabel(resourceBundle.getString(&quot;renting_history_label&quot;));</span>
+<span class="nc" id="L93">        tableLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 14));</span>
+<span class="nc" id="L94">        bottomPanel.add(tableLabel, BorderLayout.NORTH);</span>
+
+<span class="nc" id="L96">        String[] columnNames = {resourceBundle.getString(&quot;number_plate_label&quot;), resourceBundle.getString(&quot;rent_table_col&quot;), resourceBundle.getString(&quot;retrieve_table_col&quot;)};</span>
+<span class="nc" id="L97">        List&lt;Renting&gt; rentingList = RentingController.getCustomerRents(customer.geteMail());</span>
+
+<span class="nc" id="L99">        Object[][] dataArray = new Object[rentingList.size()][3];</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        for (int i = 0; i &lt; rentingList.size(); i++) {</span>
+<span class="nc" id="L101">            Renting renting = rentingList.get(i);</span>
+<span class="nc" id="L102">            dataArray[i][0] = renting.getVehicle().getNumberPlate();</span>
+<span class="nc" id="L103">            dataArray[i][1] = dateFormat.format(renting.getStartDate());</span>
+<span class="nc" id="L104">            dataArray[i][2] = dateFormat.format(renting.getEndDate());</span>
+        }
+<span class="nc" id="L106">        JTable table = new JTable(dataArray, columnNames);</span>
+<span class="nc" id="L107">        JScrollPane tableScrollPane = new JScrollPane(table);</span>
+<span class="nc" id="L108">        bottomPanel.add(tableScrollPane, BorderLayout.CENTER);</span>
+<span class="nc" id="L109">    }</span>
+	
+	private ImageIcon resizeIcon(String path, Dimension size) {
+        try {
+<span class="nc" id="L113">            BufferedImage img = ImageIO.read(new File(path));</span>
+<span class="nc" id="L114">            Image scaledImage = img.getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH);</span>
+<span class="nc" id="L115">            return new ImageIcon(scaledImage);</span>
+<span class="nc" id="L116">        } catch (IOException e) {</span>
+<span class="nc" id="L117">            e.printStackTrace();</span>
+<span class="nc" id="L118">            return null;</span>
+        }
+    }
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

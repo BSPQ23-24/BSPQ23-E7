@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RentingJDO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.server.jdo</a> &gt; <span class="el_source">RentingJDO.java</span></div><h1>RentingJDO.java</h1><pre class="source lang-java linenums">package es.deusto.spq.server.jdo;
+
+import java.util.Date;
+
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
+
+/**
+ * Represents a renting.
+ */
+@PersistenceCapable(detachable = &quot;true&quot;)
+public class RentingJDO {
+    @PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.INCREMENT)
+    private int pk;
+    @Persistent(defaultFetchGroup = &quot;true&quot;)
+    private CustomerJDO customer;
+    @Persistent(defaultFetchGroup = &quot;true&quot;)
+    private VehicleJDO vehicle;
+    private Date startDate;
+    private Date endDate;
+
+    /**
+     * Constructs a renting object with the specified email, license plate, start date, and end date.
+     *
+     * @param customer     The customer associated with the renting.
+     * @param vehicle      The vehicle associated with the renting.
+     * @param startDate    The start date of the renting.
+     * @param endDate      The end date of the renting.
+     */
+<span class="fc" id="L33">    public RentingJDO(CustomerJDO customer, VehicleJDO vehicle, Date startDate, Date endDate) {</span>
+<span class="fc" id="L34">        this.customer = customer;</span>
+<span class="fc" id="L35">        this.vehicle = vehicle;</span>
+<span class="fc" id="L36">        this.startDate = startDate;</span>
+<span class="fc" id="L37">        this.endDate = endDate;</span>
+<span class="fc" id="L38">    }</span>
+
+    /**
+     * Default constructor required for serialization.
+     */
+<span class="fc" id="L43">    public RentingJDO() {</span>
+        // Required for serialization
+<span class="fc" id="L45">    }</span>
+
+    /**
+     * Retrieves the pk id of the renting.
+     *
+     * @return The pk id associated with the renting.
+     */
+    public int getPK() {
+<span class="nc" id="L53">        return pk;</span>
+    }
+
+    /**
+     * Retrieves the customer associated with the renting.
+     *
+     * @return The customer associated with the renting.
+     */
+    public CustomerJDO getCustomer() {
+<span class="nc" id="L62">        return customer;</span>
+    }
+
+    /**
+     * Sets the customer associated with the renting.
+     *
+     * @param customer The customer to set.
+     */
+    public void setCustomer(CustomerJDO customer) {
+<span class="nc" id="L71">        this.customer = customer;</span>
+<span class="nc" id="L72">    }</span>
+
+    /**
+     * Retrieves the vehicle associated with the renting.
+     *
+     * @return The vehicle associated with the renting.
+     */
+    public VehicleJDO getVehicle() {
+<span class="nc" id="L80">        return vehicle;</span>
+    }
+
+    /**
+     * Sets the vehicle associated with the renting.
+     *
+     * @param vehicle The vehicle to set.
+     */
+    public void setVehicle(VehicleJDO vehicle) {
+<span class="nc" id="L89">        this.vehicle = vehicle;</span>
+<span class="nc" id="L90">    }</span>
+
+    /**
+     * Retrieves the start date of the renting.
+     *
+     * @return The start date of the renting.
+     */
+    public Date getStartDate() {
+<span class="nc" id="L98">        return startDate;</span>
+    }
+
+    /**
+     * Sets the start date of the renting.
+     *
+     * @param startDate The start date to set.
+     */
+    public void setStartDate(Date startDate) {
+<span class="nc" id="L107">        this.startDate = startDate;</span>
+<span class="nc" id="L108">    }</span>
+
+    /**
+     * Retrieves the end date of the renting.
+     *
+     * @return The end date of the renting.
+     */
+    public Date getEndDate() {
+<span class="nc" id="L116">        return endDate;</span>
+    }
+
+    /**
+     * Sets the end date of the renting.
+     *
+     * @param endDate The end date to set.
+     */
+    public void setEndDate(Date endDate) {
+<span class="nc" id="L125">        this.endDate = endDate;</span>
+<span class="nc" id="L126">    }</span>
+
+    /**
+     * Returns a string representation of the Renting object.
+     *
+     * @return A string representation of the Renting object.
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L135">        return &quot;Renting{&quot; +</span>
+<span class="nc" id="L136">                &quot;, email='&quot; + customer.geteMail() + '\'' +</span>
+<span class="nc" id="L137">                &quot;, licensePlate='&quot; + vehicle.getNumberPlate() + '\'' +</span>
+                &quot;, startDate=&quot; + startDate +
+                &quot;, endDate=&quot; + endDate +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

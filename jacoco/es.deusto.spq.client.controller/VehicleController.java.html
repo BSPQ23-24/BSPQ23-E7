@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.client.controller</a> &gt; <span class="el_source">VehicleController.java</span></div><h1>VehicleController.java</h1><pre class="source lang-java linenums">package es.deusto.spq.client.controller;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import es.deusto.spq.pojo.VehicleData;
+import es.deusto.spq.client.ServiceLocator;
+
+<span class="nc" id="L18">public class VehicleController {</span>
+<span class="nc" id="L19">    protected static final Logger logger = LogManager.getLogger();</span>
+    /**
+     * Retrieves a Vehicle object from the server based on the provided number plate.
+     *
+     * @param numberPlate The number plate of the vehicle to retrieve.
+     * @return The Vehicle object retrieved from the server, or null if not found or an error occurred.
+     */
+    public static VehicleData getVehicle(String numberPlate) {
+<span class="nc" id="L27">        Response response = ServiceLocator.getInstance().getWebTarget()</span>
+<span class="nc" id="L28">                .path(&quot;server/getvehicle&quot;)</span>
+<span class="nc" id="L29">                .queryParam(&quot;numberPlate&quot;, numberPlate)</span>
+<span class="nc" id="L30">                .request(MediaType.APPLICATION_JSON)</span>
+<span class="nc" id="L31">                .get();</span>
+
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (response.getStatus() == Response.Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L34">            logger.info(&quot;Getting vehicle: &quot; + response.toString());</span>
+<span class="nc" id="L35">            return response.readEntity(VehicleData.class);</span>
+        } else {
+<span class="nc" id="L37">            logger.info(&quot;ERROR getting vehicle&quot;);</span>
+<span class="nc" id="L38">            return null;</span>
+        }
+    }
+    
+    /**
+     * Retrieves a list of Vehicle objects from the server.
+     *
+     * @return A list of Vehicle objects retrieved from the server, or an empty list if no vehicles found or an error occurred.
+     */
+    public static List&lt;VehicleData&gt; getVehicles() {
+<span class="nc" id="L48">        Response response = ServiceLocator.getInstance().getWebTarget()</span>
+<span class="nc" id="L49">                .path(&quot;server/getvehicles&quot;)</span>
+<span class="nc" id="L50">                .request(MediaType.APPLICATION_JSON)</span>
+<span class="nc" id="L51">                .get();</span>
+
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (response.getStatus() == Response.Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L54">            return response.readEntity(new GenericType&lt;List&lt;VehicleData&gt;&gt;() {});</span>
+        } else {
+<span class="nc" id="L56">            logger.info(&quot;ERROR getting vehicles&quot;);</span>
+<span class="nc" id="L57">            return Collections.emptyList();</span>
+        }
+    }
+
+    /**
+     * Deletes a vehicle from the server based on the provided number plate.
+     *
+     * @param numberPlate The number plate of the vehicle to delete.
+     */
+    public static void deleteVehicle(String numberPlate) {
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (ServiceLocator.getInstance().getWebTarget() != null) {</span>
+<span class="nc" id="L68">            Response response = ServiceLocator.getInstance().getWebTarget()</span>
+<span class="nc" id="L69">                    .path(&quot;server/deletevehicle&quot;)</span>
+<span class="nc" id="L70">                    .queryParam(&quot;numberPlate&quot;, numberPlate)</span>
+<span class="nc" id="L71">                    .request(MediaType.APPLICATION_JSON)</span>
+<span class="nc" id="L72">                    .delete();</span>
+
+<span class="nc bnc" id="L74" title="All 2 branches missed.">            if (response.getStatus() == Response.Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L75">                logger.info(&quot;Deleting vehicle: &quot; + response.toString());</span>
+<span class="nc" id="L76">                JOptionPane.showMessageDialog(null, &quot;Vehicle Correctly Deleted&quot;, &quot;Success deleting vehicle&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+
+            } else {
+<span class="nc" id="L79">                logger.info(&quot;ERROR deleting vehicle: &quot; + response.getStatus());</span>
+<span class="nc" id="L80">                JOptionPane.showMessageDialog(null, &quot;Error deleting vehicle&quot;, &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+
+            }
+<span class="nc" id="L83">        } else {</span>
+<span class="nc" id="L84">            logger.error(&quot;WebTarget is null. Unable to delete vehicle.&quot;);</span>
+        }
+<span class="nc" id="L86">    }</span>
+
+    public static void addVehicle(VehicleData vehicle) {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (ServiceLocator.getInstance().getWebTarget() != null) {</span>
+<span class="nc" id="L90">            Response response = ServiceLocator.getInstance().getWebTarget()</span>
+<span class="nc" id="L91">                    .path(&quot;server/addvehicle&quot;)</span>
+<span class="nc" id="L92">                    .request(MediaType.APPLICATION_JSON)</span>
+<span class="nc" id="L93">                    .post(Entity.entity(vehicle, MediaType.APPLICATION_JSON));</span>
+
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            if (response.getStatus() == Response.Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L96">                logger.info(&quot;Adding vehicle: &quot; + response.toString());</span>
+            } else {
+<span class="nc" id="L98">                logger.info(&quot;ERROR adding vehicle: &quot; + response.getStatus());</span>
+            }
+<span class="nc" id="L100">        } else {</span>
+<span class="nc" id="L101">            logger.error(&quot;WebTarget is null. Unable to add vehicle.&quot;);</span>
+        }
+<span class="nc" id="L103">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

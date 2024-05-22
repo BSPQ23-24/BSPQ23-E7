@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.pojo</a> &gt; <span class="el_source">VehicleData.java</span></div><h1>VehicleData.java</h1><pre class="source lang-java linenums">package es.deusto.spq.pojo;
+
+/**
+ * Represents a vehicle.
+ */
+public class VehicleData {
+    private String numberPlate;
+    private String brand;
+    private String model;
+    private boolean readyToBorrow;
+    private boolean onRepair;
+    
+    /**
+     * Default constructor required for serialization.
+     */
+<span class="fc" id="L16">    public VehicleData(){</span>
+        // Required for serialization
+<span class="fc" id="L18">    }</span>
+
+    /**
+     * Constructs a VehicleData object with the specified number plate, brand, and model.
+     *
+     * @param numberPlate The number plate of the vehicle.
+     * @param brand       The brand of the vehicle.
+     * @param model       The model of the vehicle.
+     */
+<span class="fc" id="L27">    public VehicleData(String numberPlate, String brand,  String model, boolean borrow, boolean repair) {</span>
+<span class="fc" id="L28">        this.numberPlate = numberPlate;</span>
+<span class="fc" id="L29">        this.brand = brand;</span>
+<span class="fc" id="L30">        this.model = model;</span>
+<span class="fc" id="L31">        this.readyToBorrow = borrow;</span>
+<span class="fc" id="L32">        this.onRepair = repair;</span>
+<span class="fc" id="L33">    }</span>
+
+    /**
+     * Retrieves the number plate of the vehicle.
+     *
+     * @return The number plate of the vehicle.
+     */
+    public String getNumberPlate() {
+<span class="fc" id="L41">        return numberPlate;</span>
+    }
+
+    /**
+     * Sets the number plate of the vehicle.
+     *
+     * @param numberPlate The number plate to set.
+     */
+    public void setNumberPlate(String numberPlate) {
+<span class="fc" id="L50">        this.numberPlate = numberPlate;</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Retrieves the brand of the vehicle.
+     *
+     * @return The brand of the vehicle.
+     */
+    public String getBrand() {
+<span class="fc" id="L59">        return brand;</span>
+    }
+
+    /**
+     * Sets the brand of the vehicle.
+     *
+     * @param brand The brand to set.
+     */
+    public void setBrand(String brand) {
+<span class="fc" id="L68">        this.brand = brand;</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Retrieves the model of the vehicle.
+     *
+     * @return The model of the vehicle.
+     */
+    public String getModel() {
+<span class="fc" id="L77">        return model;</span>
+    }
+
+    /**
+     * Sets the model of the vehicle.
+     *
+     * @param model The model to set.
+     */
+    public void setModel(String model) {
+<span class="fc" id="L86">        this.model = model;</span>
+<span class="fc" id="L87">    }</span>
+
+    /**
+     * Checks if the vehicle is ready to borrow.
+     *
+     * @return True if the vehicle is ready to borrow, false otherwise.
+     */
+    public boolean isReadyToBorrow() {
+<span class="fc" id="L95">        return readyToBorrow;</span>
+    }
+
+    /**
+     * Sets whether the vehicle is ready to borrow.
+     *
+     * @param readyToBorrow True if the vehicle is ready to borrow, false otherwise.
+     */
+    public void setReadyToBorrow(boolean readyToBorrow) {
+<span class="fc" id="L104">        this.readyToBorrow = readyToBorrow;</span>
+<span class="fc" id="L105">    }</span>
+
+    /**
+     * Checks if the vehicle is on repair.
+     *
+     * @return True if the vehicle is on repair, false otherwise.
+     */
+    public boolean isOnRepair() {
+<span class="fc" id="L113">        return onRepair;</span>
+    }
+
+    /**
+     * Sets whether the vehicle is on repair.
+     *
+     * @param onRepair True if the vehicle is on repair, false otherwise.
+     */
+    public void setOnRepair(boolean onRepair) {
+<span class="fc" id="L122">        this.onRepair = onRepair;</span>
+<span class="fc" id="L123">    }</span>
+    
+    /**
+     * Returns a string representation of the VehicleData object.
+     *
+     * @return A string representation of the VehicleData object.
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L132">        return &quot;VehicleData{&quot; +</span>
+               &quot;\nNumber Plate: &quot; + numberPlate +
+               &quot;\nBrand: &quot; + brand +
+               &quot;\nModel: &quot; + model +
+               &quot;\nReady to Borrow: &quot; + readyToBorrow +
+               &quot;\nOn Repair: &quot; + onRepair +
+               '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

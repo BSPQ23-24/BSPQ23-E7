@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RentingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.server.services</a> &gt; <span class="el_source">RentingService.java</span></div><h1>RentingService.java</h1><pre class="source lang-java linenums">package es.deusto.spq.server.services;
+
+import java.util.List;
+
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import javax.ws.rs.core.Response;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import es.deusto.spq.pojo.Renting;
+import es.deusto.spq.pojo.RentingAssembler;
+import es.deusto.spq.server.jdo.CustomerJDO;
+import es.deusto.spq.server.jdo.RentingJDO;
+import es.deusto.spq.server.jdo.VehicleJDO;
+
+public class RentingService {
+    private static RentingService instance;
+
+<span class="fc" id="L24">    protected static final Logger logger = LogManager.getLogger();</span>
+
+	private PersistenceManager pm;
+	private Transaction tx;
+    private PersistenceManagerFactory pmf;
+
+<span class="fc" id="L30">    public RentingService() {	</span>
+<span class="fc" id="L31">        pmf = JDOHelper.getPersistenceManagerFactory(&quot;datanucleus.properties&quot;);</span>
+<span class="fc" id="L32">    }</span>
+
+    public static  RentingService getInstance() {
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (instance == null) {</span>
+<span class="fc" id="L36">            instance = new RentingService();</span>
+        }
+<span class="fc" id="L38">        return instance;</span>
+    }
+    
+    /**
+     * Adds a new Renting to the database.
+     * @param renting The data of the Renting to be added.
+     * @return Response indicating success or failure of the operation.
+     */
+    public Response addRenting(Renting renting) {
+<span class="fc" id="L47">        pm = pmf.getPersistenceManager();</span>
+<span class="fc" id="L48">        tx = pm.currentTransaction();</span>
+        try {
+<span class="fc" id="L50">            logger.info(&quot;Searching for vehicle to rent...&quot;);</span>
+<span class="fc" id="L51">            tx.begin(); // Begin transaction</span>
+<span class="fc" id="L52">            VehicleJDO vehicle = null;</span>
+            try {
+<span class="fc" id="L54">                vehicle = pm.getObjectById(VehicleJDO.class, renting.getVehicle().getNumberPlate());</span>
+<span class="fc" id="L55">            } catch (Exception e) {</span>
+<span class="fc" id="L56">                logger.info(&quot;Vehicle not available to rent&quot;);</span>
+<span class="fc" id="L57">                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Vehicle with that number plate does not exists.&quot;).build();</span>
+<span class="fc" id="L58">            }</span>
+<span class="fc" id="L59">            logger.info(&quot;Vehicle: {}&quot;, vehicle);</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">            if (vehicle == null) {</span>
+<span class="nc" id="L61">                logger.info(&quot;Vehicle not available to rent&quot;);</span>
+<span class="nc" id="L62">                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Vehicle with that number plate does not exists.&quot;).build();</span>
+            } else {
+<span class="fc" id="L64">                logger.info(&quot;Retrieved vehicle for Renting: {}&quot;, vehicle);</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">                if (!vehicle.isReadyToBorrow()) {</span>
+<span class="nc" id="L66">                    logger.info(&quot;Retrieved vehicle is not Ready to borrow: {}&quot;, vehicle);</span>
+<span class="nc" id="L67">                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Vehicle with that number plate is not ready to borrow.&quot;).build();</span>
+                }
+            }
+<span class="fc" id="L70">            CustomerJDO customer = null;</span>
+            try {
+<span class="fc" id="L72">                customer = pm.getObjectById(CustomerJDO.class, renting.getCustomer().geteMail());</span>
+<span class="nc" id="L73">            } catch (Exception e) {</span>
+<span class="nc" id="L74">                logger.info(&quot;Customer not available to rent&quot;);</span>
+<span class="nc" id="L75">                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Customer with that eMail does not exist.&quot;).build();</span>
+<span class="fc" id="L76">            }</span>
+<span class="fc" id="L77">            logger.info(&quot;Customer: {}&quot;, customer);</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">            if (customer == null) {</span>
+<span class="nc" id="L79">                logger.info(&quot;Customer not available to rent&quot;);</span>
+<span class="nc" id="L80">                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Customer with that eMail does not exist.&quot;).build();</span>
+            } else {
+<span class="fc" id="L82">                logger.info(&quot;Retrieved customer for Renting: {}&quot;, customer);</span>
+            }
+
+<span class="fc" id="L85">            vehicle.setReadyToBorrow(false);</span>
+<span class="fc" id="L86">            pm.makePersistent(vehicle);</span>
+<span class="fc" id="L87">            RentingJDO rentToSave = new RentingJDO(customer, vehicle, renting.getStartDate(), renting.getEndDate());</span>
+<span class="nc" id="L88">            pm.makePersistent(rentToSave);</span>
+
+<span class="nc" id="L90">            tx.commit(); // Commit the transaction</span>
+<span class="nc" id="L91">            return Response.ok().build();</span>
+<span class="fc" id="L92">        } catch (Exception e) {</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">            if (tx.isActive()) {</span>
+<span class="fc" id="L94">                tx.rollback(); // Rollback the transaction in case of an exception</span>
+            }
+<span class="fc" id="L96">            e.printStackTrace();</span>
+<span class="fc" id="L97">            return Response.status(Response.Status.BAD_REQUEST).entity(&quot;Error occurred while adding a renting.&quot;).build();</span>
+        } finally {
+<span class="fc" id="L99">            logger.info(&quot;Closing&quot;);</span>
+<span class="fc" id="L100">            pm.close(); // Close the PersistenceManager</span>
+        }
+    }
+
+    public Response deleteRenting(String numberPlate, String email) {
+<span class="nc" id="L105">        pm = pmf.getPersistenceManager();</span>
+<span class="nc" id="L106">        tx = pm.currentTransaction();</span>
+
+        try {
+<span class="nc" id="L109">            logger.info(&quot;Returning vehicle...&quot;);</span>
+<span class="nc" id="L110">            tx.begin(); // Begin transaction</span>
+
+<span class="nc" id="L112">            VehicleJDO vehicle = null;</span>
+            try {
+<span class="nc" id="L114">                vehicle = pm.getObjectById(VehicleJDO.class, numberPlate);</span>
+<span class="nc" id="L115">            } catch (Exception e) {</span>
+<span class="nc" id="L116">                logger.info(&quot;Vehicle not found&quot;);</span>
+<span class="nc" id="L117">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Vehicle with that number plate does not exist.&quot;).build();</span>
+<span class="nc" id="L118">            }</span>
+<span class="nc" id="L119">            logger.info(&quot;Vehicle: {}&quot;, vehicle);</span>
+            
+<span class="nc bnc" id="L121" title="All 2 branches missed.">            if (vehicle == null) {</span>
+<span class="nc" id="L122">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Vehicle not found&quot;).build();</span>
+            }
+            
+<span class="nc" id="L125">            CustomerJDO customer = null;</span>
+            try {
+<span class="nc" id="L127">                customer = pm.getObjectById(CustomerJDO.class, email);</span>
+<span class="nc" id="L128">            } catch (Exception e) {</span>
+<span class="nc" id="L129">                logger.info(&quot;Customer not found&quot;);</span>
+<span class="nc" id="L130">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Customer with that eMail does not exist.&quot;).build();</span>
+<span class="nc" id="L131">            }</span>
+<span class="nc" id="L132">            logger.info(&quot;Customer: {}&quot;, customer);</span>
+            
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (customer == null) {</span>
+<span class="nc" id="L135">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Customer not found&quot;).build();</span>
+            }
+            
+<span class="nc" id="L138">            Query query = pm.newQuery(RentingJDO.class, &quot;vehicle == :vehicle &amp;&amp; customer == :customer&quot;);</span>
+<span class="nc" id="L139">            List&lt;RentingJDO&gt; rentingList = (List&lt;RentingJDO&gt;) query.execute(vehicle, customer);</span>
+            
+<span class="nc bnc" id="L141" title="All 2 branches missed.">            if (rentingList.isEmpty()) {</span>
+<span class="nc" id="L142">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;No renting found for this vehicle and customer&quot;).build();</span>
+            }
+            
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            for (RentingJDO renting : rentingList) {</span>
+<span class="nc" id="L146">                pm.deletePersistent(renting);</span>
+<span class="nc" id="L147">            }</span>
+
+<span class="nc" id="L149">            tx.commit(); // Commit the transaction</span>
+<span class="nc" id="L150">            return Response.ok(&quot;Rentings Deleted successfully&quot;).build();</span>
+<span class="nc" id="L151">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">            if (tx.isActive()) {</span>
+<span class="nc" id="L153">                tx.rollback(); // Rollback the transaction in case of an exception</span>
+            }
+<span class="nc" id="L155">            e.printStackTrace();</span>
+<span class="nc" id="L156">            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Error occurred while returning the vehicle.&quot;).build();</span>
+        } finally {
+<span class="nc" id="L158">            logger.info(&quot;Closing&quot;);</span>
+<span class="nc" id="L159">            pm.close(); // Close the PersistenceManager</span>
+        }
+
+    }
+
+    /**
+     * Returns a rented vehicle.
+     * @param numberPlate The number plate of the vehicle to be returned.
+     * @param email The email of the customer returning the vehicle.
+     * @return Response indicating success or failure of the operation.
+     */
+    public Response returnVehicle(String numberPlate, String email) {
+<span class="nc" id="L171">        pm = pmf.getPersistenceManager();</span>
+<span class="nc" id="L172">        tx = pm.currentTransaction();</span>
+        try {
+<span class="nc" id="L174">            logger.info(&quot;Returning vehicle...&quot;);</span>
+<span class="nc" id="L175">            tx.begin(); // Begin transaction</span>
+
+<span class="nc" id="L177">            VehicleJDO vehicle = null;</span>
+            try {
+<span class="nc" id="L179">                vehicle = pm.getObjectById(VehicleJDO.class, numberPlate);</span>
+<span class="nc" id="L180">            } catch (Exception e) {</span>
+<span class="nc" id="L181">                logger.info(&quot;Vehicle not found&quot;);</span>
+<span class="nc" id="L182">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Vehicle with that number plate does not exist.&quot;).build();</span>
+<span class="nc" id="L183">            }</span>
+<span class="nc" id="L184">            logger.info(&quot;Vehicle: {}&quot;, vehicle);</span>
+            
+<span class="nc bnc" id="L186" title="All 2 branches missed.">            if (vehicle == null) {</span>
+<span class="nc" id="L187">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Vehicle not found&quot;).build();</span>
+            }
+            
+<span class="nc" id="L190">            CustomerJDO customer = null;</span>
+            try {
+<span class="nc" id="L192">                customer = pm.getObjectById(CustomerJDO.class, email);</span>
+<span class="nc" id="L193">            } catch (Exception e) {</span>
+<span class="nc" id="L194">                logger.info(&quot;Customer not found&quot;);</span>
+<span class="nc" id="L195">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Customer with that eMail does not exist.&quot;).build();</span>
+<span class="nc" id="L196">            }</span>
+<span class="nc" id="L197">            logger.info(&quot;Customer: {}&quot;, customer);</span>
+            
+<span class="nc bnc" id="L199" title="All 2 branches missed.">            if (customer == null) {</span>
+<span class="nc" id="L200">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Customer not found&quot;).build();</span>
+            }
+            
+<span class="nc" id="L203">            Query query = pm.newQuery(RentingJDO.class, &quot;vehicle == :vehicle &amp;&amp; customer == :customer&quot;);</span>
+<span class="nc" id="L204">            List&lt;RentingJDO&gt; rentingList = (List&lt;RentingJDO&gt;) query.execute(vehicle, customer);</span>
+            
+<span class="nc bnc" id="L206" title="All 2 branches missed.">            if (rentingList.isEmpty()) {</span>
+<span class="nc" id="L207">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;No renting found for this vehicle and customer&quot;).build();</span>
+            }
+            
+<span class="nc bnc" id="L210" title="All 2 branches missed.">            for (RentingJDO renting : rentingList) {</span>
+<span class="nc" id="L211">                pm.deletePersistent(renting);</span>
+<span class="nc" id="L212">            }</span>
+            
+<span class="nc" id="L214">            vehicle.setReadyToBorrow(true);</span>
+<span class="nc" id="L215">            pm.makePersistent(vehicle);</span>
+
+<span class="nc" id="L217">            tx.commit(); // Commit the transaction</span>
+<span class="nc" id="L218">            return Response.ok(&quot;Vehicle returned successfully&quot;).build();</span>
+<span class="nc" id="L219">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">            if (tx.isActive()) {</span>
+<span class="nc" id="L221">                tx.rollback(); // Rollback the transaction in case of an exception</span>
+            }
+<span class="nc" id="L223">            e.printStackTrace();</span>
+<span class="nc" id="L224">            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Error occurred while returning the vehicle.&quot;).build();</span>
+        } finally {
+<span class="nc" id="L226">            logger.info(&quot;Closing&quot;);</span>
+<span class="nc" id="L227">            pm.close(); // Close the PersistenceManager</span>
+        }
+    }
+
+    /**
+     * Retrieves all rentings from a customer from the database.
+     * @return Response containing the list of rentings of a customer or an error message if no rentings are found.
+     */
+    public Response getCustomerRents(String eMail) {
+<span class="fc" id="L236">        pm = pmf.getPersistenceManager();</span>
+<span class="fc" id="L237">        tx = pm.currentTransaction();</span>
+        try {
+<span class="fc" id="L239">        	CustomerJDO customer = null;</span>
+            try {
+<span class="fc" id="L241">                customer = pm.getObjectById(CustomerJDO.class, eMail);</span>
+<span class="nc" id="L242">            } catch (Exception e) {</span>
+<span class="nc" id="L243">                logger.info(&quot;Customer not found&quot;);</span>
+<span class="nc" id="L244">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Customer with that eMail does not exist.&quot;).build();</span>
+<span class="fc" id="L245">            }</span>
+<span class="fc" id="L246">            logger.info(&quot;Customer: {}&quot;, customer);</span>
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">            if (customer == null) {</span>
+<span class="nc" id="L248">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Customer not found&quot;).build();</span>
+            }
+<span class="fc" id="L250">        	Query query = pm.newQuery(RentingJDO.class, &quot;customer == :customer&quot;);</span>
+<span class="fc" id="L251">            List&lt;RentingJDO&gt; rentingList = (List&lt;RentingJDO&gt;) query.execute(customer);</span>
+<span class="pc bpc" id="L252" title="1 of 2 branches missed.">            if (rentingList.isEmpty()) {</span>
+<span class="fc" id="L253">                return Response.status(Response.Status.BAD_REQUEST).entity(&quot;No renting found for this customer&quot;).build();</span>
+            } else {
+<span class="nc" id="L255">            	return Response.ok(RentingAssembler.getInstance().RentingJDOListToData(rentingList)).build();</span>
+            }
+<span class="nc" id="L257">        } catch (Exception e) {</span>
+<span class="nc" id="L258">            e.printStackTrace();</span>
+<span class="nc" id="L259">            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Error occurred while extracting renting information.&quot;).build();</span>
+        } finally {
+<span class="fc" id="L261">            pm.close();</span>
+        }
+    }
+    
+    /**
+     * Retrieves all rentings of a vehicle from the database.
+     * @return Response containing the list of rentings and customers or an error message if no rentings are found.
+     */
+    public Response getVehicleRents(String numberPlate) {
+<span class="fc" id="L270">        pm = pmf.getPersistenceManager();</span>
+<span class="fc" id="L271">        tx = pm.currentTransaction();</span>
+    	try {
+<span class="fc" id="L273">        	VehicleJDO vehicle = null;</span>
+            try {
+<span class="fc" id="L275">                vehicle = pm.getObjectById(VehicleJDO.class, numberPlate);</span>
+<span class="nc" id="L276">            } catch (Exception e) {</span>
+<span class="nc" id="L277">                logger.info(&quot;Vehicle not found&quot;);</span>
+<span class="nc" id="L278">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Vehicle with that plate number does not exist.&quot;).build();</span>
+<span class="fc" id="L279">            }</span>
+<span class="fc" id="L280">            logger.info(&quot;vehicle: {}&quot;, vehicle);</span>
+<span class="pc bpc" id="L281" title="1 of 2 branches missed.">            if (vehicle == null) {</span>
+<span class="nc" id="L282">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;Vehicle not found&quot;).build();</span>
+            }
+<span class="fc" id="L284">        	Query query = pm.newQuery(RentingJDO.class, &quot;vehicle == :vehicle&quot;);</span>
+<span class="fc" id="L285">            List&lt;RentingJDO&gt; rentingList = (List&lt;RentingJDO&gt;) query.execute(vehicle);</span>
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">            if (rentingList.isEmpty()) {</span>
+<span class="fc" id="L287">                return Response.status(Response.Status.BAD_REQUEST).entity(&quot;No renting found for this vehicle&quot;).build();</span>
+            } else {
+<span class="nc" id="L289">            	return Response.ok(RentingAssembler.getInstance().RentingJDOListToData(rentingList)).build();</span>
+            }
+<span class="nc" id="L291">        } catch (Exception e) {</span>
+<span class="nc" id="L292">            e.printStackTrace();</span>
+<span class="nc" id="L293">            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Error occurred while extracting renting information.&quot;).build();</span>
+        } finally {
+<span class="fc" id="L295">            pm.close();</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

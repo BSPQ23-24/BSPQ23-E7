@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerAssembler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.pojo</a> &gt; <span class="el_source">CustomerAssembler.java</span></div><h1>CustomerAssembler.java</h1><pre class="source lang-java linenums">package es.deusto.spq.pojo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import es.deusto.spq.server.jdo.CustomerJDO;
+
+public class CustomerAssembler {
+	
+	// Singleton
+	private static CustomerAssembler instance;
+	
+	private CustomerAssembler() { }
+	
+	public static CustomerAssembler getInstance() {
+<span class="fc bfc" id="L16" title="All 2 branches covered.">		if (instance == null) {</span>
+<span class="fc" id="L17">			instance = new CustomerAssembler();</span>
+		}
+		
+<span class="fc" id="L20">		return instance;</span>
+	}
+	
+    /**
+     * Changes the CustomerJDO to CustomerData.
+     * 
+     * @param customer The customer JDO to change.
+     * @return CustomerData with all the necessary information.
+     */
+	public CustomerData CustomerJDOToData(CustomerJDO customer) {
+<span class="fc" id="L30">		CustomerData data = new CustomerData();		</span>
+		
+<span class="fc" id="L32">		data.setName(customer.getName());</span>
+<span class="fc" id="L33">		data.seteMail(customer.geteMail());</span>
+<span class="fc" id="L34">		data.setSurname(customer.getSurname());</span>
+<span class="fc" id="L35">		data.setDateOfBirth(customer.getDateOfBirth());</span>
+		
+<span class="fc" id="L37">		return data;</span>
+	}
+	
+	/**
+     * Changes a CustomerJDO list to a CustomerData list.
+     * 
+     * @param customers The customer JDO list to change.
+     * @return CustomerData list with all the necessary information.
+     */
+	public List&lt;CustomerData&gt; CustomerJDOListToData(List&lt;CustomerJDO&gt; customers){
+<span class="nc" id="L47">		List&lt;CustomerData&gt; data = new ArrayList&lt;CustomerData&gt;();</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">    	for (CustomerJDO jdo : customers) {</span>
+<span class="nc" id="L49">			data.add(CustomerAssembler.getInstance().CustomerJDOToData(jdo));</span>
+<span class="nc" id="L50">		}</span>
+    	
+<span class="nc" id="L52">    	return data;</span>
+	}
+	
+    /**
+     * Changes the CustomerData to CustomerJDO.
+     * 
+     * @param customer The customer data to change.
+     * @return CustomerJDO with all the necessary information.
+     */
+	public CustomerJDO CustomerDataToJDO(CustomerData customer) {
+<span class="fc" id="L62">		CustomerJDO jdo = new CustomerJDO();		</span>
+		
+<span class="fc" id="L64">		jdo.setName(customer.getName());</span>
+<span class="fc" id="L65">		jdo.seteMail(customer.geteMail());</span>
+<span class="fc" id="L66">		jdo.setSurname(customer.getSurname());</span>
+<span class="fc" id="L67">		jdo.setDateOfBirth(customer.getDateOfBirth());</span>
+		
+<span class="fc" id="L69">		return jdo;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

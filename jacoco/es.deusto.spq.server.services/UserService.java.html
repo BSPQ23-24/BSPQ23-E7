@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.server.services</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package es.deusto.spq.server.services;
+
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Transaction;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import es.deusto.spq.pojo.UserAssembler;
+import es.deusto.spq.server.jdo.User;
+
+public class UserService {
+    private static UserService instance;
+
+<span class="nc" id="L19">    protected static final Logger logger = LogManager.getLogger();</span>
+
+	private PersistenceManager pm;
+	private Transaction tx;
+    private PersistenceManagerFactory pmf;
+
+<span class="nc" id="L25">    public UserService() {	</span>
+<span class="nc" id="L26">       pmf = JDOHelper.getPersistenceManagerFactory(&quot;datanucleus.properties&quot;);</span>
+<span class="nc" id="L27">    }</span>
+
+    public static  UserService getInstance() {
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        if (instance == null) {</span>
+<span class="nc" id="L31">            instance = new UserService();</span>
+        }
+<span class="nc" id="L33">        return instance;</span>
+    }
+
+    /**
+     * Retrieves a user by eMail from the database.
+     * @param email The email of the user.
+     * @param password The password of the user.
+     * @return Response containing the user data or an error message if the user is not found.
+     */
+    public Response getUser(@QueryParam(&quot;eMail&quot;) String eMail, @QueryParam(&quot;password&quot;) String password) {
+<span class="nc" id="L43">        pm = pmf.getPersistenceManager();</span>
+<span class="nc" id="L44">        tx = pm.currentTransaction();</span>
+        try {
+<span class="nc" id="L46">            User user = pm.getObjectById(User.class, eMail);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            if (user != null) {</span>
+<span class="nc" id="L48">                return Response.ok(UserAssembler.getInstance().UserToData(user)).build();</span>
+            } else {
+<span class="nc" id="L50">                logger.info(&quot;User not found&quot;);</span>
+<span class="nc" id="L51">                return Response.status(Response.Status.NOT_FOUND).entity(&quot;User not found&quot;).build();</span>
+            }
+<span class="nc" id="L53">        } catch (Exception e) {</span>
+<span class="nc" id="L54">            logger.info(e);</span>
+<span class="nc" id="L55">            logger.info(&quot;Error occurred while fetching user&quot;);</span>
+<span class="nc" id="L56">            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(&quot;Error occurred while fetching user.&quot;).build();</span>
+        } finally {
+<span class="nc" id="L58">            pm.close();</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

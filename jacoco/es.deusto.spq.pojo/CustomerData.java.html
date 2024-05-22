@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.pojo</a> &gt; <span class="el_source">CustomerData.java</span></div><h1>CustomerData.java</h1><pre class="source lang-java linenums">package es.deusto.spq.pojo;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * Represents customer data.
+ */
+public class CustomerData {
+    private String eMail;
+    private String name;
+    private String surname;
+    private Date dateOfBirth;
+
+    /**
+     * Default constructor required for serialization.
+     */
+<span class="fc" id="L18">    public CustomerData() {</span>
+        // Required for serialization
+<span class="fc" id="L20">    }</span>
+
+    /**
+     * Constructs a customer data object with the specified email, name, surname, and date of birth.
+     *
+     * @param eMail       The email of the customer.
+     * @param name        The name of the customer.
+     * @param surname     The surname of the customer.
+     * @param dateOfBirth The date of birth of the customer.
+     */
+<span class="fc" id="L30">    public CustomerData(String eMail, String name, String surname, Date dateOfBirth) {</span>
+<span class="fc" id="L31">        this.eMail = eMail;</span>
+<span class="fc" id="L32">        this.name = name;</span>
+<span class="fc" id="L33">        this.surname = surname;</span>
+<span class="fc" id="L34">        this.dateOfBirth = dateOfBirth;</span>
+<span class="fc" id="L35">    }</span>
+
+    /**
+     * Constructs a customer data object with the specified email, name, and surname.
+     *
+     * @param eMail   The email of the customer.
+     * @param name    The name of the customer.
+     * @param surname The surname of the customer.
+     */
+<span class="fc" id="L44">    public CustomerData(String eMail, String name, String surname) {</span>
+<span class="fc" id="L45">        this.eMail = eMail;</span>
+<span class="fc" id="L46">        this.name = name;</span>
+<span class="fc" id="L47">        this.surname = surname;</span>
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Retrieves the email of the customer.
+     *
+     * @return The email of the customer.
+     */
+    public String geteMail() {
+<span class="fc" id="L56">        return eMail;</span>
+    }
+
+    /**
+     * Sets the email of the customer.
+     *
+     * @param eMail The email to set.
+     */
+    public void seteMail(String eMail) {
+<span class="fc" id="L65">        this.eMail = eMail;</span>
+<span class="fc" id="L66">    }</span>
+
+    /**
+     * Retrieves the name of the customer.
+     *
+     * @return The name of the customer.
+     */
+    public String getName() {
+<span class="fc" id="L74">        return name;</span>
+    }
+
+    /**
+     * Sets the name of the customer.
+     *
+     * @param name The name to set.
+     */
+    public void setName(String name) {
+<span class="fc" id="L83">        this.name = name;</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Retrieves the surname of the customer.
+     *
+     * @return The surname of the customer.
+     */
+    public String getSurname() {
+<span class="fc" id="L92">        return surname;</span>
+    }
+
+    /**
+     * Sets the surname of the customer.
+     *
+     * @param surname The surname to set.
+     */
+    public void setSurname(String surname) {
+<span class="fc" id="L101">        this.surname = surname;</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Retrieves the date of birth of the customer.
+     *
+     * @return The date of birth of the customer.
+     */
+    public Date getDateOfBirth() {
+<span class="fc" id="L110">        return dateOfBirth;</span>
+    }
+
+    /**
+     * Sets the date of birth of the customer.
+     *
+     * @param dateOfBirth The date of birth to set.
+     */
+    public void setDateOfBirth(Date dateOfBirth) {
+<span class="fc" id="L119">        this.dateOfBirth = dateOfBirth;</span>
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * Returns a string representation of the CustomerData object.
+     *
+     * @return A string representation of the CustomerData object.
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L129">        return &quot;CustomerData{&quot; +</span>
+                &quot;eMail='&quot; + eMail + '\'' +
+                &quot;, name='&quot; + name + '\'' +
+                &quot;, surname='&quot; + surname + '\'' +
+                //&quot;, dateOfBirth=&quot; + dateOfBirth +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

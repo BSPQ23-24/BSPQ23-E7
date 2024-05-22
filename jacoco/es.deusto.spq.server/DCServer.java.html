@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DCServer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.server</a> &gt; <span class="el_source">DCServer.java</span></div><h1>DCServer.java</h1><pre class="source lang-java linenums">/**
+ * @file DCServer.java
+ * @brief Contains the implementation of the DCServer class.
+ */
+
+package es.deusto.spq.server;
+
+import es.deusto.spq.server.services.CustomerService;
+import es.deusto.spq.server.services.RentingService;
+import es.deusto.spq.server.services.UserService;
+import es.deusto.spq.server.services.VehicleService;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.VehicleData;
+import es.deusto.spq.pojo.Renting;
+
+/**
+ * @class DCServer
+ * @brief Represents the server-side implementation for managing customers and vehicles. (Facade)
+ */
+@Path(&quot;/server&quot;)
+@Produces(MediaType.APPLICATION_JSON)
+<span class="fc" id="L32">public class DCServer {</span>
+
+    /**
+     * Adds a new customer to the database.
+     * @param customerData The data of the customer to be added.
+     * @return Response indicating success or failure of the operation.
+     */ 
+    @POST
+    @Path(&quot;/addcustomer&quot;)
+    public Response addCustomer(CustomerData customerData) {
+<span class="fc" id="L42">        return CustomerService.getInstance().addCustomer(customerData);</span>
+    }
+
+    /**
+     * Adds a new vehicle to the database.
+     * @param vehicleData The data of the vehicle to be added.
+     * @return Response indicating success or failure of the operation.
+     */
+    @POST
+    @Path(&quot;/addvehicle&quot;)
+    public Response addVehicle(VehicleData vehicleData) {   
+<span class="fc" id="L53">        return VehicleService.getInstance().addVehicle(vehicleData);</span>
+    }
+
+
+    /**
+     * Adds a new Renting to the database.
+     * @param renting The data of the Renting to be added.
+     * @return Response indicating success or failure of the operation.
+     */
+    @POST
+    @Path(&quot;/addrenting&quot;)
+    public Response addRenting(Renting renting) {   
+<span class="fc" id="L65">        return RentingService.getInstance().addRenting(renting);</span>
+    }
+
+
+    /**
+     * Returns a rented vehicle.
+     * @param numberPlate The number plate of the vehicle to be returned.
+     * @param email The email of the customer returning the vehicle.
+     * @return Response indicating success or failure of the operation.
+     */
+    @POST
+    @Path(&quot;/returnvehicle&quot;)
+    public Response returnVehicle(@QueryParam(&quot;numberPlate&quot;) String numberPlate, @QueryParam(&quot;eMail&quot;) String email) {
+<span class="nc" id="L78">        return RentingService.getInstance().returnVehicle(numberPlate, email);</span>
+    }
+    /**
+     * Retrieves all rentings from a customer from the database.
+     * @return Response containing the list of rentings of a customer or an error message if no rentings are found.
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(&quot;/getcustomerrents&quot;)
+    public Response getCustomerRents(@QueryParam(&quot;eMail&quot;) String eMail) {
+<span class="nc" id="L88">        return RentingService.getInstance().getCustomerRents(eMail);</span>
+    }
+    
+    /**
+     * Retrieves all rentings of a vehicle from the database.
+     * @return Response containing the list of rentings and customers or an error message if no rentings are found.
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(&quot;/getvehiclerents&quot;)
+    public Response getVehicleRents(@QueryParam(&quot;numberPlate&quot;) String numberPlate) {
+<span class="nc" id="L99">    	return RentingService.getInstance().getVehicleRents(numberPlate);</span>
+    }
+    
+    
+    /**
+     * Retrieves all customers from the database.
+     * @return Response containing the list of customers or an error message if no customers are found.
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(&quot;/getcustomers&quot;)
+    public Response getCustomers() {
+<span class="nc" id="L111">        return CustomerService.getInstance().getCustomers();</span>
+
+    }
+    
+    /**
+     * Retrieves all vehicles from the database.
+     * @return Response containing the list of vehicles or an error message if no vehicles are found.
+     */ 
+    @GET
+    @Path(&quot;/getvehicles&quot;)
+    public Response getVehicles() {
+<span class="nc" id="L122">        return VehicleService.getInstance().getVehicles();</span>
+    }
+    
+    /**
+     * Retrieves a customer by email from the database.
+     * @param eMail The email of the customer to retrieve.
+     * @return Response containing the customer data or an error message if the customer is not found.
+     */
+    @GET
+    @Path(&quot;/getcustomer&quot;)
+    public Response getCustomer(@QueryParam(&quot;eMail&quot;) String eMail) {
+<span class="fc" id="L133">        return CustomerService.getInstance().getCustomer(eMail);</span>
+    }
+    
+    /**
+     * Retrieves a vehicle by number plate from the database.
+     * @param numberPlate The number plate of the vehicle to retrieve.
+     * @return Response containing the vehicle data or an error message if the vehicle is not found.
+     */
+    @GET
+    @Path(&quot;/getvehicle&quot;)
+    public Response getVehicle(@QueryParam(&quot;numberPlate&quot;) String numberPlate) {
+<span class="fc" id="L144">        return VehicleService.getInstance().getVehicle(numberPlate);</span>
+
+    }
+
+    /**
+     * Retrieves a vehicle by number plate from the database.
+     * @param eMail The eMail of the user to retrieve.
+     * @param password The password of the user to retrieve.
+     * @return Response containing the user data or an error message if the user is not found.
+     */
+    @GET
+    @Path(&quot;/getuser&quot;)
+    public Response getUser(@QueryParam(&quot;eMail&quot;) String email, @QueryParam(&quot;password&quot;) String password) {
+<span class="nc" id="L157">        return UserService.getInstance().getUser(email, password);</span>
+
+    }
+    
+    /**
+     * Deletes a vehicle from the database.
+     * @param email The email of the vehicle to delete.
+     * @return Response indicating success or failure of the operation.
+     */
+    @DELETE
+    @Path(&quot;/deletevehicle&quot;)
+    public Response deleteVehicle(@QueryParam(&quot;numberPlate&quot;) String numberPlate) {
+<span class="fc" id="L169">        return VehicleService.getInstance().deleteVehicle(numberPlate);</span>
+
+    }
+    
+    /**
+     * Deletes a customer from the database.
+     * @param email The email of the customer to delete.
+     * @return Response indicating success or failure of the operation.
+     */
+    @DELETE
+    @Path(&quot;/deletecustomer&quot;)
+    public Response deleteCustomer(@QueryParam(&quot;eMail&quot;) String email) {
+<span class="fc" id="L181">        return CustomerService.getInstance().deleteCustomer(email);</span>
+
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

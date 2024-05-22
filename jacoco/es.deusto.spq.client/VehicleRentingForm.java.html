@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleRentingForm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DeustoCars</a> &gt; <a href="index.source.html" class="el_package">es.deusto.spq.client</a> &gt; <span class="el_source">VehicleRentingForm.java</span></div><h1>VehicleRentingForm.java</h1><pre class="source lang-java linenums">package es.deusto.spq.client;
+
+import javax.swing.*;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import es.deusto.spq.client.controller.CustomerController;
+import es.deusto.spq.client.controller.VehicleController;
+import es.deusto.spq.pojo.Renting;
+import es.deusto.spq.pojo.CustomerData;
+import es.deusto.spq.pojo.VehicleData;
+
+import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.ResourceBundle;
+
+/**
+ * Class for renting a vehicle using a graphical user interface.
+ */
+public class VehicleRentingForm extends JFrame {
+<span class="nc" id="L29">    protected static final Logger logger = LogManager.getLogger();</span>
+    private ResourceBundle resourceBundle;
+	
+    private JTextField emailField;
+    private JTextField plateField;
+    private JTextField startDateField;
+    private JTextField endDateField;
+    private JButton submitButton;
+
+    /**
+     * Constructs a new VehicleRentingForm window.
+     */
+<span class="nc" id="L41">    public VehicleRentingForm() {</span>
+<span class="nc" id="L42">        resourceBundle = MainClient.getResourceBundle();</span>
+<span class="nc" id="L43">        ImageIcon img = new ImageIcon(&quot;src/resources/rentFormIcon.png&quot;);</span>
+<span class="nc" id="L44">        setIconImage(img.getImage());</span>
+
+<span class="nc" id="L46">        submitButton = new JButton(resourceBundle.getString(&quot;rent_vehicle_button&quot;));</span>
+<span class="nc" id="L47">        submitButton.setBackground(new Color(0, 153, 204));</span>
+<span class="nc" id="L48">        submitButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L49">        submitButton.setFocusPainted(false);</span>
+<span class="nc" id="L50">        submitButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+
+<span class="nc" id="L52">        submitButton.addActionListener(e -&gt; rentVehicle());</span>
+
+<span class="nc" id="L54">        setupUI(resourceBundle.getString(&quot;rent_window_title&quot;));</span>
+
+<span class="nc" id="L56">        emailField = new JTextField();</span>
+<span class="nc" id="L57">        plateField = new JTextField();</span>
+<span class="nc" id="L58">        startDateField = new JTextField();</span>
+<span class="nc" id="L59">        endDateField = new JTextField();</span>
+
+<span class="nc" id="L61">        addComponentsToForm();</span>
+
+<span class="nc" id="L63">        setVisible(true);</span>
+<span class="nc" id="L64">    }</span>
+
+    private void setupUI(String title) {
+<span class="nc" id="L67">        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);</span>
+<span class="nc" id="L68">        setTitle(title);</span>
+<span class="nc" id="L69">        setSize(400, 300);</span>
+<span class="nc" id="L70">        setLocationRelativeTo(null); // Center the window</span>
+<span class="nc" id="L71">        setLayout(new BorderLayout());</span>
+
+<span class="nc" id="L73">        JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));</span>
+<span class="nc" id="L74">        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));</span>
+
+<span class="nc" id="L76">        add(formPanel, BorderLayout.CENTER);</span>
+<span class="nc" id="L77">        add(submitButton, BorderLayout.SOUTH);</span>
+<span class="nc" id="L78">    }</span>
+
+    private void addComponentsToForm() {
+<span class="nc" id="L81">        JPanel formPanel = (JPanel) getContentPane().getComponent(0);</span>
+
+<span class="nc" id="L83">        formPanel.add(new JLabel(resourceBundle.getString(&quot;email_label&quot;)));</span>
+<span class="nc" id="L84">        formPanel.add(emailField);</span>
+<span class="nc" id="L85">        formPanel.add(new JLabel(resourceBundle.getString(&quot;number_plate_label&quot;)));</span>
+<span class="nc" id="L86">        formPanel.add(plateField);</span>
+<span class="nc" id="L87">        formPanel.add(new JLabel(resourceBundle.getString(&quot;startdate_label&quot;)));</span>
+<span class="nc" id="L88">        formPanel.add(startDateField);</span>
+<span class="nc" id="L89">        formPanel.add(new JLabel(resourceBundle.getString(&quot;enddate_label&quot;)));</span>
+<span class="nc" id="L90">        formPanel.add(endDateField);</span>
+
+<span class="nc" id="L92">        emailField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L93">        plateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L94">        startDateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L95">        endDateField.setBorder(BorderFactory.createLineBorder(new Color(0, 153, 204), 2));</span>
+<span class="nc" id="L96">    }</span>
+
+    private void rentVehicle() {
+<span class="nc" id="L99">    	String email = emailField.getText();</span>
+<span class="nc" id="L100">        String plate = plateField.getText();</span>
+<span class="nc" id="L101">        String startDate = startDateField.getText();</span>
+<span class="nc" id="L102">        String endDate = endDateField.getText();</span>
+
+        // Validating dates
+        Date start, end;
+        try {
+<span class="nc" id="L107">            SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</span>
+<span class="nc" id="L108">            start = dateFormat.parse(startDate);</span>
+<span class="nc" id="L109">            end = dateFormat.parse(endDate);</span>
+<span class="nc" id="L110">        } catch (Exception ex) {</span>
+<span class="nc" id="L111">            JOptionPane.showMessageDialog(this, &quot;Invalid date format. Expected: YYYY-MM-DD&quot;, &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L112">            return;</span>
+<span class="nc" id="L113">        }</span>
+        
+<span class="nc" id="L115">        CustomerData customer = CustomerController.getCustomer(email);</span>
+<span class="nc" id="L116">        VehicleData vehicle = VehicleController.getVehicle(plate);</span>
+<span class="nc" id="L117">        Renting newRenting = new Renting(customer, vehicle, start, end);</span>
+
+<span class="nc" id="L119">        WebTarget DeustoCarsWebTarget = ServiceLocator.getInstance().getWebTarget().path(&quot;server/addrenting&quot;);</span>
+<span class="nc" id="L120">        Invocation.Builder invocationBuilder = DeustoCarsWebTarget.request(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L121">        Response response = invocationBuilder.post(Entity.entity(newRenting, MediaType.APPLICATION_JSON));</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">		if (response.getStatus() != Status.OK.getStatusCode()) {</span>
+<span class="nc" id="L123">			logger.error(&quot;Error creating Rent in the server. Code: {}&quot;,response.getStatus());</span>
+<span class="nc" id="L124">            JOptionPane.showMessageDialog(this, &quot;Error creating Rent in the server&quot;, &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+		} else {
+<span class="nc" id="L126">			logger.info(&quot;Renting Correctly Registered :)&quot;);</span>
+<span class="nc" id="L127">            JOptionPane.showMessageDialog(this, &quot;Renting Correctly Registered&quot;, &quot;Success registering renting&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+
+		}
+
+        // Clear input fields
+<span class="nc" id="L132">		emailField.setText(&quot;&quot;);</span>
+<span class="nc" id="L133">		plateField.setText(&quot;&quot;);</span>
+<span class="nc" id="L134">		startDateField.setText(&quot;&quot;);</span>
+<span class="nc" id="L135">		endDateField.setText(&quot;&quot;);</span>
+
+        // Connect and update the database
+        // if (updateDatabase(newRenting)) {
+        //     JOptionPane.showMessageDialog(this, &quot;Renting registered successfully!&quot;, &quot;Success&quot;, JOptionPane.INFORMATION_MESSAGE);
+        // } else {
+        //     JOptionPane.showMessageDialog(this, &quot;Error registering renting.&quot;, &quot;Error&quot;, JOptionPane.ERROR_MESSAGE);
+        // }
+<span class="nc" id="L143">    }</span>
+
+    /**
+     * Updates the database with the new renting information.
+     * 
+     * @param renting The renting data to update in the database.
+     * @return True if the database was successfully updated, false otherwise.
+     */
+    boolean updateDatabase(Renting renting) {
+        //return Database.getInstance().ejecutarActualizacion(&quot;INSERT INTO renting (id, email, licensePlate, startDate, endDate) VALUES (?, ?, ?, ?, ?)&quot;,
+                //new Parameter(renting.getId(), DataType.INTEGER),
+                //new Parameter(renting.getEmail(), DataType.STRING),
+                //new Parameter(renting.getLicensePlate(), DataType.STRING),
+                //new Parameter(new java.sql.Date(renting.getStartDate().getTime()), DataType.DATE),
+                //new Parameter(new java.sql.Date(renting.getEndDate().getTime()), DataType.DATE)
+        //);
+<span class="nc" id="L159">        return true;</span>
+    }
+
+    /**
+     * Main method to launch the VehicleRentingForm window for vehicle renting.
+     * 
+     * @param args Command line arguments.
+     */
+    public static void main(String[] args) {
+<span class="nc" id="L168">        VehicleRentingForm form = new VehicleRentingForm();</span>
+<span class="nc" id="L169">        form.setVisible(true);</span>
+<span class="nc" id="L170">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

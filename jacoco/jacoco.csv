@@ -1,0 +1,57 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+DeustoCars,es.deusto.spq.server.jdo,CustomerJDO,415,558,82,75,11,15,72,66,11,44
+DeustoCars,es.deusto.spq.server.jdo,RentingJDO,892,176,157,19,16,8,130,21,41,16
+DeustoCars,es.deusto.spq.server.jdo,Message,502,96,88,4,0,9,81,13,32,13
+DeustoCars,es.deusto.spq.server.jdo,Main,164,0,8,0,49,0,6,0,2,0
+DeustoCars,es.deusto.spq.server.jdo,User,595,69,96,2,6,10,89,12,37,12
+DeustoCars,es.deusto.spq.server.jdo,VehicleJDO,433,633,88,88,7,18,76,76,10,48
+DeustoCars,es.deusto.spq.pojo,Renting,52,27,0,0,13,10,6,5,6,5
+DeustoCars,es.deusto.spq.pojo,VehicleData,32,56,0,0,1,24,1,12,1,12
+DeustoCars,es.deusto.spq.pojo,RentingAssembler,98,8,4,2,22,3,6,2,4,1
+DeustoCars,es.deusto.spq.pojo,UserData,7,32,0,0,3,9,2,6,2,6
+DeustoCars,es.deusto.spq.pojo,DirectMessage,0,17,0,0,0,8,0,5,0,5
+DeustoCars,es.deusto.spq.pojo,VehicleAssembler,23,60,2,2,5,17,2,4,1,3
+DeustoCars,es.deusto.spq.pojo,CustomerAssembler,23,52,2,2,5,15,2,4,1,3
+DeustoCars,es.deusto.spq.pojo,UserAssembler,67,0,4,0,18,0,6,0,4,0
+DeustoCars,es.deusto.spq.pojo,MessageData,0,10,0,0,0,5,0,3,0,3
+DeustoCars,es.deusto.spq.pojo,CustomerData,28,58,0,0,1,25,1,11,1,11
+DeustoCars,es.deusto.spq.client.controller,RentingController.new GenericType() {...},3,0,0,0,1,0,1,0,1,0
+DeustoCars,es.deusto.spq.client.controller,RentingController.new GenericType() {...},3,0,0,0,1,0,1,0,1,0
+DeustoCars,es.deusto.spq.client.controller,UserController,61,0,2,0,13,0,4,0,3,0
+DeustoCars,es.deusto.spq.client.controller,RentingController,82,0,4,0,19,0,6,0,4,0
+DeustoCars,es.deusto.spq.client.controller,CustomerController,190,0,10,0,42,0,11,0,6,0
+DeustoCars,es.deusto.spq.client.controller,CustomerController.new GenericType() {...},3,0,0,0,1,0,1,0,1,0
+DeustoCars,es.deusto.spq.client.controller,VehicleController,202,0,12,0,45,0,12,0,6,0
+DeustoCars,es.deusto.spq.client.controller,VehicleController.new GenericType() {...},3,0,0,0,1,0,1,0,1,0
+DeustoCars,es.deusto.spq.client,VehicleDetailWindow,460,0,2,0,84,0,3,0,2,0
+DeustoCars,es.deusto.spq.client,DeustoCarsLogin,235,0,0,0,55,0,2,0,2,0
+DeustoCars,es.deusto.spq.client,TestForClient,45,227,7,7,7,45,7,6,0,6
+DeustoCars,es.deusto.spq.client,CustomerRegister,601,0,6,0,124,0,14,0,11,0
+DeustoCars,es.deusto.spq.client,VehicleRegistration,535,0,8,0,103,0,14,0,10,0
+DeustoCars,es.deusto.spq.client,AdminClient,421,0,12,0,101,0,22,0,16,0
+DeustoCars,es.deusto.spq.client,VehicleRentingForm,372,0,2,0,74,0,9,0,8,0
+DeustoCars,es.deusto.spq.client,VehicleRegistration.new SwingWorker() {...},15,0,0,0,5,0,3,0,3,0
+DeustoCars,es.deusto.spq.client,VehicleRegistration.new SwingWorker() {...},11,0,0,0,3,0,2,0,2,0
+DeustoCars,es.deusto.spq.client,MainClient.new SwingWorker() {...},11,0,0,0,3,0,2,0,2,0
+DeustoCars,es.deusto.spq.client,MainClient.new SwingWorker() {...},11,0,0,0,3,0,2,0,2,0
+DeustoCars,es.deusto.spq.client,MainClient.new MouseAdapter() {...},37,0,4,0,8,0,4,0,2,0
+DeustoCars,es.deusto.spq.client,MainClient.new ActionListener() {...},64,0,3,0,11,0,4,0,2,0
+DeustoCars,es.deusto.spq.client,MainClient.new JTable() {...},10,0,0,0,2,0,2,0,2,0
+DeustoCars,es.deusto.spq.client,DeustoCarsLogin.new ActionListener() {...},132,0,18,0,25,0,12,0,3,0
+DeustoCars,es.deusto.spq.client,MainClient.new MouseAdapter() {...},37,0,4,0,8,0,4,0,2,0
+DeustoCars,es.deusto.spq.client,MainClient.new JTable() {...},10,0,0,0,2,0,2,0,2,0
+DeustoCars,es.deusto.spq.client,DeustoCarsLogin.new JPanel() {...},27,0,0,0,5,0,2,0,2,0
+DeustoCars,es.deusto.spq.client,ServiceLocator,35,0,2,0,9,0,5,0,4,0
+DeustoCars,es.deusto.spq.client,CustomerDetailWindow,414,0,2,0,73,0,3,0,2,0
+DeustoCars,es.deusto.spq.client,MainClient,1315,0,18,0,240,0,39,0,30,0
+DeustoCars,es.deusto.spq.client,VehicleRetrievalForm,285,0,6,0,57,0,11,0,8,0
+DeustoCars,es.deusto.spq.client,CustomerRegister.new SwingWorker() {...},15,0,0,0,5,0,3,0,3,0
+DeustoCars,es.deusto.spq.client,CustomerRegister.new SwingWorker() {...},11,0,0,0,3,0,2,0,2,0
+DeustoCars,es.deusto.spq,App,7,0,0,0,3,0,2,0,2,0
+DeustoCars,es.deusto.spq.server,DCServerManager,331,0,8,0,75,0,12,0,8,0
+DeustoCars,es.deusto.spq.server,Main,38,0,0,0,8,0,3,0,3,0
+DeustoCars,es.deusto.spq.server,DCServer,24,31,0,0,6,8,6,8,6,8
+DeustoCars,es.deusto.spq.server.services,RentingService,463,237,28,10,106,61,20,7,2,6
+DeustoCars,es.deusto.spq.server.services,UserService,74,0,4,0,19,0,6,0,4,0
+DeustoCars,es.deusto.spq.server.services,CustomerService,132,210,8,6,27,55,6,8,1,6
+DeustoCars,es.deusto.spq.server.services,VehicleService,132,214,8,6,27,56,6,8,1,6
