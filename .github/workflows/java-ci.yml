@@ -35,7 +35,11 @@ jobs:
         cd DeustoCars
         mvn --batch-mode jetty:run &
         sleep 20
-
+        
+    - name: Run tests
+      run: |
+        cd DeustoCars
+        mvn test
 
   document:
     needs: test
