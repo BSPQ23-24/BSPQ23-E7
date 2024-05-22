@@ -41,6 +41,19 @@ jobs:
         cd DeustoCars
         mvn test
 
+    - name: Generate JaCoCo report
+    run: |
+      cd DeustoCars
+      mvn jacoco:report
+
+    - name: Deploy JaCoCo report to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: DeustoCars/target/site/jacoco
+        publish_branch: gh-pages
+        destination_dir: jacoco
+
   document:
     needs: test
     runs-on: ubuntu-latest
