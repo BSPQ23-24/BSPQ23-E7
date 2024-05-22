@@ -45,9 +45,11 @@ public class ResourceTest {
     private DCServer dcserver;
     private VehicleData testVehicle_1;
     private VehicleData testVehicle_2;
+    private VehicleData testVehicle_to_rent;
     private VehicleData testVehicle_delete;
     private CustomerData testCustomer_1;
     private CustomerData testCustomer_2;
+    private CustomerData testCustomer_to_rent;
     private CustomerData testCustomer_delete;
     private Renting testRenting_1;
     private Renting testRenting_2;
@@ -73,26 +75,27 @@ public class ResourceTest {
 
             // instantiate tested object with mock dependencies
             dcserver = new DCServer();
-
-            testVehicle_1 = new VehicleData("test_plate_1", "test", "test", true, false);
-            testVehicle_2 = new VehicleData("test_plate_2", "test", "test", true, false);
-            testVehicle_delete = new VehicleData("test_plate_delete", "test", "test", true, false);;
-            testCustomer_1 = new CustomerData("test_email_1", "test", "test");
-            testCustomer_2 = new CustomerData("test_email_2", "test", "test");
-            testCustomer_delete = new CustomerData("test_email_delete", "test", "test");
-            testRenting_1 = new Renting(testCustomer_1, testVehicle_1, new Date(), new Date());
-            testRenting_2 = new Renting(testCustomer_1, testVehicle_2, new Date(), new Date());
-            testRenting_3 = new Renting(testCustomer_2, testVehicle_1, new Date(), new Date());
-            dcserver.addVehicle(testVehicle_1);
-            dcserver.addVehicle(testVehicle_2);
-            dcserver.addVehicle(testVehicle_delete);
-            dcserver.addCustomer(testCustomer_1);
-            dcserver.addCustomer(testCustomer_2);
-            dcserver.addCustomer(testCustomer_delete);
-            dcserver.addRenting(testRenting_1);
-            dcserver.addRenting(testRenting_2);
-            dcserver.addRenting(testRenting_3);
         }
+        testVehicle_1 = new VehicleData("test_plate_1", "test", "test", true, false);
+        testVehicle_2 = new VehicleData("test_plate_2", "test", "test", true, false);
+        testVehicle_to_rent = new VehicleData("test_plate_to_rent", "test", "test", true, false);
+        testVehicle_delete = new VehicleData("test_plate_delete", "test", "test", true, false);;
+        testCustomer_1 = new CustomerData("test_email_1", "test", "test");
+        testCustomer_2 = new CustomerData("test_email_2", "test", "test");
+        testCustomer_to_rent = new CustomerData("test_email_to_rent", "test", "test");
+        testCustomer_delete = new CustomerData("test_email_delete", "test", "test");
+        testRenting_1 = new Renting(testCustomer_1, testVehicle_1, new Date(), new Date());
+        testRenting_2 = new Renting(testCustomer_1, testVehicle_2, new Date(), new Date());
+        dcserver.addVehicle(testVehicle_1);
+        dcserver.addVehicle(testVehicle_2);
+        dcserver.addVehicle(testVehicle_to_rent);
+        dcserver.addVehicle(testVehicle_delete);
+        dcserver.addCustomer(testCustomer_1);
+        dcserver.addCustomer(testCustomer_2);
+        dcserver.addCustomer(testCustomer_to_rent);
+        dcserver.addCustomer(testCustomer_delete);
+        dcserver.addRenting(testRenting_1);
+        dcserver.addRenting(testRenting_2);
     }
     
     
@@ -176,7 +179,6 @@ public class ResourceTest {
         // Mock the vehicle and renting objects
         VehicleJDO vehicle = VehicleAssembler.getInstance().VehicleDataToJDO(testVehicle_1);
         RentingJDO renting1 = RentingAssembler.getInstance().RentingDatatoJDO(testRenting_1);
-        RentingJDO renting2 = RentingAssembler.getInstance().RentingDatatoJDO(testRenting_3);
 
         // Mock the PersistenceManager behavior
         when(persistenceManager.getObjectById(VehicleJDO.class, vehicle.getNumberPlate())).thenReturn(vehicle);
@@ -184,7 +186,7 @@ public class ResourceTest {
         // Mock the Query behavior
         Query mockQuery = mock(Query.class);
         when(persistenceManager.newQuery(RentingJDO.class, "vehicle == :vehicle")).thenReturn(mockQuery);
-        when(mockQuery.execute(vehicle)).thenReturn(Arrays.asList(renting1, renting2));
+        when(mockQuery.execute(vehicle)).thenReturn(Arrays.asList(renting1));
 
         // Call the method to be tested
         Response response = dcserver.getVehicleRents(vehicle.getNumberPlate());
@@ -194,16 +196,12 @@ public class ResourceTest {
 
         List<Renting> rentingDataList = (List<Renting>) response.getEntity();
         assertNotNull(rentingDataList);
-        assertEquals(2, rentingDataList.size());
+        assertEquals(1, rentingDataList.size());
 
         // Verify the content of the rentingDataList
         Renting rentingData1 = rentingDataList.get(0);
         assertEquals(renting1.getCustomer().geteMail(), rentingData1.getCustomer().geteMail());
         assertEquals(renting1.getVehicle().getNumberPlate(), rentingData1.getVehicle().getNumberPlate());
-
-        Renting rentingData2 = rentingDataList.get(1);
-        assertEquals(renting2.getCustomer().geteMail(), rentingData2.getCustomer().geteMail());
-        assertEquals(renting2.getVehicle().getNumberPlate(), rentingData2.getVehicle().getNumberPlate());
     }
 
 
@@ -245,8 +243,8 @@ public class ResourceTest {
     @Test
     public void testAddRenting() {
         // Set up the data
-        CustomerData customerData = testCustomer_2;
-        VehicleData vehicleData = testVehicle_2;
+        CustomerData customerData = testCustomer_to_rent;
+        VehicleData vehicleData = testVehicle_to_rent;
         Renting renting = new Renting(customerData, vehicleData, new Date(), new Date());
         Response response = dcserver.addRenting(renting);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());

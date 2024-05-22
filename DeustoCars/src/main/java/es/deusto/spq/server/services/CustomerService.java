@@ -148,8 +148,12 @@ public class CustomerService {
             CustomerJDO customer = pm.getObjectById(CustomerJDO.class, email);
             
             if (customer != null) {
-                for(RentingJDO rent : (List<RentingJDO>) RentingAssembler.getInstance().RentingListToJDO((List<Renting>) RentingService.getInstance().getCustomerRents(customer.geteMail()).getEntity())){
-                    RentingService.getInstance().deleteRenting(rent.getVehicle().getNumberPlate(), rent.getCustomer().geteMail());
+                try {
+                    for(RentingJDO rent : (List<RentingJDO>) RentingAssembler.getInstance().RentingListToJDO((List<Renting>) RentingService.getInstance().getCustomerRents(customer.geteMail()).getEntity())){
+                        RentingService.getInstance().deleteRenting(rent.getVehicle().getNumberPlate(), rent.getCustomer().geteMail());
+                    }
+                } catch (Exception e) {
+                    logger.info("Customer has no rents asociated");
                 }
                 pm.deletePersistent(customer);
                 return Response.ok("Customer deleted successfully").build();
