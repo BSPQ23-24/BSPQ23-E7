@@ -42,9 +42,9 @@ jobs:
         mvn test
 
     - name: Generate JaCoCo report
-    run: |
-      cd DeustoCars
-      mvn jacoco:report
+      run: |
+        cd DeustoCars
+        mvn jacoco:report
 
     - name: Deploy JaCoCo report to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
