@@ -68,11 +68,6 @@ jobs:
           publish_dir: DeustoCars/target/doxygen/html
           publish_branch: gh-pages
           destination_dir: doxygen
-          
-      - name: Create .nojekyll file
-        run: |
-          touch DeustoCars/target/doxygen/html/.nojekyll
-        continue-on-error: true
       
 
   package:

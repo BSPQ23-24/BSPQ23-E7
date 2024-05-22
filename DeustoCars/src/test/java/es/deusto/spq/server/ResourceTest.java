@@ -53,7 +53,6 @@ public class ResourceTest {
     private CustomerData testCustomer_delete;
     private Renting testRenting_1;
     private Renting testRenting_2;
-    private Renting testRenting_3;
 
     @Mock
     private PersistenceManager persistenceManager;
