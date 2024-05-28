@@ -1,7 +1,5 @@
 var NAVTREEINDEX0 =
 {
-"":[0,0,0],
-"":[0,0,0,0],
 "_admin_client_8java.html":[2,0,0,0,0,0,0,0,0,1],
 "_admin_client_8java_source.html":[2,0,0,0,0,0,0,0,0,1],
 "_app_8java.html":[2,0,0,0,0,0,0,0,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX0 =
 "classes_1_1deusto_1_1spq_1_1server_1_1jdo_1_1_renting_j_d_o.html#a912be2ecb3634e00e4f1c52951528cfb":[1,0,0,0,0,2,0,3,1],
 "classes_1_1deusto_1_1spq_1_1server_1_1jdo_1_1_renting_j_d_o.html#ab388050e756b99ecd6ade98a5e2b467b":[1,0,0,0,0,2,0,3,7],
 "classes_1_1deusto_1_1spq_1_1server_1_1jdo_1_1_renting_j_d_o.html#ab937cbc817a6b3999edd88252c6e438e":[1,0,0,0,0,2,0,3,0],
-"classes_1_1deusto_1_1spq_1_1server_1_1jdo_1_1_renting_j_d_o.html#af6422b73f9aa376aa89954cb4ed25678":[1,0,0,0,0,2,0,3,2]
+"classes_1_1deusto_1_1spq_1_1server_1_1jdo_1_1_renting_j_d_o.html#af6422b73f9aa376aa89954cb4ed25678":[1,0,0,0,0,2,0,3,2],
+"classes_1_1deusto_1_1spq_1_1server_1_1jdo_1_1_user.html":[1,0,0,0,0,2,0,4],
+"classes_1_1deusto_1_1spq_1_1server_1_1jdo_1_1_user.html#a0a09dd85469b4fc8a630acc38cc3bf64":[1,0,0,0,0,2,0,4,8]
 };
