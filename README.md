@@ -1,4 +1,5 @@
 # 🏁BSPQ23-E7: DeustoCars 🚗🛵🏎️
+This is the link of our GitHub repository [https://github.com/BSPQ23-24/BSPQ23-E7](https://github.com/BSPQ23-24/BSPQ23-E7), where you can find the Readme with all the explanations on running the DeustoCars application and more.
 
 You can read the [DeustoCars Documentation](https://bspq23-24.github.io/BSPQ23-E7/doxygen) for a better definition of the functions.
 
@@ -46,13 +47,13 @@ This project is deployed in Java using Maven. The App implements the REST patter
     ```sh
     mvn jetty:run
     ```
+   You can check this works by entering the URL `localhost:8080`.
 
 6. Optionally, you may run some tests to check the app is working properly and generate code coverage reports using JaCoCo:
     ```sh
     mvn test
     mvn jacoco:prepare-agent test jacoco:report
     ```
-    You can check this works by entering the URL `localhost:8080`.
 
 7. Now, in a _different command line window_, launch the client profile:
     ```sh
@@ -63,6 +64,7 @@ This project is deployed in Java using Maven. The App implements the REST patter
     mvn compile exec:java -Pserver
     ```
 
+## Doxygen report
 8. To generate Doxygen reports:
     ```sh
     mvn doxygen:report
